@@ -1,8 +1,12 @@
+import DiscountSlider from '../components/landingPage/discountSlider'
 import HeroSlider from '../components/landingPage/heroSlider'
 
 const Home = () => {
   return (
-    <div ><HeroSlider/></div>
+    <div className='' >
+        <HeroSlider/>
+        <DiscountSlider title='تخفیفات ' />
+        </div>
   )
 }
 

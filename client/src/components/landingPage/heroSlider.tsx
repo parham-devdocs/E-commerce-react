@@ -36,10 +36,9 @@ useEffect(() => {
 const totalSlides = menuData.length;
 return (
   <div className="py-6 px-4 relative">
-    <h2 className="text-xl font-bold mb-4 text-right">دسته‌بندی‌ها</h2>
 
     {/* Slider viewport */}
-    <div className="w-full h-64 overflow-hidden rounded-xl relative">
+    <div className="w-full h-auto overflow-hidden rounded-xl relative">
       {/* Slides container */}
       <div
         className="flex transition-transform duration-500 ease-in-out"
@@ -60,14 +59,14 @@ return (
           </div>
         ))}
       </div>
-      <div className="absolute bottom-9 left-1/2 transform -translate-x-1/2 z-10 flex gap-2">
+      <div className="absolute bottom-2 md:bottom-5  left-1/2 transform -translate-x-1/2 z-10 flex gap-2">
       {Array.from({ length: menuData.length }).map((_, index) => (
         <div
           key={index}
-          className={` h-4 rounded-full transition-colors duration-500 ${
+          className={` lg:h-4 h-2 rounded-full transition-colors duration-500 ${
             index === currentSlide
-              ? 'bg-red-500 w-8'        
-              : 'bg-white/50 w-4'     
+              ? 'bg-red-500 lg:w-8 w-4'        
+              : 'bg-white/50 lg:w-4 w-2'     
           }`}
         />
       ))}
@@ -107,7 +106,7 @@ const SliderButton = ({ type, clickHandler }: SliderButtonProps) => {
     <button
       onClick={clickHandler}
       aria-label={type === 'prev' ? 'Previous' : 'Next'}
-      className="w-10 h-10 rounded-full bg-white/90 border border-gray-300 shadow-lg
+      className="lg:w-10 lg:h-10 h-6 w-6  rounded-full bg-white/90 border border-gray-300 shadow-lg
                  flex items-center justify-center
                  cursor-pointer
                  text-gray-800 hover:bg-white hover:scale-105 
@@ -116,9 +115,9 @@ const SliderButton = ({ type, clickHandler }: SliderButtonProps) => {
                  transition-all duration-300 z-10"
     >
       {type === 'prev' ? (
-        <FaChevronLeft className="text-lg" /> // ← RTL: prev = right arrow
+        <FaChevronLeft className="lg:text-lg text-[15px]" /> // ← RTL: prev = right arrow
       ) : (
-        <FaChevronRight className="text-lg" />  // ← RTL: next = left arrow
+        <FaChevronRight className="lg:text-lg text-[15px]" />  // ← RTL: next = left arrow
       )}
     </button>
   );
