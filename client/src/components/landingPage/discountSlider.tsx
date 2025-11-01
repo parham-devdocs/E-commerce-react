@@ -6,6 +6,7 @@ import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import Card from '../../productCard';
 import SliderButton from './sliderButton';
 import TimerBox from '../timerBox';
+import Discount from '../discount';
 
 // Your category data
 
@@ -53,40 +54,20 @@ const DiscountSlider = ({ title }: { title: string }) => {
 
   return (
     <div className="space-y-3">
-      <Header link="/" title={title} />
+      <Header link="/" title={title}  />
+      <div className=' xl:hidden  justify-center flex w-full '>
+      <Discount/>
+      
+
+      </div>
       <div 
-        className="w-full py-4 px-2 md:px-4 relative"
+        className="w-full gap-4 md:px-4 relative bg-red-500 rounded-md p-4"
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
-        <div className=' flex gap-2 items-center'>
-        <div className="w-[300px]  h-full bg-gradient-to-b from-red-500 to-red-600 
-                    text-white rounded-xl shadow-lg overflow-hidden xl:flex hidden flex-col">
-      
-      <div className="p-4 text-center border-b border-red-400/30">
-        <h3 className="text-lg font-bold">🔥 تخفیف ویژه!</h3>
-        <p className="text-xs opacity-90 mt-1">فقط برای امروز</p>
-      </div>
-
-      <div className="flex justify-center my-4 space-x-2 space-x-reverse">
-        <TimerBox value={20} label="د" />
-        <TimerBox value={20} label="د" />
-        <span className="text-2xl font-bold my-auto">:</span>
-        <TimerBox value={20} label="ث" />
-        <TimerBox value={40} label="ث" />
-      </div>
-
-      <div className="px-4 text-center mt-2 text-sm opacity-90">
-        <p>همین حالا خرید کنید و از تخفیف ویژه استفاده نمایید!</p>
-      </div>
-
-      <div className="mt-auto p-4">
-        <button className="w-full bg-white text-red-600 font-bold py-2 rounded-lg
-                          hover:bg-gray-100 transition-colors shadow-md">
-          مشاهده پیشنهادها
-        </button>
-      </div>
-    </div>
+        <div className=' flex gap-2 items-center '>
+         
+      <div className=' xl:block hidden w-[400px]'><Discount/></div> 
         <div className=" overflow-hidden rounded-xl relative">
           <div
             className="flex transition-transform duration-500 ease-in-out"

@@ -11,7 +11,7 @@ interface HeaderProps {
 const Header = ({ title, link }: HeaderProps) => {
   return (
     <div className="space-y-3 mb-6">
-      <div className="flex items-center  sm:flex-row sm:items-center sm:justify-between gap-4">
+      <div className="flex  justify-between items-center  sm:flex-row sm:items-center sm:justify-between gap-4">
         {link && (
           <Link
             to={link}
@@ -24,23 +24,11 @@ const Header = ({ title, link }: HeaderProps) => {
           </Link>
         )}
 
-        <div className="flex flex-row items-center gap-3">
         
 
-          <div className="xl:hidden flex items-center gap-2 bg-red-50/50 px-3 py-1.5 rounded-lg border border-red-200">
-            <span className="text-sm font-medium text-red-700 whitespace-nowrap">
-              تا پایان تخفیف:
-            </span>
-            <div className="flex items-center gap-1">
-              <TimerBox value={2} label="د" />
-              <TimerBox value={3} label="س" />
-              <TimerBox value={4} label="ث" />
-            </div>
-          </div>
-          <h2 className="text-2xl font-bold text-gray-800 tracking-tight text-right">
+          <h2 className="lg:text-2xl text-xl font-bold text-gray-800 tracking-tight text-right">
             {title}
           </h2>
-        </div>
       </div>
 
       {/* Red divider bar */}
