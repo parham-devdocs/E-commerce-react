@@ -53,7 +53,7 @@ const DiscountSlider = ({ title }: { title: string }) => {
   }, [isHovered, totalSlides]); // ✅ Only these deps needed
 
   return (
-    <div className="space-y-3">
+    <div className="space-y-3 ">
       <Header link="/" title={title}  />
       <div className=' xl:hidden  justify-center flex w-full '>
       <Discount/>
@@ -61,7 +61,7 @@ const DiscountSlider = ({ title }: { title: string }) => {
 
       </div>
       <div 
-        className="w-full gap-4 md:px-4 relative bg-red-500 rounded-md p-4"
+        className="w-full gap-4 md:px-4 relative bg-red-500 rounded-lg p-4"
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
@@ -79,7 +79,7 @@ const DiscountSlider = ({ title }: { title: string }) => {
           >
             {products.map((slide) => (
               <div key={slide.id} style={{ width: slideWidth }}>
-                <Card {...slide} slideWidth='250px' />
+                <Card {...slide} slideWidth='250px' path={slide.path} />
               </div>
             ))}
           </div>

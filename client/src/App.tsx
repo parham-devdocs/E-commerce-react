@@ -1,7 +1,7 @@
 // src/App.jsx
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import MainLayout from './layouts/mainLayout';
-
+import  "./App.css";
 import Home from "./pages/home";
 export default function App() {
   return (

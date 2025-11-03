@@ -1,10 +1,13 @@
-const Card = ({ image,slideWidth, title, price, discountPercent, priceAfterDiscount }: {
+import { Link } from "react-router-dom";
+
+const Card = ({ image,slideWidth, title, price, discountPercent, priceAfterDiscount,path }: {
     image: string;
     title: string;
     price: string;
     slideWidth:string
     discountPercent: string;
     priceAfterDiscount: string;
+    path:string
   }) => {
     return (
       <div className={`group w-${slideWidth}  flex flex-col h-full rounded-xl border border-gray-200 bg-white 
@@ -50,13 +53,12 @@ const Card = ({ image,slideWidth, title, price, discountPercent, priceAfterDisco
             </div>
           </div>
   
-          {/* CTA Button (Optional but powerful) */}
-          <button className="mt-3 w-full py-2 bg-gradient-to-r from-red-500 to-red-600 
+          <Link to={path} className="mt-3 flex items-center justify-center w-full py-2 bg-gradient-to-r from-red-500 to-red-600 
                             text-white text-sm font-medium rounded-lg
                             hover:from-red-600 hover:to-red-700 transition-all
-                            shadow-md hover:shadow-lg">
-            افزودن به سبد
-          </button>
+                            shadow-md hover:shadow-lg cursor-pointer" >
+            مشاهده جزييات
+          </Link>
         </div>
       </div>
     );

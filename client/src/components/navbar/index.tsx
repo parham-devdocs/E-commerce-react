@@ -4,6 +4,7 @@ import { MdMenu } from 'react-icons/md';
 import ProfileSection from './profileSection';
 import { useState } from 'react';
 import Menu from './menu';
+import ToggleBtn from '../toggleBtn';
 
 function Navbar() {
   const [menuIsDisplayed, setMenuIsDisplayed] = useState(false);
@@ -18,24 +19,20 @@ console.log(menuIsDisplayed)
         PShop
       </Link>
 
-      <div className="flex items-center gap-4 relative"> {/* ← relative container */}
+      <div className="flex items-center gap-4 relative"> 
         <ProfileSection />
 
         <Link to="/cart" aria-label="Shopping cart" className="text-xl text-gray-700 hover:text-black">
           <BiCart size={23} />
         </Link>
+        <ToggleBtn onToggleHandler={(i)=>{console.log(i)}}/>
 
-        {/* Wrap button and menu in a relative div */}
-        <div
-         onClick={()=>setMenuIsDisplayed((e)=>!e)}
-        >
-          <button aria-label="Open menu" className="cursor-pointer text-xl text-gray-700 hover:text-black">
+          <button aria-label="Open menu" className="cursor-pointer text-xl text-gray-700 hover:text-black"          onClick={()=>setMenuIsDisplayed((e)=>!e)}
+          >
             <MdMenu size={23}  />
           </button>
 
-          {/* Menu is absolutely positioned */}
          
-        </div>
       </div>
       {menuIsDisplayed && (
               <Menu onClose={()=>setMenuIsDisplayed(false)} isDisplayed={menuIsDisplayed} />
