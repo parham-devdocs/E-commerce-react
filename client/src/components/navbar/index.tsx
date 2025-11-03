@@ -4,14 +4,13 @@ import { MdMenu } from 'react-icons/md';
 import ProfileSection from './profileSection';
 import { useState } from 'react';
 import Menu from './menu';
-import ToggleBtn from '../toggleBtn';
+import ToggleBtn from '../darkModeLightModeToggler';
 
 function Navbar() {
   const [menuIsDisplayed, setMenuIsDisplayed] = useState(false);
  
-console.log(menuIsDisplayed)
   return (
-    <div className="flex relative items-center justify-between p-4">
+    <div className="flex relative items-center justify-between p-4 dark:bg-gray-900">
       <Link 
         to="/" 
         className="text-2xl font-bold bg-gradient-to-r from-red-600 to-orange-500 bg-clip-text text-transparent tracking-tight"
@@ -25,7 +24,7 @@ console.log(menuIsDisplayed)
         <Link to="/cart" aria-label="Shopping cart" className="text-xl text-gray-700 hover:text-black">
           <BiCart size={23} />
         </Link>
-        <ToggleBtn onToggleHandler={(i)=>{console.log(i)}}/>
+        <ToggleBtn  />
 
           <button aria-label="Open menu" className="cursor-pointer text-xl text-gray-700 hover:text-black"          onClick={()=>setMenuIsDisplayed((e)=>!e)}
           >

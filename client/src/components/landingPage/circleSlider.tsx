@@ -1,6 +1,5 @@
 
 import Header from '../header'
-import image from "../../../public/laptop.webp";
 import { useEffect, useState } from "react";
 import iphoneImage from "../../../public/iPhone_14_Blue_PDP_Image_Position-1A__WWEN.webp";
 import SliderButton from './sliderButton';
@@ -84,7 +83,6 @@ const CircleSlider = ({ title }: { title: string }) => {
             ))}
           </div>
 
-          {/* Navigation buttons */}
           <div className="absolute right-2 top-1/2 -translate-y-1/2 z-10">
             <SliderButton
               type="next"

@@ -2,10 +2,8 @@
 import Header from '../header'
 import image from "../../../public/laptop.webp";
 import { useEffect, useState } from "react";
-import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import Card from '../../productCard';
 import SliderButton from './sliderButton';
-import TimerBox from '../timerBox';
 import Discount from '../discount';
 
 // Your category data
@@ -83,7 +81,6 @@ const DiscountSlider = ({ title }: { title: string }) => {
               </div>
             ))}
           </div>
-
           {/* Navigation buttons */}
           <div className="absolute right-2 top-1/2 -translate-y-1/2 z-10">
             <SliderButton

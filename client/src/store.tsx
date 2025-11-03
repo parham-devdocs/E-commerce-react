@@ -1,4 +1,4 @@
-import { create } from 'zustand';
+import { create } from 'zustand/index';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import moment from "moment";
 type UserInfo = {
@@ -28,7 +28,7 @@ const useZustand = create<AuthState>()(
       isLoggedIn: false,
       userInfo: null,
       userRole: null,
-      isDarkMode: false,
+      isDarkMode: true,
    // In your store
 checkAuthStatus: () => {
   const { userInfo, isLoggedIn, logout } = get();
@@ -56,11 +56,11 @@ checkAuthStatus: () => {
         }),
 
       toggleDarkMode: () =>
-        set((state) => ({ isDarkMode: !state.isDarkMode })),
+       { set((state) => ({ isDarkMode: !state.isDarkMode }))    }
     }),
     {
-      name: 'auth-storage', // name of the item in localStorage
-      storage: createJSONStorage(() => localStorage), // (optional) by default it's localStorage
+      name: 'auth-storage', 
+      storage: createJSONStorage(() => localStorage), 
     }
   )
 );
