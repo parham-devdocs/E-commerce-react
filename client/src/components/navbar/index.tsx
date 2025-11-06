@@ -10,7 +10,7 @@ function Navbar() {
   const [menuIsDisplayed, setMenuIsDisplayed] = useState(false);
  
   return (
-    <div className="flex relative items-center justify-between p-4 dark:bg-gray-900">
+    <div className="flex relative items-center  justify-between p-4 dark:bg-gradient-to-r transition-all duration-500  dark:from-neutral-900 dark:to-neutral-700  border-b-2 border-b-red-500">
       <Link 
         to="/" 
         className="text-2xl font-bold bg-gradient-to-r from-red-600 to-orange-500 bg-clip-text text-transparent tracking-tight"
@@ -21,20 +21,20 @@ function Navbar() {
       <div className="flex items-center gap-4 relative"> 
         <ProfileSection />
 
-        <Link to="/cart" aria-label="Shopping cart" className="text-xl text-gray-700 hover:text-black">
+        <Link to="/cart" aria-label="Shopping cart" className="text-xl text-gray-700 hover:text-black dark:text-neutral-400 dark:hover:text-neutral-500 hover:scale-110 hover-dark:scale-110 transition-all duration-300">
           <BiCart size={23} />
         </Link>
         <ToggleBtn  />
 
           <button aria-label="Open menu" className="cursor-pointer text-xl text-gray-700 hover:text-black"          onClick={()=>setMenuIsDisplayed((e)=>!e)}
           >
-            <MdMenu size={23}  />
+            <MdMenu size={23} className='text-xl text-gray-700 hover:text-black dark:text-neutral-400 dark:hover:text-neutral-500 hover:scale-110 hover-dark:scale-110 transition-all duration-300'  />
           </button>
 
          
       </div>
       {menuIsDisplayed && (
-              <Menu onClose={()=>setMenuIsDisplayed(false)} isDisplayed={menuIsDisplayed} />
+              <Menu onClose={()=>setMenuIsDisplayed(false)} isDisplayed={menuIsDisplayed}  />
           )}
     </div>
   );

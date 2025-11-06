@@ -16,23 +16,35 @@ const CategorySection = () => {
         { id: 11, name: "کیف و اکسسوری", path: "/bags", image: iphoneImage },
         { id: 12, name: "سلامت و تندرستی", path: "/health", image: iphoneImage }
       ];  return (
-        <div className="w-full bg-gradient-to-br from-red-50 rounded-lg to-white  mx-auto px-4 py-6">
-            <Header link="/cats" title="دسته بندی ها"/>
-        <div className="grid  grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-6">
+        <div className="w-full 
+        bg-gradient-to-br from-red-50 to-white 
+        dark:bg-gradient-to-br dark:from-gray-900 dark:to-gray-950 
+        rounded-lg mx-auto px-4 py-6">
+      
+        <Header link="/cats" title="دسته بندی ها"/>
+      
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-6">
           {categories.map((cat) => (
             <Link
               to={cat.path}
               key={cat.id}
-              className="group  flex flex-col items-center text-center bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-200 overflow-hidden border border-gray-100"
+              className="group flex flex-col items-center text-center 
+                bg-white dark:bg-gray-800
+                rounded-xl shadow-sm hover:shadow-md 
+                transition-all duration-200 
+                overflow-hidden border border-gray-100 dark:border-neutral-900"
             >
-              <div className="w-full  aspect-square flex items-center justify-center p-4 bg-gray-50">
+              <div className="w-full aspect-square flex items-center justify-center p-4 
+                bg-gray-50 dark:bg-gray-700/90">
                 <img
                   src={cat.image}
                   alt={cat.name}
-                  className="w-full h-full object-contain transition-transform duration-300 group-hover:scale-105"
+                  className="w-full rounded-md h-full object-contain transition-transform duration-300 group-hover:scale-105"
                 />
               </div>
-              <p className="mt-2 px-2 pb-3 font-medium text-gray-800 text-sm line-clamp-1">
+              <p className="mt-2 px-2 pb-3 font-medium 
+                text-gray-800 dark:text-gray-200 
+                text-sm line-clamp-1">
                 {cat.name}
               </p>
             </Link>

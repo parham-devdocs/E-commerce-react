@@ -26,7 +26,7 @@ const Header = ({ title, link }: HeaderProps) => {
 
         
 
-          <h2 className="lg:text-2xl text-xl font-bold text-gray-800 tracking-tight text-right">
+          <h2 className="lg:text-2xl text-xl font-bold text-gray-800 dark:text-white tracking-tight text-right">
             {title}
           </h2>
       </div>

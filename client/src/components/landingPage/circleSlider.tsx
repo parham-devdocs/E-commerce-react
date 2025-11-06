@@ -47,7 +47,7 @@ const CircleSlider = ({ title }: { title: string }) => {
   }, [isHovered, totalSlides]); // ✅ Only these deps needed
 
   return (
-    <div className="space-y-3">
+    <div className="space-y-3  dark:bg-gradient-to-br p-5 rounded-md bg-white bg-gradient- dark:from-gray-900 dark:to-gray-950 ">
       <Header link="/" title={title} />
       <div 
         className="w-full py-4 px-2 md:px-4 relative"
@@ -68,7 +68,7 @@ const CircleSlider = ({ title }: { title: string }) => {
              <Link 
              to={slide.path} 
              key={slide.id} 
-             className=" flex flex-col gap-5 items-center "
+             className=" flex dark:text-white flex-col gap-5 items-center "
            >
             <div className=' rounded-full p-2 border-2 border-red-500'              style={{ width: slideWidth, height: "150px" }}             >
             <img 

@@ -5,7 +5,7 @@ import HeroSlider from '../components/landingPage/heroSlider'
 
 const Home = () => {
   return (
-    <div className=' space-y-5' >
+    <div className=' space-y-5 ' >
         <HeroSlider/>
         <DiscountSlider title='تخفیفات ' />
         <CategorySection/>
