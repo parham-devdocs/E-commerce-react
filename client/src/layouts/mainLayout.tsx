@@ -1,3 +1,4 @@
+import Footer from "../components/footer";
 import Navbar from "../components/navbar/index";
 import { Outlet } from 'react-router-dom';
 const MainLayout = () => {
@@ -7,6 +8,7 @@ const MainLayout = () => {
   <div className="flex flex-1 overflow-hidden">
     <main className="flex-1 overflow-y-auto p-8">
       <Outlet />
+      <Footer/>
     </main>
   </div>
 </div>
