@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import MainLayout from './layouts/mainLayout';
 import  "./App.css";
 import Home from "./pages/home";
+import ProductDetail from "./pages/productDetail";
 export default function App() {
   return (
     <BrowserRouter>
@@ -10,6 +11,8 @@ export default function App() {
         {/* Nested routes under MainLayout */}
         <Route path="/" element={<MainLayout />}>
           <Route path='/' element={<Home/>}/>
+          <Route path='/product' element={<ProductDetail/>}/>
+
         </Route>
 
       </Routes>
