@@ -17,7 +17,7 @@ const Price = ({
   const {seperatedPrice,seperatedPriceWithDiscount } = usePrice({ price, discountPercentage });
 
   return (
-    <div className="flex justify-center items-center py-5 w-full md:w-[700px] rounded-md bg-white dark:bg-gray-800 shadow-md dark:shadow-gray-900/50">
+    <div className="flex justify-center items-center py-5 w-full rounded-md bg-white dark:bg-gray-800 shadow-md dark:shadow-gray-900/50">
       <div className="flex flex-col lg:flex-row lg:items-center lg:gap-6 w-full max-w-full px-4">
         <div className="flex-shrink-0 mb-4 lg:mb-0">
           <img
@@ -54,7 +54,7 @@ const Price = ({
               </div>
             )}
 
-            <p className="text-2xl font-bold text-red-600 dark:text-red-400">
+            <p className="text-2xl font-bold text-red-500 dark:text-red-400">
               {seperatedPriceWithDiscount || seperatedPrice}
             </p>
           </div>

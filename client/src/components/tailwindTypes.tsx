@@ -53,4 +53,15 @@ const button = tv({
   ],
 });
 
-export { button };
+const scroll=tv({base:[
+  " [&::-webkit-scrollbar]:w-2",
+    "[&::-webkit-scrollbar-track]:bg-gray-100",
+     " [&::-webkit-scrollbar-track]:rounded-full",
+    "[&::-webkit-scrollbar-thumb]:bg-red-500",
+     " [&::-webkit-scrollbar-thumb]:rounded-full",
+        "[&::-webkit-scrollbar-thumb]:h-10 ",
+         "[&::-webkit-scrollbar-thumb]:w-10",
+    "dark:[&::-webkit-scrollbar-track]:bg-neutral-700",
+   " dark:[&::-webkit-scrollbar-thumb]:bg-red-500"
+]})
+export { button,scroll };

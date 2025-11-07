@@ -9,7 +9,7 @@ const Home = () => {
         <HeroSlider/>
         <DiscountSlider title='تخفیفات ' />
         <CategorySection/>
-        <CircleSlider title='پرفروش ها'/>
+        <CircleSlider title='پرفروش ها' autoPlay/>
         </div>
   )
 }

@@ -26,7 +26,7 @@ const products: Product[] = [
 ]
 
 
-const CircleSlider = ({ title }: { title: string }) => {
+const CircleSlider = ({ title,autoPlay }: { title?: string,autoPlay?:true }) => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
   const totalSlides = products.length;
@@ -35,20 +35,22 @@ const CircleSlider = ({ title }: { title: string }) => {
 
   useEffect(() => {
     if (isHovered) return;
+if (autoPlay) {
+  const interval = setInterval(() => {
+    setCurrentSlide(prev => (prev + 1) % totalSlides);
+  if (products.length-currentSlide<=4) {
+    setCurrentSlide(0)
+  }
+  }, 3000);
 
-    const interval = setInterval(() => {
-      setCurrentSlide(prev => (prev + 1) % totalSlides);
-    if (products.length-currentSlide<=4) {
-      setCurrentSlide(0)
-    }
-    }, 3000);
-
-    return () => clearInterval(interval);
+  return () => clearInterval(interval);
+}
+   
   }, [isHovered, totalSlides]); // ✅ Only these deps needed
 
   return (
     <div className="space-y-3  dark:bg-gradient-to-br p-5 rounded-md bg-white bg-gradient- dark:from-gray-900 dark:to-gray-950 ">
-      <Header link="/" title={title} />
+      {title && <Header link="/" title={title } /> }
       <div 
         className="w-full py-4 px-2 md:px-4 relative"
         onMouseEnter={() => setIsHovered(true)}
