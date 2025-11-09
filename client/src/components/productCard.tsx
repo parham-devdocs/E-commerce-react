@@ -45,7 +45,7 @@ const ProductCard = ({
         <img 
           src={src} 
           alt={name} 
-          className="object-contain max-h-36 transition-opacity duration-300 hover:opacity-90"
+          className="object-contain rounded-full shadow-2xl max-h-36 transition-opacity duration-300 hover:opacity-90"
           loading="lazy"
         />
       </div>

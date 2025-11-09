@@ -8,7 +8,7 @@ import ToggleBtn from '../darkModeLightModeToggler';
 
 function Navbar() {
   const [menuIsDisplayed, setMenuIsDisplayed] = useState(false);
- 
+ const cartItemCount =5
   return (
     <div className="flex relative items-center  justify-between p-4 dark:bg-gradient-to-r transition-all duration-500  dark:from-neutral-900 dark:to-neutral-700  border-b-2 border-b-red-500">
       <Link 
@@ -20,10 +20,24 @@ function Navbar() {
 
       <div className="flex items-center gap-4 relative"> 
         <ProfileSection />
-
-        <Link to="/cart" aria-label="Shopping cart" className="text-xl text-gray-700 hover:text-black dark:text-neutral-400 dark:hover:text-neutral-500 hover:scale-110 hover-dark:scale-110 transition-all duration-300">
-          <BiCart size={23} />
-        </Link>
+        <div className="relative inline-block">
+  {cartItemCount > 0 && (
+    <span
+      className="absolute -top-2 -right-2 flex items-center justify-center bg-red-500 text-white text-xs font-bold w-4 h-4 rounded-full"
+      aria-label={`${cartItemCount} item(s) in cart`}
+    >
+    <span className=' w-2 h-2'>{cartItemCount > 9 ? '9+' : cartItemCount}</span>  
+    </span>
+  )}
+  <Link
+    to="/cart"
+    aria-label="Shopping cart"
+    className="text-xl text-gray-700 hover:text-black dark:text-neutral-400 dark:hover:text-neutral-500 hover:scale-110 transition-all duration-300"
+  >
+    <BiCart size={23} />
+  </Link>
+</div>
+       
         <ToggleBtn  />
 
           <button aria-label="Open menu" className="cursor-pointer text-xl text-gray-700 hover:text-black"          onClick={()=>setMenuIsDisplayed((e)=>!e)}
