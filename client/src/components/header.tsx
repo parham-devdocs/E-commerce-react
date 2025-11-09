@@ -7,7 +7,7 @@ interface HeaderProps {
 
 const Header = ({ title, link }: HeaderProps) => {
   return (
-    <div className="space-y-3 mb-6">
+    <div className="space-y-3 mb-6 w-full ">
       <div className="flex  justify-between items-center  sm:flex-row sm:items-center sm:justify-between gap-4">
         {link && (
           <Link
@@ -23,7 +23,7 @@ const Header = ({ title, link }: HeaderProps) => {
 
         
 
-          <h2 className="lg:text-2xl dark:text-white text-xl font-bold text-gray-800 tracking-tight text-right">
+          <h2 className="lg:text-2xl w-full dark:text-white text-xl font-bold text-gray-800 tracking-tight text-right">
             {title}
           </h2>
       </div>
