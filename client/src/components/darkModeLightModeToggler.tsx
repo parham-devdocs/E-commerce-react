@@ -1,5 +1,5 @@
 import { BiMoon, BiSun } from "react-icons/bi";
-import useZustand from "../store";
+import useZustand from "../store/auth";
 
 const ToggleBtn = () => {
   const isDarkMode = useZustand((state) => state.isDarkMode);

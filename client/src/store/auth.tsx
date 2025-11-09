@@ -54,7 +54,9 @@ checkAuthStatus: () => {
           userInfo: null,
           userRole: null,
         }),
-
+        addToCart:()=>
+          set({})
+        ,
       toggleDarkMode: () =>
        { set((state) => ({ isDarkMode: !state.isDarkMode }))    }
     }),
