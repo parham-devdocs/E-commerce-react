@@ -1,20 +1,24 @@
 import usePrice from "../../hooks/priceHook";
+import useCartStore from "../../store/cart";
 import Button from "../button";
 
 const Price = ({
   title,
+  id,
   colors,
   price,
   discountPercentage,
   images
 }: {
   title: string;
+  id:string;
   colors: string[];
   images: string[];
   price: number;
   discountPercentage: number;
 }) => {
-  const {seperatedPrice,seperatedPriceWithDiscount } = usePrice({ price, discountPercentage });
+  const {seperatedPrice,seperatedPriceWithDiscount } = usePrice({ priceOrDiscount:price, discountPercentage });
+  const addToCart=useCartStore(state=>state)
 
   return (
     <div className="flex justify-center items-center py-5 w-full rounded-md bg-white dark:bg-gray-800 shadow-md dark:shadow-gray-900/50">
@@ -58,7 +62,7 @@ const Price = ({
               {seperatedPriceWithDiscount || seperatedPrice}
             </p>
           </div>
-          <Button  style={{color:"primary"}} btn={{fn:(e)=>{console.log(e)},text:"افزودن به سبد خرید"}}/>
+          <Button  style={{color:"primary"}} btn={{fn:(e)=>{addToCart.addToCart(id)},text:"افزودن به سبد خرید"}}/>
         </div>
       </div>
     </div>

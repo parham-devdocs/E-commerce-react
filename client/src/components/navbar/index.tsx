@@ -5,10 +5,10 @@ import ProfileSection from './profileSection';
 import { useState } from 'react';
 import Menu from './menu';
 import ToggleBtn from '../darkModeLightModeToggler';
-
+import useCart from "../../store/cart";
 function Navbar() {
   const [menuIsDisplayed, setMenuIsDisplayed] = useState(false);
- const cartItemCount =5
+ const cartItemCount=useCart(state=>state.getNumberOfProducts())
   return (
     <div className="flex relative items-center  justify-between p-4 dark:bg-gradient-to-r transition-all duration-500  dark:from-neutral-900 dark:to-neutral-700  border-b-2 border-b-red-500">
       <Link 

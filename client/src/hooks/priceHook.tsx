@@ -1,13 +1,13 @@
 import discountCalc from "../utils/discountCalc";
-const PriceHook = ({price,discountPercentage}:{price:number,discountPercentage?:number}) => {
+const PriceHook = ({priceOrDiscount,discountPercentage}:{priceOrDiscount:number,discountPercentage?:number}) => {
     let seperatedPriceWithDiscount;
     
     if (discountPercentage) {
-        const priceWithDiscount=discountCalc(price,discountPercentage )
+        const priceWithDiscount=discountCalc(priceOrDiscount,discountPercentage )
          seperatedPriceWithDiscount=new Intl.NumberFormat("fa-IR").format(priceWithDiscount)
 
     }
-const seperatedPrice=new Intl.NumberFormat("fa-IR").format(price)
+const seperatedPrice=new Intl.NumberFormat("fa-IR").format(priceOrDiscount)
 return ({seperatedPrice,seperatedPriceWithDiscount })
 
 }

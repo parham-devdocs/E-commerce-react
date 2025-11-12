@@ -5,6 +5,7 @@ import "./App.css";
 import Home from "./pages/home";
 import ProductDetail from "./pages/products/productDetail";
 import Products from "./pages/products/index";
+import Cart from "./pages/cart";
 export default function App() {
   return (
     <BrowserRouter>
@@ -12,7 +13,8 @@ export default function App() {
         {/* Nested routes under MainLayout */}
         <Route path="/" element={<MainLayout />}>
           <Route path="/" element={<Home />} />
-          <Route path="/product" element={<ProductDetail />} />
+          <Route path="/cart" element={<Cart />} />
+          <Route path="/product/:id" element={<ProductDetail />} />
           <Route path="/products/:category" element={<Products />} />
                   </Route>
       </Routes>

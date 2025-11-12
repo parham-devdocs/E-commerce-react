@@ -2,8 +2,14 @@ import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 
 interface CartType {
-  cart: string[]; // or number[], or { id: string; qty: number }[] — adjust as needed
+  cart: string[]; 
   addToCart: (productId: string) => void;
+  removeFromCart:(productId:string)=>void;
+  getIds:()=>string[]
+  removeAllProducts:()=>void
+  getNumberOfProducts:()=>number
+
+
 }
 
 const useCartStore = create<CartType>()(
@@ -27,6 +33,7 @@ const useCartStore = create<CartType>()(
               cart: []
             }));
           },
+          getNumberOfProducts:()=>{return get().cart.length}
            }),
     {
       name: 'cart', 
@@ -34,5 +41,6 @@ const useCartStore = create<CartType>()(
     }
   )
 );
+export const zustandStore = useCartStore;
 
 export default useCartStore;
