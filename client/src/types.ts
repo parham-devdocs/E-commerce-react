@@ -10,3 +10,7 @@ export type ProductCardType={
     inStock:boolean
     numbersAvailable?:number
 }
+
+export type ProductCardInCart={
+    img:string,productName:string,price:number,discountPercentage:number,defaultNumberOfProducts:number
+}
