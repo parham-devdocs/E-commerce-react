@@ -15,7 +15,6 @@ const Login = () => {
     register,
     handleSubmit,
     formState: { errors },
-    watch
   } = useForm<LoginFormData>({ 
     resolver: zodResolver(userLoginSchema)
   });
@@ -57,12 +56,14 @@ const Login = () => {
         
         <div className="space-y-4">
           <TextInput 
+          autoComplete="email"
             type="email" 
             id='email' 
             {...register("email")}
             placeHolder='ایمیل'
           />
           <TextInput 
+          autoComplete="new-password"
             type="password" 
             id='password' 
             {...register("password")}
@@ -71,10 +72,7 @@ const Login = () => {
         </div>
         
         <div className="flex items-center justify-between text-sm text-gray-600 dark:text-gray-300">
-          <label className="flex items-center gap-2 cursor-pointer">
-            <input type="checkbox" className="rounded border-gray-300 text-red-500 focus:ring-red-500" />
-            <span>مرا به خاطر بسپار</span>
-          </label>
+          
           <a href="#" className="text-red-500 hover:text-red-600 dark:text-red-400 dark:hover:text-red-300 transition-colors">
             رمز عبور را فراموش کرده‌اید؟
           </a>

@@ -7,6 +7,7 @@ import ProductDetail from "./pages/products/productDetail";
 import Products from "./pages/products/index";
 import Cart from "./pages/cart";
 import Login from "./pages/login";
+import Register from "./pages/register";
 export default function App() {
   return (
     <BrowserRouter>
@@ -18,6 +19,8 @@ export default function App() {
           <Route path="/product/:id" element={<ProductDetail />} />
           <Route path="/products/:category" element={<Products />} />
           <Route path="/login" element={<Login/>} />
+          <Route path="/register" element={<Register/>} />
+
 
                   </Route>
       </Routes>
