@@ -20,3 +20,9 @@ export type ProductCardInCart={
     numberOfProducts?:number
 
  }
+
+ export type LoginInput = {
+    email: string
+    password: string
+  }
+  

@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-const TextInput = ({ type, name, placeHolder, ...props }: { placeHolder: string, name: string, type: "text" | "email" | "password" }) => {
+const TextInput = ({ type, id, placeHolder, ...props }: { placeHolder: string, id: string, type: "text" | "email" | "password" }) => {
     const [isFocused, setIsFocused] = useState(false);
     const [input, setInput] = useState("");
     
@@ -8,14 +8,10 @@ const TextInput = ({ type, name, placeHolder, ...props }: { placeHolder: string,
         <div className="relative">
             <input
                 type={type}
-                name={name}
-                value={input} // Add value prop for controlled component
+                name={id}
                 onChange={(e) => {
                     setInput(e.currentTarget.value);
-                    // If you need to call the original onChange from props:
-                    if (props.onChange) {
-                        props.onChange(e);
-                    }
+                    
                 }}
                 onFocus={() => setIsFocused(true)}
                 onBlur={() => setIsFocused(false)}
@@ -23,7 +19,7 @@ const TextInput = ({ type, name, placeHolder, ...props }: { placeHolder: string,
                 {...props}
             />
             <label
-                htmlFor={name}
+                htmlFor={id}
                 className={`absolute w-fit h-fit inset-y-0 right-2 bg-white dark:bg-transparent text-red-500 text-right transition-all duration-200 ease-in-out pointer-events-none ${
                     isFocused || input.length > 0
                         ? "-top-0 -translate-y-1/2 text-sm dark:top-2 dark:text-[10px] " 
