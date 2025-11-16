@@ -4,6 +4,7 @@ import { tv } from "tailwind-variants";
 const button = tv({
   base: [
     "inline-flex items-center justify-center",
+    " w-full",
     "px-4 py-1.5 rounded-full",
     "font-medium transition-all duration-200",
     "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2",

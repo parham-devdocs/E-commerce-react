@@ -2,10 +2,13 @@ import type { ProductCardInCart } from "../../types"
 import usePrice from "../../hooks/priceHook";
 import ProductNumber from "./productNumber";
 import { useState } from "react";
+import useCartStore from "../../store/cart";
 
-const ProductCard = ({img,productName,price,discountPercentage,defaultNumberOfProducts}:ProductCardInCart) => {
+const ProductCard = ({img,id,productName,price,discountPercentage,defaultNumberOfProducts}:ProductCardInCart) => {
     const [numberOfProducts,setNumberOfProducts] = useState(defaultNumberOfProducts);
-    
+    const decrementNumberOfProducts=useCartStore(state=>state.decrementNumberOfProducts)
+    const incrementNumberOfProducts=useCartStore(state=>state.increaseNumberOfProducts)
+
     // Calculate individual item prices
     const { priceWithDiscount} = usePrice({
         discountPercentage, 
@@ -25,10 +28,13 @@ const ProductCard = ({img,productName,price,discountPercentage,defaultNumberOfPr
 
     const decreaseHandler = () => {
         setNumberOfProducts(prev => Math.max(1, prev - 1)); 
+        decrementNumberOfProducts({id})
     };
     
     const increaseHandler = () => {
         setNumberOfProducts(prev => prev + 1);
+        incrementNumberOfProducts({id})
+        
     };
 
     return (

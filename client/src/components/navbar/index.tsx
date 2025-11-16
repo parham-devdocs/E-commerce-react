@@ -6,17 +6,13 @@ import { useState } from 'react';
 import Menu from './menu';
 import ToggleBtn from '../darkModeLightModeToggler';
 import useCart from "../../store/cart";
+import Logo from '../logo';
 function Navbar() {
   const [menuIsDisplayed, setMenuIsDisplayed] = useState(false);
  const cartItemCount=useCart(state=>state.getNumberOfProducts())
   return (
     <div className="flex relative items-center  justify-between p-4 dark:bg-gradient-to-r transition-all duration-500  dark:from-neutral-900 dark:to-neutral-700  border-b-2 border-b-red-500">
-      <Link 
-        to="/" 
-        className="text-2xl font-bold bg-gradient-to-r from-red-600 to-orange-500 bg-clip-text text-transparent tracking-tight"
-      >
-        PShop
-      </Link>
+     <Logo/>
 
       <div className="flex items-center gap-4 relative"> 
         <ProfileSection />

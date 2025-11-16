@@ -12,5 +12,11 @@ export type ProductCardType={
 }
 
 export type ProductCardInCart={
-    img:string,productName:string,price:number,discountPercentage:number,defaultNumberOfProducts:number
+    img:string,productName:string,price:number,discountPercentage:number,defaultNumberOfProducts:number,id:string
 }
+
+ export type ProductCartData  = {
+    id:string
+    numberOfProducts?:number
+
+ }

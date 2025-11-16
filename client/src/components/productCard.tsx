@@ -1,6 +1,7 @@
 import type { ProductCardType } from "../types"; 
 import  usePrice  from "../hooks/priceHook"; 
 import Button from "./button";
+import useCartStore from "../store/cart";
 
 const ProductCard = ({
   id,
@@ -11,7 +12,8 @@ const ProductCard = ({
   discountPercentage,
   inStock,
 }: ProductCardType) => {
-  const { seperatedPrice, seperatedPriceWithDiscount } = usePrice({ price, discountPercentage });
+  const { seperatedPrice, seperatedPriceWithDiscount } = usePrice({ priceOrDiscount:price, discountPercentage });
+  const addToCart=useCartStore(state=>state.addToCart)
   return (
     <div 
       className="md:w-72 w-full  min-h-96 flex flex-col items-center shadow-lg rounded-xl dark:bg-gray-800 bg-white p-4 
@@ -76,7 +78,7 @@ const ProductCard = ({
         )}
       </div>} 
      {inStock && <Button  btn={{text:"افزودن به سبد خرید",fn(e) {
-        console.log(e)
+      addToCart({id})
       }}}/>} 
     </div>
   );

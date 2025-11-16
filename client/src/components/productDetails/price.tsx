@@ -62,7 +62,7 @@ const Price = ({
               {seperatedPriceWithDiscount || seperatedPrice}
             </p>
           </div>
-          <Button  style={{color:"primary"}} btn={{fn:(e)=>{addToCart.addToCart(id)},text:"افزودن به سبد خرید"}}/>
+          <Button  style={{color:"primary"}} btn={{fn:()=>{addToCart.addToCart({id})},text:"افزودن به سبد خرید"}}/>
         </div>
       </div>
     </div>
