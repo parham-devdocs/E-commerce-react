@@ -1,4 +1,3 @@
-import { useState } from "react";
 import iphone11 from "../../../public/iphone-11-header.png";
 import Header from "../header";
 const Gallery = () => {

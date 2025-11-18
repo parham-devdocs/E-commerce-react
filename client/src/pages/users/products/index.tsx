@@ -1,10 +1,10 @@
 
 
-import React, { useState } from 'react'
-import Pagination from '../../components/pagination'
-import ProductCard from '../../components/productCard';
-import iphone14 from "../../../public/iPhone_14_Blue_PDP_Image_Position-1A__WWEN.webp";
-import Header from '../../components/header';
+import  { useState } from 'react'
+import Pagination from '../../../components/pagination'
+import ProductCard from '../../../components/productCard';
+import iphone14 from "../../../../public/iPhone_14_Blue_PDP_Image_Position-1A__WWEN.webp";
+import Header from '../../../components/header';
 import { useParams } from 'react-router-dom';
 const products = [
   {

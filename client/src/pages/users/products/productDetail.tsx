@@ -1,7 +1,7 @@
-import Price from "../../components/productDetails/price";
-import iphone11 from "../../../public/iPhone_14_Blue_PDP_Image_Position-1A__WWEN.webp";
-import Gallery from "../../components/productDetails/gallery";
-import Details from "../../components/productDetails/details";
+import Price from "../../../components/productDetails/price";
+import iphone11 from "../../../../public/iPhone_14_Blue_PDP_Image_Position-1A__WWEN.webp";
+import Gallery from "../../../components/productDetails/gallery";
+import Details from "../../../components/productDetails/details";
 import { useParams } from "react-router-dom";
 
 const ProductDetailPage = () => {

@@ -1,6 +1,6 @@
 
-import Payment from '../components/cart/payment'
-import ProductSection from '../components/cart/productSection'
+import Payment from '../../components/cart/payment'
+import ProductSection from '../../components/cart/productSection'
 
 const Cart = () => {
   return (
