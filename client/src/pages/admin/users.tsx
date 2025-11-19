@@ -3,7 +3,7 @@ import { createColumnHelper,type ColumnDef } from '@tanstack/react-table';
 import type { User } from '../../types';
 import Button from '../../components/button';
 import DropDown from '../../components/dropDown';
-import { MdAdminPanelSettings, MdSell } from 'react-icons/md';
+import { MdAdminPanelSettings } from 'react-icons/md';
 import { FaTag } from 'react-icons/fa';
 import { BsPerson } from 'react-icons/bs';
 

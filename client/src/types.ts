@@ -13,6 +13,15 @@ export type ProductCardType={
     numbersAvailable?:number
 }
 
+export type Product={
+  id:string;
+  src:string ;
+  name:string,
+    shortDescription?:string,
+    price:number,
+    discountPercentage:number,
+    numbersAvailable:number}
+
 export type ProductCardInCart={
     img:string,productName:string,price:number,discountPercentage:number,defaultNumberOfProducts:number,id:string
 }

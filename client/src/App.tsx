@@ -8,7 +8,8 @@ import Products from "./pages/users/products/index";
 import Cart from "./pages/users/cart";
 import Login from "./pages/users/login";
 import Register from "./pages/users/register";
-import Users from "./pages/admin/users";
+import UserList from "./pages/admin/users";
+import ProductList from "./pages/admin/products";
 export default function App() {
   return (
     <BrowserRouter>
@@ -21,7 +22,9 @@ export default function App() {
           <Route path="/products/:category" element={<Products />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/admin/users" element={<Users />} />
+          <Route path="/admin/users" element={<UserList />} />
+          <Route path="/admin/products" element={<ProductList />} />
+
         </Route>
       </Routes>
     </BrowserRouter>
