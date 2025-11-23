@@ -2,8 +2,7 @@ import { useEffect, useState, type MouseEvent } from "react";
 
 const Pagination = ({ pages,onClickHandler }: { pages: number,onClickHandler:(value:number)=>void }) => {
   const [currentPages, setCurrentPages] = useState<number[]>([]);
-
-  // ✅ Initialize currentPages safely based on total page count
+const [selectedPage,setSelectedPage]=useState(1)
   useEffect(() => {
     if (pages <= 0) {
       setCurrentPages([]);
@@ -14,20 +13,17 @@ const Pagination = ({ pages,onClickHandler }: { pages: number,onClickHandler:(va
     setCurrentPages(initialPages);
   }, [pages]);
 
-  // ✅ Click handler: slide window left/right
   function clickHandler(e: MouseEvent<HTMLButtonElement>) {
     const value = Number(e.currentTarget.value);
     const first = currentPages[0];
     const last = currentPages[currentPages.length - 1];
-
-    // Slide right: clicked near end AND not at max
+setSelectedPage(+e.currentTarget.value)
     if (last - value <= 1 && last < pages) {
       setCurrentPages(prev => {
         const newLast = prev[prev.length - 1] + 1;
         return [...prev.slice(1), newLast];
       });
     }
-    // Slide left: clicked near start AND not at beginning
     else if (value - first <= 1 && first > 1) {
       setCurrentPages(prev => {
         const newFirst = prev[0] - 1;
@@ -37,7 +33,6 @@ const Pagination = ({ pages,onClickHandler }: { pages: number,onClickHandler:(va
     onClickHandler(value)
   }
 
-  // 🛑 Handle edge case: no pages
   if (pages <= 0) return null;
 
   const firstVisible = currentPages[0];
@@ -53,8 +48,8 @@ const Pagination = ({ pages,onClickHandler }: { pages: number,onClickHandler:(va
               const len = prev.length;
               return Array.from({ length: len }, (_, i) => i + 1);
             })}
-            className="w-8 h-8 bg-red-500  text-white rounded-md hover:bg-red-400
-                      cursor-pointer flex items-center justify-center text-sm"
+            className={`w-8 h-8 bg-red-500  text-white rounded-md hover:bg-red-400
+                      cursor-pointer flex items-center justify-center text-sm`}
           >
             1
           </button>
@@ -62,21 +57,19 @@ const Pagination = ({ pages,onClickHandler }: { pages: number,onClickHandler:(va
         </div>
       )}
 
-      {/* Visible page buttons */}
       {currentPages.map(page => (
         <button
           key={page}
           value={page}
           onClick={clickHandler}
-          className="w-8 h-8 bg-red-500 text-white rounded-md hover:bg-red-400
+          className={`w-8 h-8 ${selectedPage === page ? " bg-red-400":"bg-red-500"}  text-white rounded-md hover:bg-red-400
                     cursor-pointer  flex items-center justify-center text-sm
-                     transition-colors"
+                     transition-colors`}
         >
           {page}
         </button>
       ))}
 
-      {/* Last page + ellipsis */}
       {lastVisible < pages - 1 && (
         <div className="flex items-center gap-1">
           <span className="text-gray-500 dark:text-gray-400">...</span>

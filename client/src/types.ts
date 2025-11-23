@@ -12,7 +12,12 @@ export type ProductCardType={
     inStock:boolean
     numbersAvailable?:number
 }
-
+export type ProductPopUp={
+  id:string
+  count:string
+  discountPercentage:string
+  price:string
+}
 export type Product={
   id:string;
   src:string ;
