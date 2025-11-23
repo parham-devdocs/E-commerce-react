@@ -1,23 +1,15 @@
-import { Inject, Injectable } from '@nestjs/common';
-import mongoose, { Model } from 'mongoose';
-interface Cat extends Document {
-  readonly name: string;
-  readonly age: number;
-  readonly breed: string;
-}
+import {  Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 @Injectable()
 export class AppService {
+
   constructor(
-    @Inject('CAT_MODEL')
-    private catModel: Model<Cat>,
+    private configService: ConfigService
   ) {}
   getHello(): string {
-    const data = new this.catModel({ name: 'p', age: 22, breed: 's' });
-    data.save();
+  const port=this.configService.get<number>("PORT")
+  console.log(port)
     return 'Hello World!';
   }
-  async findCats(): Promise<any> {
-    const data = await this.catModel.find();
-    return data;
-  }
+
 }
