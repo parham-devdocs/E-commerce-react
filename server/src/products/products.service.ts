@@ -10,7 +10,7 @@ export class ProductsService {
     private productModel: Model<Product>,
   ){}
  async create(createProductDto: CreateProductDto) {
-    const res=await  new this.productModel(createProductDto).save()
+    const res=await  new this.productModel(createProductDto).save({timestamps:true})
 
     return res ;
   }
