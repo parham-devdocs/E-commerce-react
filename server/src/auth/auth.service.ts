@@ -4,6 +4,7 @@ import { LoginUserDto } from "./dto/login-auth.dto";
 @Injectable()
 export class AuthService {
   register(registerUserDto:RegisterUserDto) {
+    console.log(registerUserDto)
     return 'This action adds a new auth';
   }
 

@@ -6,7 +6,7 @@ const iranPhoneRegex = /^(\+98|0)?9\d{9}$/;
 export const RegisterUserSchema = z.object({
   firstName: z.string().min(1, "First name is required"),
   lastName: z.string().min(1, "Last name is required"),
-  email: z.string().email("Email is not a valid email"),
+  email: z.email("Email is not a valid email"),
   address: z.string().min(1, "Address is required"),
   phoneNumber: z
     .string()
