@@ -1,41 +1,39 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Res, Req } from '@nestjs/common';
+import { Controller, Get, Post, Body,  Res, Req } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { RegisterUserDto, RegisterUserSchema } from './dto/register-auth.dto';
 import { LoginUserDto } from "./dto/login-auth.dto";
 import { ZodValidationPipe } from 'nestjs-zod';
 import { JWTService } from './JWTService';
 import {type Response,type Request } from 'express';
-import { setAuthCookie} from 'src/utils';
 @Controller('auth')
 export class AuthController {
   constructor(
     private readonly authService: AuthService,
-    private readonly jwtService:JWTService;
-    
+
   ) {}
 
   @Post('register')
-    register(
-    @Body(new ZodValidationPipe(RegisterUserSchema)) dto: RegisterUserDto, // ✅ validated DTO
-    @Res({ passthrough: true }) res: Response, @Req() req:Request
+ async   register(
+    @Body(new ZodValidationPipe(RegisterUserSchema))  dto: RegisterUserDto, 
+    @Res({ passthrough: true }) res: Response, @Req() req:Request 
   ) {
-    // 1. Generate tokens
-    const { accessToken, refreshToken } = this.jwtService.createToken(dto.email); 
-  setAuthCookie(res,accessToken,"accessToken","accessToken")
-  setAuthCookie(res,refreshToken,"refreshToken","refreshToken")
-  console.log(req.cookies)
-    const user = this.authService.register(dto);
 
-    return { user, accessToken };
+    const {data,message}:any = await this.authService.register(dto,res);
+
+    return  {message:message , data}
   }
   @Post("login")
-  login(@Body(new ZodValidationPipe(LoginUserDto)) loginUserDto: LoginUserDto) {
-    return this.authService.login(loginUserDto);
+ async login(@Body(new ZodValidationPipe(LoginUserDto)) dto: LoginUserDto ,
+  @Res({ passthrough: true }) res: Response, @Req() req:Request 
+) {
+  const {data,message}:{data?:any,message:string} =await this.authService.login(dto,res);
+    return  {message:message , data}
+
   }
 
   @Get("logout")
   loogout(@Body() registerUserDto: RegisterUserDto) {
-    return this.authService.register(registerUserDto);
+    // return this.authService.register(registerUserDto);
   }
 
 }

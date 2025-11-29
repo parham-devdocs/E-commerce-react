@@ -1,5 +1,5 @@
 import { Response } from 'express'; // or fastify if you use it
-
+import bcrypt from "bcrypt";
 
 
 export const setAuthCookie = (
@@ -17,3 +17,16 @@ const token=  res.cookie(key, value, {
   })
   return token
 };
+
+
+export const hashPassword=async(plainPassword:string) =>{
+  const saltRounds = 12; 
+  const hashedPassword = await bcrypt.hash(plainPassword, saltRounds);
+  return hashedPassword 
+}
+
+export const dehashPassword=async(hashedPassword:string,password) =>{
+  const saltRounds = 12; 
+  const decryptedPassword = await bcrypt.compare(password,hashedPassword);
+  return decryptedPassword
+}
