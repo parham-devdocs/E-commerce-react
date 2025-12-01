@@ -8,3 +8,8 @@ export interface  ENV {
     value:string
     maxAge:number
   }
+
+  export interface tokenType{ 
+    email: string,
+     iat: number,
+      exp: number }

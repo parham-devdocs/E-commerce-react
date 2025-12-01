@@ -4,14 +4,19 @@ import { createParamDecorator, ExecutionContext, UnauthorizedException } from '@
 import jwt from "jsonwebtoken";
  const Token = createParamDecorator(
   (data:unknown,ctx: ExecutionContext) => {
-    const accessToken = ctx.switchToHttp().getRequest().cookies.accessToken
-   const verifiedToken= jwt.verify(accessToken,process.env.JWT_ACCESS_SECRET as string)
-
-    if (verifiedToken) {
-      return verifiedToken
+    try {
+      const accessToken = ctx.switchToHttp().getRequest().cookies.accessToken
+      const verifiedToken= jwt.verify(accessToken,process.env.JWT_ACCESS_SECRET as string)
+   
+       if (verifiedToken) {
+         return verifiedToken
+   
+       }
+    } catch (error) {
+      throw new UnauthorizedException
 
     }
-    throw new UnauthorizedException
+   
   },
 );
 

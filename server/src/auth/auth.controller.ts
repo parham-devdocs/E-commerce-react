@@ -1,10 +1,12 @@
-import { Controller, Get, Post, Body,  Res, Req } from '@nestjs/common';
+import { Controller, Get, Post, Body,  Res, Req, UnauthorizedException } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { RegisterUserDto, RegisterUserSchema } from './dto/register-auth.dto';
 import { LoginUserDto } from "./dto/login-auth.dto";
 import { ZodValidationPipe } from 'nestjs-zod';
 import { JWTService } from './JWTService';
 import {type Response,type Request } from 'express';
+import Token from 'src/customDecorators/token.decorator';
+import {type tokenType } from 'src/interfaces';
 @Controller('auth')
 export class AuthController {
   constructor(
@@ -31,9 +33,14 @@ export class AuthController {
 
   }
 
-  @Get("logout")
-  loogout(@Body() registerUserDto: RegisterUserDto) {
-    // return this.authService.register(registerUserDto);
+  @Get('logout')
+  async logout(
+    @Token() token: tokenType,
+    @Res() res: Response,      
+  ) {
+      await this.authService.logout(token, res);
+
+ 
   }
 
 }

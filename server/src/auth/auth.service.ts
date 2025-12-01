@@ -6,10 +6,12 @@ import { User } from './entities/user.entity';
 import { ExceptionsHandler } from '@nestjs/core/exceptions/exceptions-handler';
 import { JWTService } from './JWTService';
 import { dehashPassword, setAuthCookie } from 'src/utils';
-import { Response } from 'express';
+import {type Response } from 'express';
 import { hashPassword } from "../utils";
 import { QueryFailedError } from "typeorm";
 import { ZodError } from 'zod';
+import { tokenType } from 'src/interfaces';
+import Token from 'src/customDecorators/token.decorator';
 @Injectable()
 export class AuthService {
   constructor(
@@ -47,7 +49,7 @@ export class AuthService {
     } catch (error) {
       if (error instanceof QueryFailedError) {
         const detail = error .driverError?.detail;
-console.log(detail)
+
 return {message:detail}
       }
       if (error instanceof ZodError) {
@@ -110,7 +112,52 @@ return {message:error.message}
     }
   }
 
-  logout(id: number) {
-    return `This action returns a #${id} auth`;
+  async logout(token: tokenType, res: Response) {
+    try {
+      const user = await this.authRepository.findOne({ where: { email: token.email } });
+  
+      // Case 1: User doesn't exist
+      if (!user) {
+        throw new NotFoundException('User not found');
+      }
+  
+      // Case 2: User exists but has no active session
+      if (!user.refreshToken) {
+        throw new UnauthorizedException('User not logged in');
+      }
+  
+      // Case 3: Valid logout
+      res.clearCookie('accessToken');
+      res.clearCookie('refreshToken');
+      user.refreshToken = '';
+      await this.authRepository.save(user); // ✅ Await!
+  
+      return res.status(200).json({ message: 'User logged out' });
+  
+    } catch (error) {
+      console.log(error)
+      if (error instanceof NotFoundException) {
+        return res.status(404).json({
+          statusCode: 404,
+          message: 'User not found',
+          error: 'Not Found',
+        });
+      }
+  
+      if (error instanceof UnauthorizedException) {
+        return res.status(401).json({
+          statusCode: 401, // ✅ Fixed
+          message: 'User not logged in',
+          error: 'Unauthorized',
+        });
+      }
+  
+      // Unexpected error
+      return res.status(500).json({
+        statusCode: 500,
+        message: 'Logout failed',
+        error: 'Internal Server Error',
+      });
+    }
   }
 }
