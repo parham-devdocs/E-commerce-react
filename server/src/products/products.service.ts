@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
-import { Model } from 'mongoose';
+import { Model, MongooseError } from 'mongoose';
 import { Product } from "./product.interface";
 @Injectable()
 export class ProductsService {
@@ -10,9 +10,18 @@ export class ProductsService {
     private productModel: Model<Product>,
   ){}
  async create(createProductDto: CreateProductDto) {
+  try {
+console.log(createProductDto)
     const res=await  new this.productModel(createProductDto).save({timestamps:true})
+    return {message:"product created",data:res} ;
 
-    return res ;
+  } catch (error) {
+    if (error instanceof MongooseError) {
+return {message:error.message}}
+  
+  return {message:"server internal error "}
+  }
+
   }
 
   findAll() {

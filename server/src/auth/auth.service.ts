@@ -3,7 +3,6 @@ import { RegisterUserDto } from './dto/register-auth.dto';
 import { LoginUserDto } from './dto/login-auth.dto';
 import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
-import { ExceptionsHandler } from '@nestjs/core/exceptions/exceptions-handler';
 import { JWTService } from './JWTService';
 import { dehashPassword, setAuthCookie } from 'src/utils';
 import {type Response } from 'express';
