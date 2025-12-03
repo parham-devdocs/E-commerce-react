@@ -17,9 +17,11 @@ export class ProductsController {
 
   }
 
-  @Get()
-  findAll() {
-    return this.productsService.findAll();
+  @Get("pagination/:page")
+ async  findAll(@Param('page') page:string, @Token() token:tokenType,@Res({passthrough:true}) res:Response ) {
+  const response= await   this.productsService.findAll(page);
+console.log(response)
+    return response
   }
 
 

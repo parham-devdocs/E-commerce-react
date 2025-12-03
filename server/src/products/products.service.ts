@@ -1,7 +1,7 @@
 import { ConflictException, Inject, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
-import { Model, MongooseError } from 'mongoose';
+import { Model } from 'mongoose';
 import { Product } from "./product.interface";
 import { Response } from "express";
 @Injectable()
@@ -26,8 +26,24 @@ export class ProductsService {
     }
   }
 
-  findAll() {
-    return `This action returns all products`;
+  async findAll(page: string) {
+    const pageNum = parseInt(page, 10) || 1;
+    const limit = 10;
+    const skip = (pageNum - 1) * limit;
+  
+    const [products, total] = await Promise.all([
+      this.productModel.find().skip(skip).limit(limit).lean(),
+      this.productModel.countDocuments()
+    ]);
+    
+  if (products.length===0) {
+
+    throw new NotFoundException()
+  }
+    return {
+      data: products,
+    
+    };
   }
 
   async findOne(res:Response, id: string) {
