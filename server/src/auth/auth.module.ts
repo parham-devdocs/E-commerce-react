@@ -8,7 +8,8 @@ import { DatabaseModule } from '../database.module';
 @Module({
   controllers: [AuthController],
   providers: [AuthService,JWTService,...authProvider],
-  imports:[DatabaseModule]
+  imports:[DatabaseModule],
+  exports:[AuthService]
   
 })
 export class AuthModule {}

@@ -6,8 +6,9 @@ import { ProductsModule } from './products/products.module';
 import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
 import { CatgoryModule } from './category/category.module';
+import { ReviewModule } from './review/review.module';
 @Module({
-  imports: [ ProductsModule,ConfigModule.forRoot({isGlobal:true}), AuthModule, CatgoryModule],
+  imports: [ ProductsModule,ConfigModule.forRoot({isGlobal:true}), AuthModule, CatgoryModule, ReviewModule],
   controllers: [AppController],
   providers: [AppService],
 })

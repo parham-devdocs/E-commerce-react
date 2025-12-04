@@ -1,30 +1,54 @@
-import { ConflictException, Inject, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
+import { BadRequestException, ConflictException, Inject, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
-import { Model } from 'mongoose';
+import { isValidObjectId, Model } from 'mongoose';
 import { Product } from "./product.interface";
 import { Response } from "express";
+import { Category } from 'src/category/category.interface';
 @Injectable()
 export class ProductsService {
   constructor(
-    @Inject("PRODUCT_MODEL")
-    private productModel: Model<Product>,
+    @Inject("PRODUCT_MODEL")     private productModel: Model<Product>,
+
+    @Inject("CATEGORY_MODEL")     private categoryModel: Model<Category>,
+
+
   ){}
+
   async create(createProductDto: CreateProductDto) {
-      const existing = await this.productModel.findOne({ name: createProductDto.name }).lean();
-    if (existing) {
+    // 1. Validate that category ID is a valid ObjectId
+    if (!isValidObjectId(createProductDto.category)) {
+      throw new BadRequestException('Invalid category ID');
+    }
+
+    // 2. Check if category exists
+    const categoryExists = await this.categoryModel.findById(createProductDto.category).exec();
+    if (!categoryExists) {
+      throw new NotFoundException('Category not found');
+    }
+
+    // 3. Check for duplicate product name
+    const existingProduct = await this.productModel.findOne({ name: createProductDto.name }).exec();
+    if (existingProduct) {
       throw new ConflictException('Product with this name already exists');
     }
-    try {
 
+    // 4. Create and save product
+    try {
       const newProduct = new this.productModel(createProductDto);
       const saved = await newProduct.save();
-      return{message:"product created",data:saved}  
+      return {
+        message: 'Product created',
+        data: saved,
+      };
     } catch (error) {
-      // Log error in real app
+      // Optional: log error (e.g., with Winston)
+      console.error('Product creation error:', error);
       throw new InternalServerErrorException('Failed to create product');
     }
   }
+
+
 
   async findAll(page: string) {
     const pageNum = parseInt(page, 10) || 1;

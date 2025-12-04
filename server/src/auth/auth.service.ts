@@ -10,7 +10,6 @@ import { hashPassword } from "../utils";
 import { QueryFailedError } from "typeorm";
 import { ZodError } from 'zod';
 import { tokenType } from 'src/interfaces';
-import Token from 'src/customDecorators/token.decorator';
 @Injectable()
 export class AuthService {
   constructor(

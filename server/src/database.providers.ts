@@ -1,6 +1,7 @@
 import * as mongoose from 'mongoose';
 import { DataSource } from 'typeorm';
 import { User } from './auth/entities/user.entity';
+import { Review } from './review/entities/review.entity';
 export const databaseProviders = [
   {
     provide: 'DATABASE_CONNECTION',
@@ -17,7 +18,7 @@ export const databaseProviders = [
         username: process.env.DB_USER,
         password: process.env.DB_PASSWORD,
         database: process.env.DB_NAME,
-        entities: [User],
+        entities: [User,Review],
 
         synchronize: true,
       });

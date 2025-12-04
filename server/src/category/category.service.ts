@@ -5,7 +5,7 @@ import { Category } from "./category.interface";
 @Injectable()
 export class CatgoryService {
   constructor(
-    @Inject("PRODUCT_MODEL")
+    @Inject("CATEGORY_MODEL")
     private CategoryModel: Model<Category>,
   ){
     

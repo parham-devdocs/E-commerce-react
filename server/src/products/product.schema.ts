@@ -3,7 +3,7 @@ import * as mongoose from 'mongoose';
 export const ProductSchema = new mongoose.Schema({
     name: { type: String, required: true },
     brand: { type: String, required: true },
-    category: { type: String, required: true },
+    category: { type: mongoose.Types.ObjectId,required:true },
     price: { type: String, required: true }, 
     discountPercentage: { type: Number, min: 0, max: 100, default: 0 },
     attributes: mongoose.Schema.Types.Mixed,
