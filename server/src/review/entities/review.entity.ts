@@ -1,6 +1,6 @@
 
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from 'typeorm';
-import { User } from 'src/auth/entities/user.entity';
+import { AUTH} from 'src/auth/entities/user.entity';
 
 @Entity()
 export class Review {
@@ -11,13 +11,13 @@ export class Review {
   comment: string;
    
   @Column()
-  productId:number;
+  productId:string;
 
    
   @Column({ type: 'int' }) 
   rate: number; 
 
-  @ManyToOne(() => User, user => user.reviews) 
+  @ManyToOne(() => AUTH, auth => auth.reviews) 
   @JoinColumn({ name: 'userId' }) 
-  user: User;
+  user: AUTH;
 }

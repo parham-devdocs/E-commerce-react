@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Inject } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe } from '@nestjs/common';
 import { ReviewService } from './review.service';
 import { CreateReviewDto } from './dto/create-review.dto';
 import { UpdateReviewDto } from './dto/update-review.dto';
@@ -10,11 +10,13 @@ export class ReviewController {
 
   constructor(private readonly reviewService: ReviewService) {  }
 
-  @Post()
-  create(@Token() token:tokenType,@Body() createReviewDto: CreateReviewDto) {
-    
-    console.log(createReviewDto)
-    return this.reviewService.create(createReviewDto);
+  @Post(':productId')
+  create(
+    @Token() token: tokenType,
+    @Param('productId') productId: string, 
+    @Body() createReviewDto: CreateReviewDto,
+  ) {
+    return this.reviewService.create(productId, token, createReviewDto);
   }
 
   @Get()
@@ -22,18 +24,22 @@ export class ReviewController {
     return this.reviewService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.reviewService.findOne(+id);
+  @Get(':productId')
+  findOne( 
+  @Token() token: tokenType,
+  @Param('productId') productId: string,
+
+
+) {
+  
+    return this.reviewService.findOneByProductId(token,productId);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateReviewDto: UpdateReviewDto) {
-    return this.reviewService.update(+id, updateReviewDto);
-  }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.reviewService.remove(+id);
+  @Delete(':productId')
+  remove( @Token() token: tokenType,
+  @Param('productId') productId: string,
+) {
+    return this.reviewService.remove(token,productId);
   }
 }

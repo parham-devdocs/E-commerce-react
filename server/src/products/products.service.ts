@@ -1,4 +1,4 @@
-import { BadRequestException, ConflictException, Inject, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
+import { BadRequestException, ConflictException, HttpException, HttpStatus, Inject, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { isValidObjectId, Model } from 'mongoose';
@@ -69,35 +69,22 @@ export class ProductsService {
     
     };
   }
-
-  async findOne(res:Response, id: string) {
-    try {
-      const product = await this.productModel.findById(id)
-
-      if (!product) {
-        throw new  NotFoundException()
-       
-      }
-  
-      return res.status(200).json({
-        message: "product retrieved",
-        data: product
-      });
-  
-    } catch (error) {
-      // Handle invalid ObjectId (CastError)
-      if (error.name === 'CastError') {
-        return res.status(400).json({
-          message: "invalid product id"
-        });
-      }
-  
-      return res.status(500).json({
-        message: "server internal error",
-        error: error.message
-      });
+  async findOne(id: string) {
+    if (!isValidObjectId(id)) {
+      throw new HttpException('Invalid productId', HttpStatus.BAD_REQUEST);
     }
+  
+    const product = await this.productModel.findById(id);
+    if (!product) {
+      throw new NotFoundException('Product not found');
+    }
+  
+    return {
+      message: 'product retrieved',
+      data: product,
+    };
   }
+  
 
   async findOneByName(res:Response, name: string) {
     try {

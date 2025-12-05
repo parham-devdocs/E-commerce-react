@@ -1,7 +1,7 @@
 import { DataSource } from 'typeorm';
-import { AUTH } from './entities/user.entity';
+import { AUTH } from 'src/auth/entities/user.entity';
 
-export const authProvider = [
+export const userProvider = [
   {
     provide: 'AUTH_REPOSITORY',
     useFactory: (dataSource: DataSource) => dataSource.getRepository(AUTH),

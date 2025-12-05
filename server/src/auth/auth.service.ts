@@ -2,7 +2,7 @@ import { Inject, Injectable, NotFoundException, UnauthorizedException } from '@n
 import { RegisterUserDto } from './dto/register-auth.dto';
 import { LoginUserDto } from './dto/login-auth.dto';
 import { Repository } from 'typeorm';
-import { User } from './entities/user.entity';
+import { AUTH } from './entities/user.entity';
 import { JWTService } from './JWTService';
 import { dehashPassword, setAuthCookie } from 'src/utils';
 import {type Response } from 'express';
@@ -14,7 +14,7 @@ import { tokenType } from 'src/interfaces';
 export class AuthService {
   constructor(
     @Inject('AUTH_REPOSITORY')
-    private authRepository: Repository<User>,
+    private authRepository: Repository<AUTH>,
     private jwtServcie: JWTService,
   ) {}
   async register(registerUserDto: RegisterUserDto, res: Response) {

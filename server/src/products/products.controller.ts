@@ -18,7 +18,7 @@ export class ProductsController {
   }
 
   @Get("pagination/:page")
- async  findAll(@Param('page') page:string, @Token() token:tokenType,@Res({passthrough:true}) res:Response ) {
+ async  findAll(@Param('page') page:string, @Token() token:tokenType) {
   const response= await   this.productsService.findAll(page);
 console.log(response)
     return response
@@ -26,8 +26,8 @@ console.log(response)
 
 
   @Get(':id')
-  async findOne(@Token() token:tokenType,@Param('id') id: string , @Res({ passthrough: true }) response: Response) {
-    const res=await this.productsService.findOne(response,id);
+  async findOne(@Token() token:tokenType,@Param('id') id: string ) {
+    const res=await this.productsService.findOne(id);
     return res
 
   }
