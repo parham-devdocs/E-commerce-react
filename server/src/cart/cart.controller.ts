@@ -16,13 +16,13 @@ export class CartController {
   }
 
   @Get()
-  findAll() {
-    return this.cartService.findAll();
+  findAll(@Token() token:tokenType, @Body() createCartDto: CreateCartItemDTO , @Param("productId") productId:string) {
+    return this.cartService.findAll(token,createCartDto,productId);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.cartService.findOne(+id);
+  @Get(":productId")
+  findOne(@Token() token:tokenType, @Body() createCartDto: CreateCartItemDTO , @Param("productId") productId:string) {
+    return this.cartService.findOne(token,productId)
   }
 
   @Patch(':id')

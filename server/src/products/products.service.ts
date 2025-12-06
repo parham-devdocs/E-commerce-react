@@ -23,17 +23,16 @@ export class ProductsService {
 
     // 2. Check if category exists
     const categoryExists = await this.categoryModel.findById(createProductDto.category).exec();
+    
     if (!categoryExists) {
       throw new NotFoundException('Category not found');
     }
 
-    // 3. Check for duplicate product name
     const existingProduct = await this.productModel.findOne({ name: createProductDto.name }).exec();
     if (existingProduct) {
       throw new ConflictException('Product with this name already exists');
     }
 
-    // 4. Create and save product
     try {
       const newProduct = new this.productModel(createProductDto);
       const saved = await newProduct.save();
@@ -41,6 +40,7 @@ export class ProductsService {
         message: 'Product created',
         data: saved,
       };
+
     } catch (error) {
       // Optional: log error (e.g., with Winston)
       console.error('Product creation error:', error);

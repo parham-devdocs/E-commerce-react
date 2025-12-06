@@ -1,4 +1,4 @@
-import { HttpException, Inject, Injectable } from '@nestjs/common';
+import { ConflictException, HttpException, Inject, Injectable } from '@nestjs/common';
 import { CreateCartItemDTO } from './dto/create-cart.dto';
 import { UpdateCartDto } from './dto/update-cart.dto';
 import { Repository } from 'typeorm';
@@ -18,8 +18,11 @@ export class CartService {
   async create(token:tokenType,createCartItemDto: CreateCartItemDTO,productId:string) {
     const user=await this.userService.findOne(token.email)
     await this.productService.findOne(productId)
+    const existingCartItem=await this.findOne(token,productId)
+    if (existingCartItem) {
+      throw new ConflictException("this product has been regidterd for this user")
+    }
     try {
-      // const cartItem=this.cartRepository.create({quantity})
       const cartItem=new CartItem()
       cartItem.productId=productId
       cartItem.user=user
@@ -29,15 +32,24 @@ export class CartService {
     } catch (error) {
       throw new HttpException("Internal Server Error",400)
     }
-  console.log({token,productId})
   }
 
-  findAll() {
-    return `This action returns all cart`;
+  findAll(token:tokenType,createCartItemDto: CreateCartItemDTO,productId:string) {
+     return ""
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} cart`;
+  async findOne(token:tokenType,productId:string) {
+    const user=await this.userService.findOne(token.email)
+   this.productService.findOne(productId)
+    const existingCartItem=await this.cartRepository.find({where:{user,productId}})
+    if (!existingCartItem) {
+      return null
+    }
+    return existingCartItem
+
+
+
+
   }
 
   update(id: number, updateCartDto: UpdateCartDto) {
