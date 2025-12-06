@@ -12,7 +12,7 @@ export class CartItem {
 
   
 
-  @Column()
+  @Column({type:"int"})
   quantity: number;
 
   @ManyToOne(() => AUTH, auth => auth.cartItems) 

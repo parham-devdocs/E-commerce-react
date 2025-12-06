@@ -16,8 +16,8 @@ export class CartController {
   }
 
   @Get()
-  findAll(@Token() token:tokenType, @Body() createCartDto: CreateCartItemDTO , @Param("productId") productId:string) {
-    return this.cartService.findAll(token,createCartDto,productId);
+  findAll(@Token() token:tokenType) {
+    return this.cartService.findAll(token);
   }
 
   @Get(":productId")

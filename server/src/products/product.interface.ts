@@ -5,7 +5,7 @@
     brand:string
     category:string
     price:string
-    descountPercentage:number
+    discountPercentage:number
     attributes:{[key: string]: string}
     inStock:boolean
     count:number

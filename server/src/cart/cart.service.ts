@@ -1,4 +1,4 @@
-import { ConflictException, HttpException, Inject, Injectable } from '@nestjs/common';
+import { ConflictException, HttpException, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateCartItemDTO } from './dto/create-cart.dto';
 import { UpdateCartDto } from './dto/update-cart.dto';
 import { Repository } from 'typeorm';
@@ -7,6 +7,9 @@ import { JWTService } from 'src/auth/JWTService';
 import { ProductsService } from 'src/products/products.service';
 import { UserService } from 'src/user/user.service';
 import { tokenType } from 'src/interfaces';
+import { Product } from 'src/products/product.interface';
+import { ProductItem } from './cart.intrface';
+import { NotFoundError } from 'rxjs';
 @Injectable()
 export class CartService {
   constructor(
@@ -17,8 +20,13 @@ export class CartService {
   ){}
   async create(token:tokenType,createCartItemDto: CreateCartItemDTO,productId:string) {
     const user=await this.userService.findOne(token.email)
-    await this.productService.findOne(productId)
+    const {data}=await this.productService.findOne(productId)
+    if (data.count===0) {
+      throw new HttpException("out of stock",422)
+    }
     const existingCartItem=await this.findOne(token,productId)
+
+
     if (existingCartItem) {
       throw new ConflictException("this product has been regidterd for this user")
     }
@@ -34,15 +42,37 @@ export class CartService {
     }
   }
 
-  findAll(token:tokenType,createCartItemDto: CreateCartItemDTO,productId:string) {
-     return ""
-  }
+  async findAll(token:tokenType) {
+
+    const user=await this.userService.findOne(token.email)
+    const cart:ProductItem[]=[]
+
+     const existingCartItem=await this.cartRepository.find({where:{user}})
+     
+     if (existingCartItem.length===0) {
+       return null
+     }
+
+      for (const item of existingCartItem) {
+        const cartItem=await this.cartRepository.findOne({where:{user}})
+if (!cartItem) {
+  throw new NotFoundException("cart item not found")
+}
+        const {data} = await this.productService.findOne(String(item.productId))
+        const modifiedProduct={id:data.id,price:data.price,discountPercentage:data.discountPercentage,name:data.name,quantity:cartItem.quantity }
+cart.push(modifiedProduct)
+        
+    }
+    return cart
+ 
+ 
+   }
 
   async findOne(token:tokenType,productId:string) {
     const user=await this.userService.findOne(token.email)
    this.productService.findOne(productId)
     const existingCartItem=await this.cartRepository.find({where:{user,productId}})
-    if (!existingCartItem) {
+    if (existingCartItem.length===0) {
       return null
     }
     return existingCartItem
