@@ -1,3 +1,4 @@
+import { CartItem } from "src/cart/entities/cart-item.entity";
 import { Review } from "src/review/entities/review.entity";
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
@@ -29,4 +30,7 @@ export class AUTH {
 
   @OneToMany(() => Review, review => review.id,{nullable:true})
   reviews: Review[];
+
+  @OneToMany(()=>CartItem,cartItem=>cartItem.id,{nullable:true})
+  cartItems:CartItem[]
 }

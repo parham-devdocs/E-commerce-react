@@ -25,7 +25,7 @@ export const hashPassword=async(plainPassword:string) =>{
   return hashedPassword 
 }
 
-export const dehashPassword=async(hashedPassword:string,password) =>{
+export const dehashPassword=async(hashedPassword:string,password:string) =>{
   const saltRounds = 12; 
   const decryptedPassword = await bcrypt.compare(password,hashedPassword);
   return decryptedPassword

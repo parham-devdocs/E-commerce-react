@@ -8,8 +8,9 @@ import { AuthModule } from './auth/auth.module';
 import { CatgoryModule } from './category/category.module';
 import { ReviewModule } from './review/review.module';
 import { UserModule } from './user/user.module';
+import { CartModule } from './cart/cart.module';
 @Module({
-  imports: [ ProductsModule,ConfigModule.forRoot({isGlobal:true}), AuthModule, CatgoryModule, ReviewModule, UserModule],
+  imports: [ ProductsModule,ConfigModule.forRoot({isGlobal:true}), AuthModule, CatgoryModule, ReviewModule, UserModule, CartModule],
   controllers: [AppController],
   providers: [AppService],
 })
