@@ -71,8 +71,8 @@ cart.push(modifiedProduct)
   async findOne(token:tokenType,productId:string) {
     const user=await this.userService.findOne(token.email)
    this.productService.findOne(productId)
-    const existingCartItem=await this.cartRepository.find({where:{user,productId}})
-    if (existingCartItem.length===0) {
+    const existingCartItem=await this.cartRepository.findOne({where:{user,productId}})
+    if (!existingCartItem) {
       return null
     }
     return existingCartItem
@@ -82,8 +82,25 @@ cart.push(modifiedProduct)
 
   }
 
-  update(id: number, updateCartDto: UpdateCartDto) {
-    return `This action updates a #${id} cart`;
+  async update(token:tokenType, updateCartDto: UpdateCartDto,productId: string) {
+    const user=await this.userService.findOne(token.email)
+   this.productService.findOne(productId)
+    const cartItem=await this.cartRepository.findOne({where:{user,productId}})
+    if (!cartItem) {
+      return null
+    }
+    try {
+      if (updateCartDto.quantity) {
+      cartItem.quantity=updateCartDto.quantity
+       const updatedCartItem= await this.cartRepository.save(cartItem)
+       return updatedCartItem
+
+      }
+    } catch (error) {
+      throw new HttpException("Internal Server Error",500)
+    }
+
+
   }
 
   remove(id: number) {

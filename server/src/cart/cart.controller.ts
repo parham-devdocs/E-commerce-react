@@ -25,9 +25,9 @@ export class CartController {
     return this.cartService.findOne(token,productId)
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateCartDto: UpdateCartDto) {
-    return this.cartService.update(+id, updateCartDto);
+  @Patch(':productId')
+  update(@Token() token:tokenType, @Body() updateCartDto: UpdateCartDto ,@Param('productId') productId: string) {
+    return this.cartService.update(token, updateCartDto,productId);
   }
 
   @Delete(':id')
