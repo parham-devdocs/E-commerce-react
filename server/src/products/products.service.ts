@@ -4,13 +4,14 @@ import { UpdateProductDto } from './dto/update-product.dto';
 import { isValidObjectId, Model } from 'mongoose';
 import { Product } from "./product.interface";
 import { Response } from "express";
-import { Category } from 'src/category/category.interface';
+import { Category } from 'src/category/category.schema';
+import { InjectModel } from '@nestjs/mongoose';
 @Injectable()
 export class ProductsService {
   constructor(
-    @Inject("PRODUCT_MODEL")     private productModel: Model<Product>,
+    @InjectModel("Product")     private productModel: Model<Product>,
 
-    @Inject("CATEGORY_MODEL")     private categoryModel: Model<Category>,
+    @InjectModel('Category') private categoryModel: Model<Category>
 
 
   ){}

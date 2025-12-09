@@ -43,4 +43,15 @@ export class CatgoryController {
   remove(@Token() token:tokenType ,@Param('id') id: string) {
     return this.catgoryService.remove(id);
   }
+
+  @Get("/products/:id")
+  findProducts(@Token() token:tokenType ,@Param('id') id: string){
+    console.log(token)
+return this.catgoryService.productByCategory(id)
+  }
+
+  @Post(":productId/:categoryId")
+  addProducts(@Token() token:tokenType ,@Param('productId') productId: string,@Param('categoryId') categoryId:string){
+return this.catgoryService.addProduct(productId,categoryId)
+  }
 }

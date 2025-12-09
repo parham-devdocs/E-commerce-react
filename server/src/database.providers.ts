@@ -4,11 +4,7 @@ import { AUTH } from './auth/entities/user.entity';
 import { Review } from './review/entities/review.entity';
 import {CartItem } from "./cart/entities/cart-item.entity";
 export const databaseProviders = [
-  {
-    provide: 'DATABASE_CONNECTION',
-    useFactory: (): Promise<typeof mongoose> =>
-      mongoose.connect(process.env.MONGOOSE_CONNECTION_URI as string),
-  },
+
   {
     provide: 'DATA_SOURCE',
     useFactory: async () => {

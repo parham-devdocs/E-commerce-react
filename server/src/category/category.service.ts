@@ -1,12 +1,12 @@
 import { ConflictException, HttpException, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateCategoryDto } from './dto/create-catgory.dto';
 import  { Model } from 'mongoose';
-import { Category } from "./category.interface";
+import { Category } from './category.schema';
+import { InjectModel } from '@nestjs/mongoose';
 @Injectable()
 export class CatgoryService {
   constructor(
-    @Inject("CATEGORY_MODEL")
-    private CategoryModel: Model<Category>,
+    @InjectModel('Category') private CategoryModel: Model<Category>
   ){
     
   }
@@ -89,4 +89,56 @@ return cat
         error: error.message      }
     }
   }
+  
+  async productByCategory(id: string) {
+    try {
+      const category = await this.CategoryModel
+        .findById(id)
+        .populate({
+          path: 'products',
+          model: 'Product',
+          strictPopulate: false,
+          select: '_id name'
+        })
+  
+      if (!category) {
+        return { message: 'Category not found' };
+      }
+  
+      return category; // Now includes full product documents
+    } catch (error: any) {
+      if (error.name === 'CastError') {
+        return { message: 'Invalid category id' };
+      }
+      return { error: error.message };
+    }
+  }
+  
+
+  async addProduct(productId: string, categoryId: string) {
+    try {
+      const result = await this.CategoryModel.findByIdAndUpdate(
+        categoryId,
+        { $addToSet: { products: productId } , new:true}
+      ).populate({
+        path: 'products',
+        model: 'Product',
+        strictPopulate: false,
+        select:'_id name'
+      });
+  
+      if (!result) {
+        return { message: 'Category not found' };
+      }
+  
+      return result;
+    } catch (error: any) {
+      if (error.name === 'CastError') {
+        return { message: 'Invalid ID format' };
+      }
+      return { error: error.message };
+    }
+  }
 }
+
+
