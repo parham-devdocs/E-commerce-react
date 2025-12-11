@@ -1,7 +1,7 @@
 
-import { AUTH } from 'src/auth/entities/user.entity';
-import { Entity, PrimaryGeneratedColumn, Column,ObjectId, ManyToOne, JoinColumn } from 'typeorm';
-
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from 'typeorm';
+import { Cart } from './cart.entity';
+import { Exclude } from "class-transformer";
 @Entity()
 export class CartItem {
   @PrimaryGeneratedColumn()
@@ -10,15 +10,13 @@ export class CartItem {
   @Column()
   productId: string;
 
-  
-
-  @Column({type:"int"})
+  @Column({ type: 'int' })
   quantity: number;
 
-  @ManyToOne(() => AUTH, auth => auth.cartItems) 
-  @JoinColumn({ name: 'userId' }) 
-  user: AUTH;
-
+  @ManyToOne(() => Cart, cart => cart.cartItems)
+  @JoinColumn({ name: 'cartId' }) 
+  @Exclude() 
+  cart: Cart;
 }
 
 

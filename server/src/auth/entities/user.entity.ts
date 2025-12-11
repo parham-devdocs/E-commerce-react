@@ -1,8 +1,9 @@
-import { CartItem } from "src/cart/entities/cart-item.entity";
-import { Review } from "src/review/entities/review.entity";
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+// auth/entities/user.entity.ts
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
+import { Cart } from 'src/cart/entities/cart.entity';
+import { Review } from 'src/review/entities/review.entity';
 
-@Entity()
+@Entity('auth') // or 'user'
 export class AUTH {
   @PrimaryGeneratedColumn()
   id: number;
@@ -10,14 +11,11 @@ export class AUTH {
   @Column({ length: 30 })
   fullName: string;
 
-  @Column({type:"text",unique:true})
+  @Column({ type: 'text', unique: true })
   email: string;
 
-  @Column({type:"text",unique:true})
+  @Column({ type: 'text', unique: true })
   phoneNumber: string;
-
-  @Column({nullable:true})
-  cartId?: number;
 
   @Column()
   address: string;
@@ -25,12 +23,12 @@ export class AUTH {
   @Column()
   hashedPassword: string;
 
-  @Column({type:"text"})
-  refreshToken?:string
+  @Column({ type: 'text', nullable: true })
+  refreshToken?: string;
 
-  @OneToMany(() => Review, review => review.id,{nullable:true})
-  reviews: Review[];
+  @OneToMany(() => Cart, cart => cart.user)
+  carts: Cart[];
 
-  @OneToMany(()=>CartItem,cartItem=>cartItem.id,{nullable:true})
-  cartItems:CartItem[]
+  @OneToMany(() => Review, review => review.user )
+  review: Review[];
 }

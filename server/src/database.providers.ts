@@ -3,6 +3,7 @@ import { DataSource } from 'typeorm';
 import { AUTH } from './auth/entities/user.entity';
 import { Review } from './review/entities/review.entity';
 import {CartItem } from "./cart/entities/cart-item.entity";
+import { Cart } from './cart/entities/cart.entity';
 export const databaseProviders = [
 
   {
@@ -15,7 +16,7 @@ export const databaseProviders = [
         username: process.env.DB_USER,
         password: process.env.DB_PASSWORD,
         database: process.env.DB_NAME,
-        entities: [AUTH,Review,CartItem],
+        entities: [AUTH,Review,CartItem,Cart],
 
         synchronize: true,
       });

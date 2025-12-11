@@ -105,12 +105,12 @@ return cat
         return { message: 'Category not found' };
       }
   
-      return category; // Now includes full product documents
+      return category; 
     } catch (error: any) {
       if (error.name === 'CastError') {
         return { message: 'Invalid category id' };
       }
-      return { error: error.message };
+      return { error: error.message }
     }
   }
   

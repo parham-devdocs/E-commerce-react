@@ -17,7 +17,7 @@ export class Review {
   @Column({ type: 'int' }) 
   rate: number; 
 
-  @ManyToOne(() => AUTH, auth => auth.reviews) 
+  @ManyToOne(() => AUTH, auth => auth.review) 
   @JoinColumn({ name: 'userId' }) 
   user: AUTH;
 }
