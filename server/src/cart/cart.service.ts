@@ -113,7 +113,6 @@ return active
 
   async findProductsInCart(token: tokenType) {
     const user = await this.userService.findOne(token.email);
-    if (!user) throw new HttpException('User not found', HttpStatus.NOT_FOUND);
   
     const cart = await this.cartRepository.findOne({
       where: {
@@ -145,7 +144,24 @@ return active
 
 
 
-  remove(id: number) {
-    return `This action removes a #${id} cart`;
-  }
+    async remove(token: tokenType, productId: string) {
+      const cartItem = await this.findProductInCart(token, productId);
+    
+      if (!cartItem.item) {
+        throw new NotFoundException('Product not found in cart');
+        // Or return a custom response like { success: false, message: 'Item not in cart' }
+      }
+    
+      // Now cartItem is guaranteed to be CartItem (not undefined)
+      await this.cartItemRepository.remove(cartItem.item);
+    
+      return {
+        success: true,
+        message: 'Item removed from cart',
+        removedItem: {
+          productId: cartItem.item.id,
+          quantity: cartItem.quantity,
+        },
+      };
+    }
 }

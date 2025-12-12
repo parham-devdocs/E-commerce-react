@@ -23,8 +23,8 @@ export class CartController {
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.cartService.remove(+id);
+  remove(@Token() token:tokenType,@Param('id') id: string) {
+    return this.cartService.remove(token,id);
   }
   
 }
