@@ -1,7 +1,6 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
 import { CartService } from './cart.service';
 import { CreateCartItemDTO } from './dto/create-cart.dto';
-import { UpdateCartDto } from './dto/update-cart.dto';
 import Token from 'src/customDecorators/token.decorator';
 import {type tokenType } from 'src/interfaces';
 
@@ -14,7 +13,10 @@ export class CartController {
    
     return this.cartService.create(token,createCartDto);
   }
-
+  @Get("products")
+  findProductsInCart(@Token() token:tokenType) {
+    return this.cartService.findProductsInCart(token)
+  }
   @Get(":id")
   findActiveCart(@Token() token:tokenType, @Body() createCartDto: CreateCartItemDTO , @Param("id") id:string) {
     return this.cartService.findActiveCart(token,id)
@@ -24,4 +26,5 @@ export class CartController {
   remove(@Param('id') id: string) {
     return this.cartService.remove(+id);
   }
+  
 }

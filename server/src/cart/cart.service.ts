@@ -25,7 +25,7 @@ export class CartService {
     createCartItemDto: CreateCartItemDTO,
   ) {
     const user = await this.userService.findOne(token.email);
- const {inCart,message}=await this.findProductInCart(token,createCartItemDto.productId)
+ const {inCart}=await this.findProductInCart(token,createCartItemDto.productId)
  if (inCart) {
   const cartItem=await this.cartItemRepository.findOne({where:{productId:createCartItemDto.productId}})
   if (cartItem) {
@@ -95,6 +95,7 @@ return active
     });
   
     if (cartItem) {
+      
       return {
         inCart: true,
         message: 'Product already in cart',
@@ -109,6 +110,39 @@ return active
     };
   }
   
+
+  async findProductsInCart(token: tokenType) {
+    const user = await this.userService.findOne(token.email);
+    if (!user) throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+  
+    const cart = await this.cartRepository.findOne({
+      where: {
+        user,
+        active: true,
+      },
+      relations: ["cartItems"],
+    })
+    if (cart) {
+      const products: any[] = [];
+      for (const cartItem of cart.cartItems) {
+        const product = await this.productService.findOne(cartItem.productId)
+        const modifiedProduct={price:product.data.price,name:product.data.name,discountPercentage:product.data.discountPercentage,id:product.data.id,image:product.data.images[0],quantity:cartItem.quantity}
+        products.push(modifiedProduct)
+      }
+    
+      return {
+        inCart: true,
+        message: 'Product already in cart',
+        products,
+      };
+    }
+    
+    return {
+      inCart: false,
+      message: 'Product can be added',
+    }}
+
+
 
 
   remove(id: number) {
