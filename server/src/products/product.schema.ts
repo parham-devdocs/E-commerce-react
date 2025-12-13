@@ -4,7 +4,7 @@
   
   export type ProductDocument = HydratedDocument<Product>;
   
-  @Schema()
+  @Schema({timestamps:true})
   export class Product {
     @Prop({ required: true })
     name: string;
@@ -33,8 +33,15 @@
     @Prop({ type: String, maxlength: 1000 })
     description: string;
   
-    @Prop({type:String})
-    attributes: Record<string, any>; // equivalent to Schema.Types.Mixed
+    @Prop({type:{}})
+    attributes: Record<string, any>;
+
+    @Prop({type:Date})
+    createdAt?: Date
+
+    @Prop({type:Date})
+    updatedAt?: Date
+
   }
   
   export const ProductSchema = SchemaFactory.createForClass(Product);

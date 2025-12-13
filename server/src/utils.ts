@@ -1,5 +1,23 @@
 import { Response } from 'express'; // or fastify if you use it
 import bcrypt from "bcrypt";
+import { DateTime } from 'luxon';
+
+
+export function dateComparison(date:string) {
+    const dt1 = DateTime.fromISO(date);
+const now = DateTime.fromISO(DateTime.now().toISO())
+    const startOfLastWeek=dt1.startOf("day").minus({days:6})
+    const endOfLastWeek=now.startOf("day")
+
+    const normalizedDt1 = dt1.startOf('day');
+
+    const comparison=normalizedDt1>=startOfLastWeek && normalizedDt1<=endOfLastWeek
+
+    return comparison
+
+
+    
+}
 
 
 export const setAuthCookie = (

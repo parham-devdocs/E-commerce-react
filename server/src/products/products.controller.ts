@@ -24,6 +24,15 @@ console.log(response)
     return response
   }
 
+  @Get("/recent")
+  getRecentProducts(){
+    return this.productsService.getRecentProducts()
+  }
+
+  @Get("/discount")
+  getProductsWithDiscount(){
+    return this.productsService.getProductsWithDiscount()
+  }
 
   @Get(':id')
   async findOne(@Token() token:tokenType,@Param('id') id: string ) {
@@ -47,4 +56,7 @@ console.log(response)
   remove(@Param('id') id: string) {
     return this.productsService.remove(+id);
   }
+
+
+
 }

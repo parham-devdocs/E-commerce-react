@@ -2,10 +2,11 @@ import { BadRequestException, ConflictException, HttpException, HttpStatus, Inje
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { isValidObjectId, Model } from 'mongoose';
-import { Product } from "./product.interface";
+import { Product } from "src/products/product.schema";
 import { Response } from "express";
 import { Category } from 'src/category/category.schema';
 import { InjectModel } from '@nestjs/mongoose';
+import { dateComparison } from "../utils";
 @Injectable()
 export class ProductsService {
   constructor(
@@ -111,6 +112,25 @@ export class ProductsService {
       });
     }
   }
+
+  async getRecentProducts(){
+    const products = await this.productModel
+    .find({ inStock: true,count:{$gt:0} })       
+    .sort({ createdAt: -1 })      
+    .limit(10)
+    .exec();   
+    if (!products) {
+      throw new NotFoundException("no recent product found")
+    }
+    return products}
+
+    async getProductsWithDiscount(){
+      const product = await this.productModel.find({discountPercentage:{$gt:0},inStock:true}).limit(0)
+      console.log(product)
+      if (!product) {
+        throw new NotFoundException("no recent product found")
+      }
+      return product}
 
   update(id: number, updateProductDto: UpdateProductDto) {
     return `This action updates a #${id} product`;
