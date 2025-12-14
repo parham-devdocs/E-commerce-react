@@ -2,6 +2,8 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import  cookieParser from 'cookie-parser';
 import { ConfigService } from '@nestjs/config';
+import express from "express";
+import path from 'path';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.enableCors({
@@ -13,6 +15,7 @@ async function bootstrap() {
   });
    app.get(ConfigService);
   app.use(cookieParser());
-  await app.listen(process.env.PORT || 3000);
+  app.use('/uploads', express.static(path.join(__dirname, '..', '..', 'uploads')));
+    await app.listen(process.env.PORT || 3000);
 }
 bootstrap();

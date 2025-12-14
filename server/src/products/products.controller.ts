@@ -1,17 +1,18 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Res } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Res, UseInterceptors, UploadedFile, UploadedFiles } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import Token from 'src/customDecorators/token.decorator';
 import {type tokenType } from 'src/interfaces';
 import {type Response } from 'express';
-
+import {  FileInterceptor} from "@nestjs/platform-express";
+import {  } from "express";
 @Controller('products')
 export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
 
   @Post()
-  async create(@Body() createProductDto: CreateProductDto, @Token() token:tokenType,@Res({passthrough:true}) res:Response ) {
+  async create(@Body() createProductDto: CreateProductDto, @Token() toker:tokenType,@Res({passthrough:true}) res:Response ) {
    const response=await this.productsService.create(createProductDto);
     return response
 
@@ -55,6 +56,13 @@ console.log(response)
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.productsService.remove(+id);
+  }
+
+  @Post('upload/singleImage/:productId')
+  @UseInterceptors(FileInterceptor('file'))
+  async uploadSingleFile( @Param("productId") productId:any ,  @UploadedFile() file: any) {
+  return await this.productsService.uploadProductImage(file,productId)
+    
   }
 
 

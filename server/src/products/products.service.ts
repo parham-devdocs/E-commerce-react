@@ -1,12 +1,13 @@
 import { BadRequestException, ConflictException, HttpException, HttpStatus, Inject, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
-import { isValidObjectId, Model } from 'mongoose';
+import { isValidObjectId, Model, ObjectId } from 'mongoose';
 import { Product } from "src/products/product.schema";
 import { Response } from "express";
 import { Category } from 'src/category/category.schema';
 import { InjectModel } from '@nestjs/mongoose';
 import { dateComparison } from "../utils";
+import { fi } from 'zod/v4/locales';
 @Injectable()
 export class ProductsService {
   constructor(
@@ -138,5 +139,12 @@ export class ProductsService {
 
   remove(id: number) {
     return `This action removes a #${id} product`;
+  }
+
+  async uploadProductImage(file:any,productId:ObjectId){
+   const savedImage=await this.productModel.updateOne({ _id: productId}, { $push: { images: file.filename } })
+
+        console.log(savedImage)
+  return file
   }
 }
