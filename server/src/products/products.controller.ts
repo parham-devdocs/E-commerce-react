@@ -58,9 +58,14 @@ console.log(response)
     return this.productsService.remove(+id);
   }
 
+  @Get("images/:productId")
+  async getImages(@Token() Token:tokenType, @Param("productId") productId:any ){
+    return this.productsService.getProductImages(productId)
+  }
+
   @Post('upload/singleImage/:productId')
   @UseInterceptors(FileInterceptor('file'))
-  async uploadSingleFile( @Param("productId") productId:any ,  @UploadedFile() file: any) {
+  async uploadSingleFile(@Token() Token:tokenType, @Param("productId") productId:any ,  @UploadedFile() file: any) {
   return await this.productsService.uploadProductImage(file,productId)
     
   }

@@ -144,7 +144,11 @@ export class ProductsService {
   async uploadProductImage(file:any,productId:ObjectId){
    const savedImage=await this.productModel.updateOne({ _id: productId}, { $push: { images: file.filename } })
 
-        console.log(savedImage)
   return file
+  }
+
+  async getProductImages(id:string){
+    const product= await this.productModel.findById(id).select({images:true})
+    return product?.images
   }
 }
