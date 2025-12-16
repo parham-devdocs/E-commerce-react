@@ -48,3 +48,20 @@ export const dehashPassword=async(hashedPassword:string,password:string) =>{
   const decryptedPassword = await bcrypt.compare(password,hashedPassword);
   return decryptedPassword
 }
+
+export const calculateTotalPrice = (priceList: number[]) => {
+  return priceList.reduce((acc, productPrice) => acc + productPrice, 0);
+};
+
+export const calculateDicount=(discountPercentage:number,price:number)=>{
+  const modifiedPercentage=discountPercentage/100
+  const discount=price * modifiedPercentage
+return discount
+}
+
+
+export const calculatePriceWithDiscount=(discountPercentage:number,price:number)=>{
+  const modifiedPercentage=discountPercentage/100
+const appliedDiscount=price-(price*modifiedPercentage)
+return appliedDiscount
+}

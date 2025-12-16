@@ -18,8 +18,8 @@ export class CartController {
     return this.cartService.findProductsInCart(token)
   }
   @Get(":id")
-  findActiveCart(@Token() token:tokenType, @Body() createCartDto: CreateCartItemDTO , @Param("id") id:string) {
-    return this.cartService.findActiveCart(token,id)
+  findActiveCart(@Token() token:tokenType, @Body() createCartDto: CreateCartItemDTO ) {
+    return this.cartService.findActiveCart(token)
   }
 
   @Delete(':id')

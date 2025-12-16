@@ -7,11 +7,7 @@ import { JWTService } from 'src/auth/JWTService';
 import { ProductsService } from 'src/products/products.service';
 import { UserService } from 'src/user/user.service';
 import { tokenType } from 'src/interfaces';
-import { Product } from 'src/products/product.interface';
-import { ProductItem } from './cart.intrface';
-import { NotFoundError, retry } from 'rxjs';
 import { Cart } from './entities/cart.entity';
-import mongoose from 'mongoose';
 @Injectable()
 export class CartService {
   constructor(
@@ -38,7 +34,7 @@ return item
  }
      await this.productService.findOne(createCartItemDto.productId);
   
-    let cart =await this.findActiveCart(token,createCartItemDto.productId)
+    let cart =await this.findActiveCart(token)
   
     const cartItem = this.cartItemRepository.create({
       productId:createCartItemDto.productId,
@@ -70,11 +66,12 @@ return item
   }
 
 
-  async findActiveCart(token:tokenType,productId:string) {
+  async findActiveCart(token:tokenType) {
     const user=await this.userService.findOne(token.email)
-   this.productService.findOne(productId)
   const active=await this.cartRepository.findOne({where:{active:true,user},relations:["cartItems"]})
-  
+  if (!active) {
+    throw new NotFoundException("active cart not foud")
+  }
 return active
 
   }

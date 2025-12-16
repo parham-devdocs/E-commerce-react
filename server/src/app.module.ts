@@ -10,6 +10,7 @@ import { ReviewModule } from './review/review.module';
 import { UserModule } from './user/user.module';
 import { CartModule } from './cart/cart.module';
 import { MongooseModule } from '@nestjs/mongoose';
+import { PaymentModule } from './payment/payment.module';
 @Module({
   imports: [ ProductsModule,ConfigModule.forRoot({isGlobal:true}), AuthModule,  ReviewModule, UserModule, CartModule,  ConfigModule.forRoot({ isGlobal: true }),
 
@@ -22,7 +23,8 @@ import { MongooseModule } from '@nestjs/mongoose';
     }),
 
     ProductsModule,
-    CatgoryModule
+    CatgoryModule,
+    PaymentModule
   ],
   controllers: [AppController],
   providers: [AppService],

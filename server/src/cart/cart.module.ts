@@ -9,7 +9,8 @@ import { UserModule } from 'src/user/user.module';
 @Module({
   controllers: [CartController],
   providers: [CartService,...cartProvider,...cartItemProvider],
-  imports:[DatabaseModule,ProductsModule,UserModule]
+  imports:[DatabaseModule,ProductsModule,UserModule],
+  exports:[CartService]
 })
 export class CartModule {}
 

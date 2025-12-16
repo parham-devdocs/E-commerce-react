@@ -6,7 +6,7 @@ import { Product } from "src/products/product.schema";
 import { Response } from "express";
 import { Category } from 'src/category/category.schema';
 import { InjectModel } from '@nestjs/mongoose';
-import { dateComparison } from "../utils";
+import { calculateDicount, calculatePriceWithDiscount, dateComparison } from "../utils";
 import { fi } from 'zod/v4/locales';
 @Injectable()
 export class ProductsService {
@@ -37,7 +37,9 @@ export class ProductsService {
     }
 
     try {
-      const newProduct = new this.productModel(createProductDto);
+      const priceWithDiscount=calculatePriceWithDiscount(createProductDto.discountPercentage,createProductDto.price)
+      const discountAmount=calculateDicount(createProductDto.discountPercentage,createProductDto.price)
+      const newProduct = new this.productModel({...createProductDto,priceWithDiscount,discountAmount});
       const saved = await newProduct.save();
       return {
         message: 'Product created',

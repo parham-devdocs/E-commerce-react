@@ -38,7 +38,6 @@ export class UserService {
     }
   
    
-    // return this.userModel.updateOne({id},{address:updateUserDto.address,email:updateUserDto.email,phoneNumber:updateUserDto.phoneNumber,fullName:updateUserDto.phoneNumber});
   }
 
     async remove(id: number) {

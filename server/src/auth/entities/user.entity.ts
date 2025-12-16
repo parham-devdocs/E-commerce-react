@@ -2,6 +2,7 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
 import { Cart } from 'src/cart/entities/cart.entity';
 import { Review } from 'src/review/entities/review.entity';
+import { Invoice } from 'src/payment/entities/payment.entity';
 
 @Entity('auth') // or 'user'
 export class AUTH {
@@ -28,6 +29,9 @@ export class AUTH {
 
   @OneToMany(() => Cart, cart => cart.user)
   carts: Cart[];
+
+  @OneToMany(() => Invoice, Invoice => Invoice.user)
+  invoices: [];
 
   @OneToMany(() => Review, review => review.user )
   review: Review[];
