@@ -11,20 +11,25 @@ export class CartController {
   @Post()
   create(@Token() token:tokenType, @Body() createCartDto: CreateCartItemDTO ) {
    
-    return this.cartService.create(token,createCartDto);
+    return this.cartService.upsert(token,createCartDto);
   }
-  @Get("products")
+
+  @Patch()
+  deacticeCart(@Token() token:tokenType){
+    return this.cartService.deactiveCart(token)
+  }
+    @Get("products")
   findProductsInCart(@Token() token:tokenType) {
     return this.cartService.findProductsInCart(token)
   }
-  @Get(":id")
-  findActiveCart(@Token() token:tokenType, @Body() createCartDto: CreateCartItemDTO ) {
+  @Get()
+  findActiveCart(@Token() token:tokenType ) {
     return this.cartService.findActiveCart(token)
   }
 
   @Delete(':id')
   remove(@Token() token:tokenType,@Param('id') id: string) {
-    return this.cartService.remove(token,id);
+    return this.cartService.removeCartItem(token,id);
   }
   
 }

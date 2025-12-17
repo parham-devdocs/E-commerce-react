@@ -10,8 +10,8 @@ export class PaymentController {
   constructor(private readonly paymentService: PaymentService) {}
 
   @Post()
-  create(@Token() token:tokenType,@Body() createInvoiceDTO: createInvoiceDTO) {
-    return this.paymentService.create(token,createInvoiceDTO);
+  create(@Token() token:tokenType) {
+    return this.paymentService.create(token);
   }
 
   @Get()

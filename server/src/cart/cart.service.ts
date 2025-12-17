@@ -16,61 +16,79 @@ export class CartService {
     private productService:ProductsService,
     private userService:UserService
   ){}
-  async create(
+  async upsert(
     token: tokenType,
     createCartItemDto: CreateCartItemDTO,
   ) {
-    const user = await this.userService.findOne(token.email);
- const {inCart}=await this.findProductInCart(token,createCartItemDto.productId)
- if (inCart) {
-  const cartItem=await this.cartItemRepository.findOne({where:{productId:createCartItemDto.productId}})
-  if (cartItem) {
-    cartItem.quantity=createCartItemDto.quantity
-await  this.cartItemRepository.save(cartItem)    
-  const {item}=await this.findProductInCart(token,createCartItemDto.productId)
-
-return item
-  }
- }
-     await this.productService.findOne(createCartItemDto.productId);
+    console.log('[DEBUG] Starting upsert for user:', token.email, 'productId:', createCartItemDto.productId);
   
-    let cart =await this.findActiveCart(token)
+    const user = await this.userService.findOne(token.email);
+    console.log('[DEBUG] Found user:', user?.id);
+  
+    // ✅ Get the actual cart item in the user's active cart
+    const cartItemResult = await this.findProductInCart(token, createCartItemDto.productId);
+    console.log('[DEBUG] Product in cart?', cartItemResult.inCart);
+  
+    if (cartItemResult.inCart && cartItemResult.item) {
+      // ✅ Use the already-found cart item — it's guaranteed to be in the correct cart
+      const cartItem = cartItemResult.item;
+      console.log('[DEBUG] Updating existing cartItem:', cartItem.id, 'from', cartItem.quantity, 'to', createCartItemDto.quantity);
+  
+      cartItem.quantity = createCartItemDto.quantity;
+      await this.cartItemRepository.save(cartItem);
+      console.log('[DEBUG] cartItem updated successfully.');
+  
+      // Optionally reload to ensure relations are fresh (or just return updated data)
+      return {
+        id: cartItem.id,
+        productId: cartItem.productId,
+        quantity: cartItem.quantity,
+      };
+    }
+  
+    // --- If not in cart: create new cart item ---
+    console.log('[DEBUG] Product NOT in cart. Creating new cartItem...');
+  
+    await this.productService.findOne(createCartItemDto.productId);
+    console.log('[DEBUG] Product exists.');
+  
+    let cart = await this.findActiveCart(token);
+    console.log('[DEBUG] Active cart found?', !!cart, cart ? `Cart ID: ${cart.id}` : 'No active cart.');
   
     const cartItem = this.cartItemRepository.create({
-      productId:createCartItemDto.productId,
+      productId: createCartItemDto.productId,
       quantity: createCartItemDto.quantity,
     });
+  
     if (cart) {
       cartItem.cart = cart;
-      cart.cartItems.push(cartItem)
+      cart.cartItems.push(cartItem);
     } else {
       cart = this.cartRepository.create({
         user: user,
         active: true,
-        cartItems: [cartItem]
+        cartItems: [cartItem],
       });
-      cartItem.cart = cart
+      cartItem.cart = cart;
     }
   
     const savedCart = await this.cartRepository.save(cart);
+    console.log('[DEBUG] Cart saved. Total items:', savedCart.cartItems.length);
   
+    // Return the newly added item
+    const newItem = savedCart.cartItems.find(item => item.productId === createCartItemDto.productId);
     return {
-      id: savedCart.id,
-      active: savedCart.active,
-      cartItems: savedCart.cartItems.map((item) => ({
-        id: item.id,
-        productId: item.productId,
-        quantity: item.quantity,
-      })),
+      id: newItem?.id,
+      productId: newItem?.productId,
+      quantity: newItem?.quantity,
     };
   }
-
 
   async findActiveCart(token:tokenType) {
     const user=await this.userService.findOne(token.email)
   const active=await this.cartRepository.findOne({where:{active:true,user},relations:["cartItems"]})
   if (!active) {
-    throw new NotFoundException("active cart not foud")
+    return null
   }
 return active
 
@@ -90,7 +108,7 @@ return active
         productId 
       },
     });
-  
+  console.log(cartItem)
     if (cartItem) {
       
       return {
@@ -141,15 +159,13 @@ return active
 
 
 
-    async remove(token: tokenType, productId: string) {
+    async removeCartItem(token: tokenType, productId: string) {
       const cartItem = await this.findProductInCart(token, productId);
     
       if (!cartItem.item) {
         throw new NotFoundException('Product not found in cart');
-        // Or return a custom response like { success: false, message: 'Item not in cart' }
       }
     
-      // Now cartItem is guaranteed to be CartItem (not undefined)
       await this.cartItemRepository.remove(cartItem.item);
     
       return {
@@ -161,4 +177,15 @@ return active
         },
       };
     }
+
+    async deactiveCart(token:tokenType){
+const cart=await this.findActiveCart(token)
+if (cart) {
+  cart.active=false
+const deactivatedCart=await this.cartRepository.save(cart)
+return deactivatedCart
+
+
 }
+throw new NotFoundException("cart not found")
+}}

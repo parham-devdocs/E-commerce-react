@@ -41,6 +41,13 @@ console.log(response)
     return res
 
   }
+
+  @Get(':id/available')
+  async findOneAvailable(@Token() token:tokenType,@Param('id') id: string ) {
+    const res=await this.productsService.findOneAvailable(id);
+    return res
+
+  }
   @Get(':id')
   async findOneByName( name:string, @Res({ passthrough: true }) response: Response) {
     const res=await this.productsService.findOneByName(response,name);

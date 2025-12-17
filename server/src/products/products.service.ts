@@ -90,6 +90,22 @@ export class ProductsService {
     };
   }
   
+  async findOneAvailable(id: string) {
+    if (!isValidObjectId(id)) {
+      throw new HttpException('Invalid productId', HttpStatus.BAD_REQUEST);
+    }
+  
+    const product = await this.productModel.find({id,inStock:true});
+    if (!product) {
+      throw new NotFoundException('Product not found');
+    }
+  
+    return {
+      message: 'product retrieved',
+      data: product,
+    };
+  }
+  
 
   async findOneByName(res:Response, name: string) {
     try {
@@ -153,4 +169,40 @@ export class ProductsService {
     const product= await this.productModel.findById(id).select({images:true})
     return product?.images
   }
+  async reduceStock(productId: string, quantity: number): Promise<any> {
+const product =await this.findOne(productId)
+if (!product.data.inStock || product.data.count-quantity<=0 ) {
+  this.markOutOfStock(productId)
+}
+const result = await this.productModel.updateOne(
+  {
+    _id: productId,
+    count: { $gte: quantity }  
+  },
+  [
+    { $set: { count: { $subtract: ["$count", quantity] } } },
+    { $set: { inStock: { $gt: ["$count", 0] } } }
+  ]
+);
+   
+  if (result.matchedCount === 0) {
+    const exists = await this.productModel.exists({ _id: productId });
+    if (!exists) {
+      throw new NotFoundException(`Product with ID ${productId} not found`);
+    }
+
+    throw new ConflictException(
+      `Insufficient stock for product ${productId}. Requested: ${quantity}`
+    );
+  }
+  }
+
+
+  async markOutOfStock(productId: string){
+const result=await this.productModel.updateOne({_id:productId},{inStock:false})
+if (result.matchedCount === 0) {
+  throw new NotFoundException(`Product with ID ${productId} not found`);
+}
+  }
+
 }

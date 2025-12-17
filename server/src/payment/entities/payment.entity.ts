@@ -5,7 +5,7 @@ import { Cart } from 'src/cart/entities/cart.entity';
 
 @Entity()
 export class Invoice {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn("uuid")
   id: number;
 
   @ManyToOne(() => AUTH, user => user.invoices)
@@ -17,13 +17,13 @@ export class Invoice {
   cart: Cart;
 
   @Column('decimal', { precision: 10, scale: 2 })
-  totalPrice: number;
+ price: number;
 
   @Column('decimal', { precision: 10, scale: 2, default: 0 })
-  discount: number;
+  totalDiscount: number;
 
   @Column('decimal', { precision: 10, scale: 2 })
-  priceWithDiscount: number;
+  finalPrice: number;
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;
