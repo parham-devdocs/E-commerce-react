@@ -7,6 +7,8 @@ import { JWTService } from './JWTService';
 import {type Response,type Request } from 'express';
 import Token from 'src/customDecorators/token.decorator';
 import {type tokenType } from 'src/interfaces';
+import { UserRole } from './entities/user.entity';
+import { ChangeRoleDto } from './dto/change-user-role';
 @Controller('auth')
 export class AuthController {
   constructor(
@@ -28,9 +30,16 @@ export class AuthController {
  async login(@Body(new ZodValidationPipe(LoginUserDto)) dto: LoginUserDto ,
   @Res({ passthrough: true }) res: Response, @Req() req:Request 
 ) {
+  
   const {data,message}:{data?:any,message:string} =await this.authService.login(dto,res);
     return  {message:message , data}
 
+  }
+
+  @Post("changeRole")
+  async changeRole(@Token() token:tokenType,@Body() body:ChangeRoleDto){
+    const {email}=token
+    return this.authService.changeRole(email,body.role)
   }
 
   @Get('logout')

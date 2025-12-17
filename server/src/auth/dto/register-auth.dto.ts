@@ -7,6 +7,7 @@ export const RegisterUserSchema = z.object({
   fullName: z.string().min(1, "Full name is required"),
   email: z.email("Email is not a valid email"),
   address: z.string().min(1, "Address is required"),
+  role:z.enum(["user","admin","guest"]).default("guest"),
   phoneNumber: z
     .string()
     .min(1, "Phone number is required")

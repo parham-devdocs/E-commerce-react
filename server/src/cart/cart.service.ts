@@ -20,25 +20,17 @@ export class CartService {
     token: tokenType,
     createCartItemDto: CreateCartItemDTO,
   ) {
-    console.log('[DEBUG] Starting upsert for user:', token.email, 'productId:', createCartItemDto.productId);
   
     const user = await this.userService.findOne(token.email);
-    console.log('[DEBUG] Found user:', user?.id);
   
-    // ✅ Get the actual cart item in the user's active cart
     const cartItemResult = await this.findProductInCart(token, createCartItemDto.productId);
-    console.log('[DEBUG] Product in cart?', cartItemResult.inCart);
-  
+
     if (cartItemResult.inCart && cartItemResult.item) {
-      // ✅ Use the already-found cart item — it's guaranteed to be in the correct cart
       const cartItem = cartItemResult.item;
-      console.log('[DEBUG] Updating existing cartItem:', cartItem.id, 'from', cartItem.quantity, 'to', createCartItemDto.quantity);
   
       cartItem.quantity = createCartItemDto.quantity;
       await this.cartItemRepository.save(cartItem);
-      console.log('[DEBUG] cartItem updated successfully.');
   
-      // Optionally reload to ensure relations are fresh (or just return updated data)
       return {
         id: cartItem.id,
         productId: cartItem.productId,
@@ -46,14 +38,10 @@ export class CartService {
       };
     }
   
-    // --- If not in cart: create new cart item ---
-    console.log('[DEBUG] Product NOT in cart. Creating new cartItem...');
-  
+    
     await this.productService.findOne(createCartItemDto.productId);
-    console.log('[DEBUG] Product exists.');
   
     let cart = await this.findActiveCart(token);
-    console.log('[DEBUG] Active cart found?', !!cart, cart ? `Cart ID: ${cart.id}` : 'No active cart.');
   
     const cartItem = this.cartItemRepository.create({
       productId: createCartItemDto.productId,
@@ -75,7 +63,6 @@ export class CartService {
     const savedCart = await this.cartRepository.save(cart);
     console.log('[DEBUG] Cart saved. Total items:', savedCart.cartItems.length);
   
-    // Return the newly added item
     const newItem = savedCart.cartItems.find(item => item.productId === createCartItemDto.productId);
     return {
       id: newItem?.id,

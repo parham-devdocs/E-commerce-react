@@ -4,10 +4,11 @@ import { AuthController } from './auth.controller';
 import { JWTService } from './JWTService';
 import { authProvider } from './auth.provider';
 import { DatabaseModule } from '../database.module';
+import { UserService } from 'src/user/user.service';
 
 @Module({
   controllers: [AuthController],
-  providers: [AuthService,JWTService,...authProvider],
+  providers: [AuthService,JWTService,UserService,...authProvider],
   imports:[DatabaseModule],
   exports:[AuthService]
   

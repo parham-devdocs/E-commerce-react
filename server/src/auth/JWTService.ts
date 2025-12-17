@@ -11,8 +11,8 @@ interface TokenPair {
 @Injectable()
 export class JWTService {
   
-  createToken(email: string): TokenPair {
-    const payload = { email };
+  createToken(email: string,role:string): TokenPair {
+    const payload = { email,role };
 
     const accessToken = jwt.sign(
       payload, // ✅

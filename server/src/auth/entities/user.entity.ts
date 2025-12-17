@@ -4,7 +4,14 @@ import { Cart } from 'src/cart/entities/cart.entity';
 import { Review } from 'src/review/entities/review.entity';
 import { Invoice } from 'src/payment/entities/payment.entity';
 
-@Entity('auth') // or 'user'
+
+// roles.enum.ts
+export enum UserRole {
+  ADMIN = 'admin',
+  USER = 'user',
+  GUEST = 'guest', // optional, usually inferred at runtime
+}
+@Entity('auth') 
 export class AUTH {
   @PrimaryGeneratedColumn()
   id: number;
@@ -23,6 +30,13 @@ export class AUTH {
 
   @Column()
   hashedPassword: string;
+  
+  @Column({
+    type: 'enum',
+    enum: UserRole,
+    default: UserRole.USER,
+  })
+  role: UserRole;
 
   @Column({ type: 'text', nullable: true })
   refreshToken?: string;

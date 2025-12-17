@@ -2,7 +2,7 @@ import { Inject, Injectable, NotFoundException, UnauthorizedException } from '@n
 import { RegisterUserDto } from './dto/register-auth.dto';
 import { LoginUserDto } from './dto/login-auth.dto';
 import { Repository } from 'typeorm';
-import { AUTH } from './entities/user.entity';
+import { AUTH, UserRole } from './entities/user.entity';
 import { JWTService } from './JWTService';
 import { dehashPassword, setAuthCookie } from 'src/utils';
 import {type Response } from 'express';
@@ -10,12 +10,14 @@ import { hashPassword } from "../utils";
 import { QueryFailedError } from "typeorm";
 import { ZodError } from 'zod';
 import { tokenType } from 'src/interfaces';
+import { UserService } from 'src/user/user.service';
 @Injectable()
 export class AuthService {
   constructor(
     @Inject('AUTH_REPOSITORY')
     private authRepository: Repository<AUTH>,
     private jwtServcie: JWTService,
+    private userService:UserService
   ) {}
   async register(registerUserDto: RegisterUserDto, res: Response) {
     try {
@@ -27,6 +29,7 @@ export class AuthService {
       }
       const { accessToken, refreshToken } = this.jwtServcie.createToken(
         registerUserDto.email,
+        registerUserDto.role
       );
       setAuthCookie(res, accessToken, 'accessToken', 'accessToken');
       setAuthCookie(res, refreshToken, 'refreshToken', 'refreshToken');
@@ -63,13 +66,9 @@ return {message:error.message}
 
   async login(loginUserDto: LoginUserDto, res: Response) {
     try {
-      // ✅ Fixed: added `await`
       const user = await this.authRepository.findOne({
-        where: { email: loginUserDto.email },
-        select: { id: true, email: true, fullName: true, phoneNumber: true, address: true, hashedPassword: true, refreshToken: true },
-      });
-  
-      // ✅ Fixed: correct exception instantiation
+        where: { email: loginUserDto.email }
+      })
       if (!user) {
         throw new NotFoundException('User not found');
       }
@@ -81,20 +80,16 @@ return {message:error.message}
         throw new UnauthorizedException('Invalid credentials');
       }
   
-      const { accessToken, refreshToken } = this.jwtServcie.createToken(loginUserDto.email);
+      const { accessToken, refreshToken } = this.jwtServcie.createToken(loginUserDto.email,user.role);
   
-      // ✅ Fixed: update refreshToken and persist with `await`
       user.refreshToken = refreshToken;
       await this.authRepository.save(user);
   
       setAuthCookie(res, accessToken, 'accessToken', 'accessToken');
       setAuthCookie(res, refreshToken, 'refreshToken', 'refreshToken');
-  
-      // ✅ Fixed: exclude sensitive fields from response
-      const { hashedPassword, refreshToken: _, ...safeUser } = user;
-  
+
+      const { hashedPassword, refreshToken: _,role, ...safeUser } = user;
       return { message: "user logged in successfully", data: safeUser };
-  
     } catch (error) {
       // 👇 This block is left EXACTLY as you wrote it — untouched
       if (error instanceof QueryFailedError) {
@@ -157,5 +152,15 @@ return {message:error.message}
         error: 'Internal Server Error',
       });
     }
+  }
+
+  async changeRole(email:string,role:UserRole){
+  await this.userService.findOne(email)
+  
+ const updatedRole=   await  this.authRepository.update({email},{role:role})
+ if (!updatedRole.affected) {
+  throw new NotFoundException(`User with email ${email} not found`);
+}
+ return updatedRole.raw
   }
 }
