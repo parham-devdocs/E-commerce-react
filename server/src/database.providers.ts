@@ -19,7 +19,7 @@ export const databaseProviders = [
         database: process.env.DB_NAME,
         entities: [AUTH,Review,CartItem,Cart,Invoice],
 
-        synchronize: true,
+        synchronize: true
       });
 
       return dataSource.initialize();

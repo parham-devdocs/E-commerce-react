@@ -1,20 +1,29 @@
-
-import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
-import { Reflector } from '@nestjs/core';
-import { Roles } from './roles.decorator';
+// auth.guard.ts
+import { Injectable, CanActivate, ExecutionContext, UnauthorizedException } from '@nestjs/common';
+import { JWTService } from './auth/JWTService';
 
 @Injectable()
-export class RolesGuard implements CanActivate {
-  constructor(private reflector: Reflector) {}
+export class AuthGuard implements CanActivate {
+  constructor(private jwtService: JWTService) {} // ✅ private!
 
   canActivate(context: ExecutionContext): boolean {
-    const roles = this.reflector.get(Roles, context.getHandler());
-    if (!roles) {
-      return true;
-    }
     const request = context.switchToHttp().getRequest();
-    const user = request.user;
-    // return matchRoles(roles, user.roles);
-    return true
+    const accessToken = request.cookies?.accessToken;
+
+    if (!accessToken) {
+      throw new UnauthorizedException('Token missing');
+    }
+
+    try {
+      const payload = this.jwtService.verifyTokenOnly(accessToken);
+      if (!payload.role) {
+        throw new UnauthorizedException('Role missing in token');
+      }
+      // ✅ Attach user to request for RolesGuard
+      request.user = payload;
+      return true; 
+    } catch (err) {
+      throw new UnauthorizedException('Invalid token');
+    }
   }
 }

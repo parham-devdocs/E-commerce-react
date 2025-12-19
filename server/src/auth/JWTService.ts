@@ -1,6 +1,6 @@
 // jwt.service.ts
-import { Injectable } from '@nestjs/common';
-import  jwt from 'jsonwebtoken';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
+import  jwt, { JwtPayload } from 'jsonwebtoken';
 import { email } from 'zod';
 
 interface TokenPair {
@@ -28,4 +28,18 @@ export class JWTService {
 
     return { accessToken, refreshToken };
   }
+
+  
+  
+// JWTService.ts
+verifyTokenOnly(token: string): JwtPayload {
+  try {
+    return jwt.verify(token, process.env.JWT_ACCESS_SECRET as string) as JwtPayload;
+  } catch (error) {
+    if (error instanceof jwt.TokenExpiredError) {
+      throw new UnauthorizedException('Token expired');
+    }
+    throw new UnauthorizedException('Invalid token');
+  }
+}
 }

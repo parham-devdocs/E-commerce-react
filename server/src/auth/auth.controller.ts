@@ -37,9 +37,9 @@ export class AuthController {
   }
 
   @Post("changeRole")
-  async changeRole(@Token() token:tokenType,@Body() body:ChangeRoleDto){
+  async changeRole(@Token() token:tokenType,@Body() body:ChangeRoleDto,@Res({ passthrough: true }) res: Response){
     const {email}=token
-    return this.authService.changeRole(email,body.role)
+    return this.authService.changeRole(email,body.role,res)
   }
 
   @Get('logout')

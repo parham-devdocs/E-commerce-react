@@ -12,7 +12,9 @@ import { CartModule } from './cart/cart.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { PaymentModule } from './payment/payment.module';
 import { APP_GUARD } from '@nestjs/core';
-import { RolesGuard } from './auth.guard';
+import { AuthGuard } from './auth.guard';
+import { JWTService } from './auth/JWTService';
+import { AccessContorlService } from './accessControlService';
 @Module({
   imports: [ ProductsModule,ConfigModule.forRoot({isGlobal:true}), AuthModule,  ReviewModule, UserModule, CartModule,  ConfigModule.forRoot({ isGlobal: true }),
 
@@ -29,9 +31,7 @@ import { RolesGuard } from './auth.guard';
     PaymentModule
   ],
   controllers: [AppController],
-  providers: [AppService,  {
-    provide: APP_GUARD,
-    useClass: RolesGuard,
-  },],
+  providers: [AppService,AccessContorlService],
+exports:[AccessContorlService]
 })
 export class AppModule {}
