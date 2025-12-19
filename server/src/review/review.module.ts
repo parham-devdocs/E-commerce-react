@@ -6,10 +6,11 @@ import { DatabaseModule } from 'src/database.module';
 import { reviewProvider } from './review.provider';
 import { ProductsModule } from 'src/products/products.module';
 import { UserModule } from 'src/user/user.module';
+import { AccessContorlService } from 'src/accessControlService';
 
 @Module({
   controllers: [ReviewController],
-  providers: [ReviewService,...reviewProvider],
-  imports:[DatabaseModule,ProductsModule,UserModule]
+  providers: [ReviewService,AccessContorlService,...reviewProvider],
+  imports:[DatabaseModule,ProductsModule,UserModule,AuthModule]
 })
 export class ReviewModule {}

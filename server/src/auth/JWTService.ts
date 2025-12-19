@@ -1,5 +1,5 @@
 // jwt.service.ts
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable, InternalServerErrorException, UnauthorizedException } from '@nestjs/common';
 import  jwt, { JwtPayload } from 'jsonwebtoken';
 import { email } from 'zod';
 
@@ -32,14 +32,20 @@ export class JWTService {
   
   
 // JWTService.ts
-verifyTokenOnly(token: string): JwtPayload {
+verifyTokenOnly(tokenType: "refreshToken" | "accessToken", token: string): JwtPayload {
   try {
-    return jwt.verify(token, process.env.JWT_ACCESS_SECRET as string) as JwtPayload;
+    if (tokenType === "accessToken") {
+      return jwt.verify(token, process.env.JWT_ACCESS_SECRET as string) as JwtPayload;
+    }
+    if (tokenType === "refreshToken") {
+      return jwt.verify(token, process.env.JWT_REFRESH_SECRET as string) as JwtPayload;
+    }
+    
+    throw new InternalServerErrorException('Invalid token type');
   } catch (error) {
     if (error instanceof jwt.TokenExpiredError) {
       throw new UnauthorizedException('Token expired');
     }
     throw new UnauthorizedException('Invalid token');
   }
-}
-}
+}}

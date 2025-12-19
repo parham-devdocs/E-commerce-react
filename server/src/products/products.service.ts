@@ -7,7 +7,6 @@ import { Response } from "express";
 import { Category } from 'src/category/category.schema';
 import { InjectModel } from '@nestjs/mongoose';
 import { calculateDicount, calculatePriceWithDiscount, dateComparison } from "../utils";
-import { fi } from 'zod/v4/locales';
 @Injectable()
 export class ProductsService {
   constructor(

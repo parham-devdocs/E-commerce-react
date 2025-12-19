@@ -21,7 +21,7 @@ export class CartService {
     createCartItemDto: CreateCartItemDTO,
   ) {
   
-    const user = await this.userService.findOne(token.email);
+    const user = await this.userService.findOneByEmail(token.email);
   
     const cartItemResult = await this.findProductInCart(token, createCartItemDto.productId);
 
@@ -72,7 +72,7 @@ export class CartService {
   }
 
   async findActiveCart(token:tokenType) {
-    const user=await this.userService.findOne(token.email)
+    const user=await this.userService.findOneByEmail(token.email)
   const active=await this.cartRepository.findOne({where:{active:true,user},relations:["cartItems"]})
   if (!active) {
     return null
@@ -82,7 +82,7 @@ return active
   }
 
   async findProductInCart(token: tokenType, productId: string) {
-    const user = await this.userService.findOne(token.email);
+    const user = await this.userService.findOneByEmail(token.email);
     if (!user) throw new HttpException('User not found', HttpStatus.NOT_FOUND);
   
     // This single query is blazing fast
@@ -114,7 +114,7 @@ return active
   
 
   async findProductsInCart(token: tokenType) {
-    const user = await this.userService.findOne(token.email);
+    const user = await this.userService.findOneByEmail(token.email);
   
     const cart = await this.cartRepository.findOne({
       where: {

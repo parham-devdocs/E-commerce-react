@@ -23,7 +23,7 @@ export class UserService {
        return users; 
   }
 
-  async findOne(email:string) {
+  async findOneByEmail(email:string) {
     const user = await this.userModel.findOne({ where: { email } });
     if (!user) {
       throw new NotFoundException(`User with ID ${email} not found`);

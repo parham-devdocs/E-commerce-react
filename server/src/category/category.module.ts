@@ -8,11 +8,13 @@ import { ProductProvider } from 'src/products/product.db.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ProductSchema } from 'src/products/product.schema';
 import { CategorySchema } from './category.schema';
+import { AccessContorlService } from 'src/accessControlService';
+import { AuthModule } from 'src/auth/auth.module';
 
 @Module({
   controllers: [CatgoryController],
-  providers: [CatgoryService],
-  imports: [DatabaseModule,MongooseModule.forFeature([{ name: 'Category', schema: CategorySchema },
+  providers: [CatgoryService,AccessContorlService],
+  imports: [DatabaseModule,AuthModule,MongooseModule.forFeature([{ name: 'Category', schema: CategorySchema },
     { name: 'Product', schema: ProductSchema } ])]
 })
 export class CatgoryModule {}

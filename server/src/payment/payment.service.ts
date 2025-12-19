@@ -17,7 +17,7 @@ export class PaymentService {
     private productService:ProductsService){}
 async  create(token:tokenType) {
 const {email}=token
-const user=await this.userService.findOne(email)
+const user=await this.userService.findOneByEmail(email)
 const cart=await this.cartService.findActiveCart(token)
 if (cart) {
   const productPromises = cart.cartItems.map(async (item) => {

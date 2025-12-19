@@ -9,10 +9,12 @@ import { Category, CategorySchema } from 'src/category/category.schema';
 import { ProductSchema,Product } from './product.schema';
 import { join } from 'path';
 import { MulterModule } from '@nestjs/platform-express';
+import { AuthModule } from 'src/auth/auth.module';
+import { AccessContorlService } from 'src/accessControlService';
 @Module({
   controllers: [ProductsController],
-  providers: [ProductsService],
-  imports:[CatgoryModule, MongooseModule.forFeature([
+  providers: [ProductsService,AccessContorlService],
+  imports:[CatgoryModule,AuthModule, MongooseModule.forFeature([
     { name: Product.name, schema: ProductSchema },
     { name: Category.name, schema: CategorySchema }
   ]), MulterModule.register({

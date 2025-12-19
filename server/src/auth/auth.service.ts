@@ -4,12 +4,12 @@ import { LoginUserDto } from './dto/login-auth.dto';
 import { Repository } from 'typeorm';
 import { AUTH, UserRole } from './entities/user.entity';
 import { JWTService } from './JWTService';
-import { dehashPassword, setAuthCookie } from 'src/utils';
-import {type Response } from 'express';
+import { dehashPassword, getAuthCookie, setAuthCookie } from 'src/utils';
+import {Request, type Response } from 'express';
 import { hashPassword } from "../utils";
 import { QueryFailedError } from "typeorm";
 import { ZodError } from 'zod';
-import { tokenType } from 'src/interfaces';
+import { CooikeType, tokenType } from 'src/interfaces';
 import { UserService } from 'src/user/user.service';
 @Injectable()
 export class AuthService {
@@ -22,11 +22,12 @@ export class AuthService {
   ) {}
   async register(registerUserDto: RegisterUserDto, res: Response) {
     try {
-       await this.userService.findOne(registerUserDto.email)
+       await this.userService.findOneByEmail(registerUserDto.email)
 
       const { accessToken, refreshToken } = this.jwtServcie.createToken(
         registerUserDto.email,
-        registerUserDto.role
+        registerUserDto.role,
+        
       );
       
       setAuthCookie(res, accessToken, 'accessToken', 'accessToken');
@@ -62,11 +63,10 @@ export class AuthService {
 
   async login(loginUserDto: LoginUserDto, res: Response) {
     try {
-      const user = await this.userService.findOne(loginUserDto.email)
+      const user = await this.userService.findOneByEmail(loginUserDto.email)
   
       const passwordIsCorrect = await dehashPassword(user.hashedPassword, loginUserDto.password);
   
-      // ✅ Fixed: correct exception instantiation
       if (!passwordIsCorrect) {
         throw new UnauthorizedException('Invalid credentials');
       }
@@ -96,9 +96,60 @@ export class AuthService {
     }
   }
 
+
+// In AuthService
+async refreshToken(req: Request, res: Response) {
+  const refreshToken = req.cookies?.refreshToken;
+
+  if (!refreshToken) {
+    throw new UnauthorizedException('Refresh token missing');
+  }
+
+  try {
+    const payload = this.jwtServcie.verifyTokenOnly("refreshToken",refreshToken); 
+    const { email } = payload;
+    const user = await this.userService.findOneByEmail(email);
+    if (!user) {
+      throw new UnauthorizedException('User not found');
+    }
+
+ 
+    const { accessToken, refreshToken: newRefreshToken } = this.jwtServcie.createToken(email, user.role);
+
+    user.refreshToken = newRefreshToken;
+    await this.authRepository.save(user);
+
+    setAuthCookie(res,"accessToken", accessToken, 'accessToken');
+    setAuthCookie(res,"refreshToken", newRefreshToken, 'refreshToken');
+
+    const { hashedPassword, refreshToken: _, ...safeUser } = user;
+    const tokens=getAuthCookie(req)
+console.log(tokens)
+    return {
+      message: 'Tokens refreshed successfully',
+      user: safeUser,
+      accessToken,refreshToken
+    };
+
+  } catch (error) {
+    // Clear cookies on failure
+    res.clearCookie('accessToken');
+    res.clearCookie('refreshToken');
+    
+    if (error.name === 'TokenExpiredError') {
+      throw new UnauthorizedException('Refresh token expired');
+    }
+    if (error.name === 'JsonWebTokenError') {
+      throw new UnauthorizedException('Invalid refresh token');
+    }
+    throw new UnauthorizedException('Unable to refresh token');
+  }
+}
+
+
   async logout(token: tokenType, res: Response): Promise<any> {
     const { email } = token;
-    const user = await this.userService.findOne(email);
+    const user = await this.userService.findOneByEmail(email);
   
     // Clear cookies (always do this)
     const cookieOptions = { httpOnly: true, secure: true, sameSite: 'strict' as const };
@@ -117,10 +168,9 @@ export class AuthService {
     });
   }
   async changeRole(email:string,role:UserRole,res: Response){
- const user= await this.userService.findOne(email)
+ const user= await this.userService.findOneByEmail(email)
   
  const updatedRole=   await  this.authRepository.update({email},{role:role})
- const cookieOptions = { httpOnly: true, secure: true, sameSite: 'strict' as const };
  const { accessToken, refreshToken } = this.jwtServcie.createToken(user.email,role);
   
  user.refreshToken = refreshToken;

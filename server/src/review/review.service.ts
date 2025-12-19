@@ -26,7 +26,7 @@ const existingComment=await this.findOneByProductId(token,productId)
 if (existingComment) {
   throw new ConflictException("comment for this product has already been made")
 }
-  const user = await this.userService.findOne(email);
+  const user = await this.userService.findOneByEmail(email);
 
 
   const review = this.reviewRepository.create({

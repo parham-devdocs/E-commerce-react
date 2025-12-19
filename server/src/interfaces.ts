@@ -12,4 +12,7 @@ export interface  ENV {
   export interface tokenType{ 
     email: string,
      iat: number,
+     refreshToken:string
       exp: number }
+
+      export interface CooikeType{refreshToken:string,accessToken:string}

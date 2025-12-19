@@ -1,4 +1,4 @@
-import { Response } from 'express'; // or fastify if you use it
+import { Request, Response } from 'express'; // or fastify if you use it
 import bcrypt from "bcrypt";
 import { DateTime } from 'luxon';
 
@@ -36,6 +36,12 @@ const token=  res.cookie(key, value, {
   return token
 };
 
+export const getAuthCookie = (
+  req: Request,
+):Record<string,any> => {
+const token=  req.cookies
+  return token
+};
 
 export const hashPassword=async(plainPassword:string) =>{
   const saltRounds = 12; 
