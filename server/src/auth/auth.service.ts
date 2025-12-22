@@ -1,4 +1,4 @@
-import { BadRequestException, HttpException, Inject, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, HttpException, HttpStatus, Inject, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { RegisterUserDto } from './dto/register-auth.dto';
 import { LoginUserDto } from './dto/login-auth.dto';
 import { Repository } from 'typeorm';
@@ -22,43 +22,54 @@ export class AuthService {
   ) {}
   async register(registerUserDto: RegisterUserDto, res: Response) {
     try {
-       await this.userService.findOneByEmail(registerUserDto.email)
-
+      // 🔴 CRITICAL: Check if user already exists
+      const existingUser = await this.authRepository.findOne({where:{email:registerUserDto.email}})
+      console.log(existingUser)
+      if (existingUser) {
+        throw new BadRequestException('User with this email already exists');
+      }
+  
       const { accessToken, refreshToken } = this.jwtServcie.createToken(
         registerUserDto.email,
-        registerUserDto.role,
-        
+        registerUserDto.role, // now safe to use — user is new
       );
-      
+  
       setAuthCookie(res, accessToken, 'accessToken', 'accessToken');
       setAuthCookie(res, refreshToken, 'refreshToken', 'refreshToken');
-      const hashedPassword=await hashPassword(registerUserDto.password)
-      const newUser = this.authRepository.create({
-        fullName:registerUserDto.fullName,
-        email:registerUserDto.email,
-        address:registerUserDto.address,
-        phoneNumber:registerUserDto.phoneNumber,
-        hashedPassword:hashedPassword,
-      refreshToken
-
-      });
-      const user=await this.authRepository.save(newUser);
-      return {user,message:"user registred successfully"}
-    } catch (error) {
-      if (error instanceof QueryFailedError) {
-        const detail = error .driverError?.detail;
-
-        throw new BadRequestException(detail)
-
-      }
-      if (error instanceof ZodError ) {
-        throw new BadRequestException(error.message)
-        
-      }
-      throw new HttpException("server internal error",500)
-    }
-
   
+      const hashedPassword = await hashPassword(registerUserDto.password);
+  
+      const newUser = this.authRepository.create({
+        fullName: registerUserDto.fullName,
+        email: registerUserDto.email,
+        address: registerUserDto.address,
+        phoneNumber: registerUserDto.phoneNumber,
+        hashedPassword,
+        refreshToken,
+      });
+  
+      const user = await this.authRepository.save(newUser);
+      return { user, message: "User registered successfully" };
+  
+    } catch (error) {
+      // Optional: improve QueryFailedError handling
+      if (error instanceof QueryFailedError) {
+        // Log the actual error for debugging
+        console.error('Database error:', error);
+  
+        // Provide a safe fallback message
+        const detail = error.driverError?.detail || 'Email or phone number already in use';
+        throw new BadRequestException(detail);
+      }
+  
+      if (error instanceof BadRequestException) {
+        throw error; // re-throw known client errors
+      }
+  
+      // Avoid generic 500 — but keep it as fallback
+      console.error('Unexpected error in register:', error);
+      throw new HttpException('Registration failed', HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
 
   async login(loginUserDto: LoginUserDto, res: Response) {
@@ -70,7 +81,7 @@ export class AuthService {
       if (!passwordIsCorrect) {
         throw new UnauthorizedException('Invalid credentials');
       }
-  
+
       const { accessToken, refreshToken } = this.jwtServcie.createToken(loginUserDto.email,user.role);
   
       user.refreshToken = refreshToken;
@@ -124,7 +135,6 @@ async refreshToken(req: Request, res: Response) {
 
     const { hashedPassword, refreshToken: _, ...safeUser } = user;
     const tokens=getAuthCookie(req)
-console.log(tokens)
     return {
       message: 'Tokens refreshed successfully',
       user: safeUser,

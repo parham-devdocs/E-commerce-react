@@ -3,7 +3,6 @@ import { AuthService } from './auth.service';
 import { RegisterUserDto, RegisterUserSchema } from './dto/register-auth.dto';
 import { LoginUserDto } from "./dto/login-auth.dto";
 import { ZodValidationPipe } from 'nestjs-zod';
-import { JWTService } from './JWTService';
 import {type Response,type Request } from 'express';
 import Token from 'src/customDecorators/token.decorator';
 import {type tokenType } from 'src/interfaces';
@@ -17,18 +16,19 @@ export class AuthController {
   ) {}
 
   @Post('register')
- async   register(
-    @Body(new ZodValidationPipe(RegisterUserSchema))  dto: RegisterUserDto, 
-    @Res({ passthrough: true }) res: Response, @Req() req:Request 
+ async   register
+  (@Body(new ZodValidationPipe(RegisterUserDto))  dto: RegisterUserDto, 
+    @Res({ passthrough: true }) res: Response
   ) {
+    // const {data,message}:{data?:any,message:string} = await this.authService.register(dto,res);
 
-    const {data,message}:any = await this.authService.register(dto,res);
-
-    return  {message:message , data}
+    // return  {message:message , data}
+    return await this.authService.register(dto,res)
   }
   @Post("login")
- async login(@Body(new ZodValidationPipe(LoginUserDto)) dto: LoginUserDto ,
-  @Res({ passthrough: true }) res: Response, @Req() req:Request 
+ async login
+ (@Body(new ZodValidationPipe(LoginUserDto)) dto: LoginUserDto ,
+  @Res({ passthrough: true }) res: Response
 ) {
   
   const {data,message}:{data?:any,message:string} =await this.authService.login(dto,res);

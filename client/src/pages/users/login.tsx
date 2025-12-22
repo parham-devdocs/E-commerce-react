@@ -18,9 +18,9 @@ const Login = () => {
   } = useForm<LoginFormData>({
     resolver: zodResolver(userLoginSchema),
   });
-
+  
   const onSubmit: SubmitHandler<LoginFormData> = (data) => {
-    console.log(data);
+  console.log("SS")
   };
 
   useEffect(() => {
