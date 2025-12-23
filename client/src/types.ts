@@ -1,5 +1,7 @@
 import type { ColumnDef } from "@tanstack/react-table"
 import type { ReactNode } from "react"
+import type z from "zod"
+import type { userLoginSchema, userRegisterSchema } from "./formValidationSchemas"
 
 
 export type ProductCardType={
@@ -93,3 +95,7 @@ export interface DropDownType {
    size?: 'sm' | 'md' | 'lg';    
 
  }
+
+
+ export type LoginFormData = z.infer<typeof userLoginSchema>;
+ export type RegsiterFormData = z.infer<typeof userRegisterSchema>;

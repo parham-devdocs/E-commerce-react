@@ -2,11 +2,12 @@ import React from 'react';
 import { BiLogIn, BiLogOut } from 'react-icons/bi';
 import { BsPerson } from 'react-icons/bs';
 import { Link } from 'react-router-dom';
+import {useAuth} from '../../store/auth';
 
 const ProfileSection = () => {
   const loggedIn = true; // You can replace this with real auth logic later
-
-  if (loggedIn) {
+const {isLoggedIn,userInfo}=useAuth()
+  if (isLoggedIn) {
     return (
       <div className="flex items-center gap-3 md:gap-4">
         {/* Logout Button */}
@@ -20,7 +21,7 @@ const ProfileSection = () => {
             </div>
           </div>
           <span className="font-medium text-gray-800 text-sm md:text-base whitespace-nowrap">
-            پرهام پازارگادی
+            {userInfo?.fullName}
           </span>
         </Link>
         <button

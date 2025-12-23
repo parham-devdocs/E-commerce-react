@@ -5,17 +5,16 @@ import Button from "../../components/button";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { userRegisterSchema } from "../../formValidationSchemas";
-import { z } from "zod";
 import { useEffect } from "react";
 import { toast } from "sonner";
 import { useRegisterUser } from "../../queries/userQueries";
-import type { AxiosError } from "axios";
+import { useNavigate } from "react-router-dom";
+import type { RegisterFormData } from "../../api/userApis";
 
-type RegisterFormData = z.infer<typeof userRegisterSchema>;
 
 const Register = () => {
   const { mutate, isPending,error } = useRegisterUser();
-
+const navigate=useNavigate()
   const {
     register,
     handleSubmit,
@@ -24,10 +23,12 @@ const Register = () => {
     resolver: zodResolver(userRegisterSchema),
   });
 
-  const onSubmit: SubmitHandler<any> = (data) => {
-    // ✅ Always call mutate — don't check error here!
+  const onSubmit: SubmitHandler<RegisterFormData> = (data) => {
+
     mutate(data)
-   
+   if (!error) {
+    navigate("/")
+   }
 
       };
 

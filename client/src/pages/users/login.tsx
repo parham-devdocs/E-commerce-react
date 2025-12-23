@@ -4,11 +4,12 @@ import Button from "../../components/button";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { userLoginSchema } from "../../formValidationSchemas";
-import { z } from "zod";
 import { useEffect } from "react";
 import { toast } from "sonner";
+import { useLoginUser } from "../../queries/userQueries";
+import type { LoginFormData } from "../../types";
+import { useNavigate } from "react-router-dom";
 
-type LoginFormData = z.infer<typeof userLoginSchema>;
 
 const Login = () => {
   const {
@@ -18,9 +19,14 @@ const Login = () => {
   } = useForm<LoginFormData>({
     resolver: zodResolver(userLoginSchema),
   });
-  
+  const {error,mutate}=useLoginUser()
+  const navigate=useNavigate()
   const onSubmit: SubmitHandler<LoginFormData> = (data) => {
-  console.log("SS")
+
+    mutate(data)
+    if (!error) {
+      navigate("/")
+    }
   };
 
   useEffect(() => {
@@ -28,9 +34,9 @@ const Login = () => {
       toast.error(errors.email.message, {
         // Customize this toast's appearance
         style: {
-          backgroundColor: "#fef2f2", // Example: Light red background
-          color: "#b91c1c", // Example: Dark red text
-          border: "1px solid #fecaca", // Example: Red border
+          backgroundColor: "#fef2f2", 
+          color: "#b91c1c", 
+          border: "1px solid #fecaca", 
         },
       });
     }

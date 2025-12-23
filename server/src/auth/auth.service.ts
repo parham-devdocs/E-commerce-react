@@ -1,4 +1,4 @@
-import { BadRequestException, HttpException, HttpStatus, Inject, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, HttpException, HttpStatus, Inject, Injectable, Logger, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { RegisterUserDto } from './dto/register-auth.dto';
 import { LoginUserDto } from './dto/login-auth.dto';
 import { Repository } from 'typeorm';
@@ -72,38 +72,77 @@ export class AuthService {
     }
   }
 
-  async login(loginUserDto: LoginUserDto, res: Response) {
-    try {
-      const user = await this.userService.findOneByEmail(loginUserDto.email)
+  // ... other imports
   
+  async login(loginUserDto: LoginUserDto, res: Response) {
+    const logger = new Logger('AuthService');
+    
+    logger.log('Login attempt started', { email: loginUserDto.email });
+  
+    try {
+      // 🔍 Log: Incoming request data (avoid logging raw password!)
+      logger.log('Received login DTO', { email: loginUserDto.email });
+  
+      // 🔍 Step 1: Find user by email
+      const user = await this.userService.findOneByEmail(loginUserDto.email);
+      
+      if (!user) {
+        logger.warn('User not found', { email: loginUserDto.email });
+        throw new UnauthorizedException('Invalid credentials');
+      }
+  
+      logger.log('User found', { userId: user.id, email: user.email });
+  
+      // 🔍 Step 2: Verify password
+      logger.log('Verifying password...');
       const passwordIsCorrect = await dehashPassword(user.hashedPassword, loginUserDto.password);
   
       if (!passwordIsCorrect) {
+        logger.warn('Password verification failed', { email: loginUserDto.email });
         throw new UnauthorizedException('Invalid credentials');
       }
-
-      const { accessToken, refreshToken } = this.jwtServcie.createToken(loginUserDto.email,user.role);
+  
+      logger.log('Password verified successfully', { email: loginUserDto.email });
+  
+      const { accessToken, refreshToken } = this.jwtServcie.createToken(loginUserDto.email, user.role);
+      logger.log('JWT tokens generated', { email: loginUserDto.email, role: user.role });
   
       user.refreshToken = refreshToken;
       await this.authRepository.save(user);
+      logger.log('Refresh token saved to DB', { userId: user.id });
   
       setAuthCookie(res, accessToken, 'accessToken', 'accessToken');
       setAuthCookie(res, refreshToken, 'refreshToken', 'refreshToken');
-
-      const { hashedPassword, refreshToken: _,role, ...safeUser } = user;
+      logger.log('Auth cookies set');
+  
+      const { hashedPassword, refreshToken: _, ...safeUser } = user;
+      logger.log('Login successful', { userId: user.id });
+  
       return { message: "user logged in successfully", data: safeUser };
-    } catch (error){
-      if (error instanceof QueryFailedError) {
-        const detail = error .driverError?.detail;
-
-        throw new BadRequestException(detail)
-
+  
+     } catch (error) {
+      logger.error('Login failed', {
+        error: {
+          message: error.message,
+          name: error.constructor.name,
+          stack: error.stack,
+        },
+        email: loginUserDto?.email,
+      });
+    
+      // Re-throw client-facing errors so they keep their status code
+      if (
+        error instanceof NotFoundException ||
+        error instanceof UnauthorizedException ||
+        error instanceof BadRequestException ||
+        error instanceof HttpException
+      ) {
+        throw error; // Preserve original status code (404, 401, 400, etc.)
       }
-      if (error instanceof ZodError ) {
-        throw new BadRequestException(error.message)
-        
-      }
-      throw new HttpException("server internal error",500)
+    
+      // Only treat truly unexpected errors as 500
+      logger.error('Unexpected error during login', { error });
+      throw new HttpException('Internal server error', 500);
     }
   }
 

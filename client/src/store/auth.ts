@@ -22,7 +22,7 @@ interface AuthState {
   checkAuthStatus:()=>any;
 }
 
-const useZustand = create<AuthState>()(
+const useAuthStore = create<AuthState>()(
   persist(
     (set,get) => ({
       isLoggedIn: false,
@@ -66,6 +66,6 @@ checkAuthStatus: () => {
     }
   )
 );
-export const zustandStore = useZustand;
+export const useAuth = useAuthStore
 
-export default useZustand
+export default useAuthStore
