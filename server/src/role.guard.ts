@@ -3,6 +3,7 @@ import { Reflector } from '@nestjs/core';
 import { Observable } from 'rxjs';
 import { AccessContorlService, ROLE_KEY } from './accessControlService';
 import { UserRole } from './auth/entities/user.entity';
+import { IS_PUBLIC_KEY } from './customDecorators/publicRoute.decorator';
 
 export class TokenDto {
   id: number;
@@ -19,6 +20,14 @@ export class RoleGuard implements CanActivate {
   canActivate(
     context: ExecutionContext,
   ): boolean | Promise<boolean> | Observable<boolean> {
+    const isPublic = this.reflector.getAllAndOverride<boolean>(IS_PUBLIC_KEY, [
+      context.getHandler(),
+      context.getClass(),
+    ]);
+    
+    if (isPublic) {
+      return true; 
+    }
     const requiredRoles = this.reflector.getAllAndOverride<UserRole[]>(ROLE_KEY, [
       context.getHandler(),
       context.getClass(),

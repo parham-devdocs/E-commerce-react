@@ -19,11 +19,10 @@ export default function App() {
         {/* Nested routes under MainLayout */}
         <Route path="/" element={<MainLayout />}>
           <Route path="/" element={<Home />} />
-          const allowedRoles = new Set(["user", "admin"]);
 
 <Route
   path="/cart"
-  element={userRole && userRole=== "user" ? <Cart /> : <Navigate to="/" replace />}
+  element={userRole && userRole=== "user" ? <Cart /> : <Navigate to="/login" replace />}
 />          <Route path="/product/:id" element={<ProductDetail />} />
           <Route path="/products/:category" element={<Products />} />
           <Route path="/login" element={<Login />} />

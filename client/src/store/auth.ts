@@ -29,6 +29,7 @@ const useAuthStore = create<AuthState>()(
       userInfo: null,
       userRole: null,
       isDarkMode: true,
+
    // In your store
 checkAuthStatus: () => {
   const { userInfo, isLoggedIn, logout } = get();
@@ -48,12 +49,14 @@ checkAuthStatus: () => {
           userRole: userData.role,
         }),
 
-      logout: () =>
-        set({
-          isLoggedIn: false,
-          userInfo: null,
-          userRole: null,
-        }),
+        logout: () => {
+          set({
+            isLoggedIn: false,
+            userInfo: null,
+            userRole: null,
+          });
+  
+        },
         addToCart:()=>
           set({})
         ,

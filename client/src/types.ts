@@ -20,14 +20,6 @@ export type ProductPopUp={
   discountPercentage:string
   price:string
 }
-export type Product={
-  id:string;
-  src:string ;
-  name:string,
-    shortDescription?:string,
-    price:number,
-    discountPercentage:number,
-    numbersAvailable:number}
 
 export type ProductCardInCart={
     img:string,productName:string,price:number,discountPercentage:number,defaultNumberOfProducts:number,id:string
@@ -99,3 +91,20 @@ export interface DropDownType {
 
  export type LoginFormData = z.infer<typeof userLoginSchema>;
  export type RegsiterFormData = z.infer<typeof userRegisterSchema>;
+
+
+
+
+ export interface Product{
+  id:string
+  name:string
+  brand:string
+  category:string
+  price:string
+  discountPercentage:number
+  attributes:{[key: string]: string}
+  inStock:boolean
+  count:number
+  images:string[]
+  description:string
+}

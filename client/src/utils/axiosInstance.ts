@@ -5,6 +5,7 @@ import axios from 'axios';
 // Create instance
 const apiClient = axios.create({
   baseURL: "http://localhost:5000",
+  withCredentials:true,
   timeout: 10000,
   headers: {
     'Content-Type': 'application/json',
@@ -35,9 +36,10 @@ apiClient.interceptors.response.use(
   (error) => {
     // Handle common errors (e.g., 401 = token expired)
     if (error.response?.status === 401) {
+      console.log(error  )
       // Redirect to login, clear tokens, etc.
       localStorage.removeItem('access_token');
-      window.location.href = '/login';
+      // window.location.href = '/login';
     }
     return Promise.reject(error);
   }

@@ -29,7 +29,6 @@ export const setAuthCookie = (
 const token=  res.cookie(key, value, {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
-    sameSite: 'strict',
     maxAge:tokenType==="accessToken" ? 60 * 60 * 1000 : 60 *60 *1000* 24*7, 
     path: '/',
   })

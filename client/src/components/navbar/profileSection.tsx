@@ -1,12 +1,20 @@
-import React from 'react';
 import { BiLogIn, BiLogOut } from 'react-icons/bi';
 import { BsPerson } from 'react-icons/bs';
-import { Link } from 'react-router-dom';
+import { Link, Navigate, useNavigate } from 'react-router-dom';
 import {useAuth} from '../../store/auth';
+import { useLogoutUser } from '../../queries/userQueries';
 
 const ProfileSection = () => {
-  const loggedIn = true; // You can replace this with real auth logic later
+  const {error,mutate}=useLogoutUser()
 const {isLoggedIn,userInfo}=useAuth()
+const navigate=useNavigate()
+function logoutHandler() {
+  console.log(isLoggedIn)
+  mutate()
+  if (!error) {
+    navigate("/")
+  }
+}
   if (isLoggedIn) {
     return (
       <div className="flex items-center gap-3 md:gap-4">
@@ -28,7 +36,7 @@ const {isLoggedIn,userInfo}=useAuth()
           aria-label="Logout"
           className="p-2 rounded-full text-red-500  hover:scale-105 hover:text-red-400 cursor-pointer   transition-colors duration-500"
         >
-          <BiLogOut size={23} />
+          <BiLogOut size={23} onClick={logoutHandler} />
         </button>
       </div>
     );
@@ -42,7 +50,7 @@ const {isLoggedIn,userInfo}=useAuth()
         aria-label="Login"
         className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-500 hover:bg-blue-700 text-white text-sm font-medium shadow hover:shadow-md transition-all duration-200"
       >
-        <BiLogIn size={18} />
+        <BiLogIn size={18} onClick={logoutHandler} href='/login'/>
         <span className="hidden sm:inline">ورود</span>
       </Link>
     </div>

@@ -1,6 +1,6 @@
 // queries/userQueries.ts
 import { useMutation } from "@tanstack/react-query";
-import { registerUser,loginUser } from "../api/userApis";
+import { registerUser,loginUser, logoutUser } from "../api/userApis";
 import { AxiosError } from "axios";
 import { toast } from "sonner";
 import queryErrorHandler from "../utils/queryErrorHandler";
@@ -25,6 +25,18 @@ export const useLoginUser = () => {
     mutationFn: loginUser,
     onSuccess: () => {
       toast.success('ورود با موفقیت انجام شد');
+    },
+    onError: (error) => {
+      queryErrorHandler(error);
+    },
+  });
+};
+
+export const useLogoutUser = () => {
+  return useMutation<void, AxiosError>({
+    mutationFn: logoutUser,
+    onSuccess: () => {
+      toast.success('خروج با موفقیت انجام شد');
     },
     onError: (error) => {
       queryErrorHandler(error);

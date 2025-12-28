@@ -16,4 +16,10 @@ const loginUser=async (data:LoginFormData)=>{
     return response.data
 }
 
-export {registerUser,loginUser}
+const logoutUser=async ()=>{
+    const response=await apiClient.get("/auth/logout")
+    useAuth.getState().logout()
+    return response.data   
+}
+
+export {registerUser,loginUser,logoutUser}

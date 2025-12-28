@@ -11,6 +11,7 @@ import { AuthGuard } from 'src/auth.guard';
 import { RoleGuard } from 'src/role.guard';
 import { Roles } from 'src/roles.decorator';
 import { UserRole } from 'src/auth/entities/user.entity';
+import { Public } from 'src/customDecorators/publicRoute.decorator';
 @Controller('products')
 @UseGuards(AuthGuard, RoleGuard) 
 
@@ -42,11 +43,10 @@ console.log(response)
     return this.productsService.getRecentProducts()
   }
 
-  @Roles(UserRole.ADMIN)
-  @Roles(UserRole.USER)
-  @Roles(UserRole.GUEST)
+ @Public()
   @Get("/discount")
   getProductsWithDiscount(){
+    console.log("something")
     return this.productsService.getProductsWithDiscount()
   }
 

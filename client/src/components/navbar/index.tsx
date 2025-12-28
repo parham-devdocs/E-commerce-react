@@ -25,13 +25,18 @@ function Navbar() {
     <span className=' w-2 h-2'>{cartItemCount > 9 ? '9+' : cartItemCount}</span>  
     </span>
   )}
-  <Link
-    to="/cart"
-    aria-label="Shopping cart"
-    className="text-xl text-gray-700 hover:text-black dark:text-neutral-400 dark:hover:text-neutral-500 hover:scale-110 transition-all duration-300"
-  >
+ <Link
+  to="/cart"
+  aria-label="Shopping cart"
+  className="text-xl text-gray-700 hover:text-black dark:text-neutral-400 dark:hover:text-neutral-500 hover:scale-110 transition-all duration-300 relative"
+>
+  <div className="relative inline-block">
     <BiCart size={23} />
-  </Link>
+    <span className="absolute -top-2 -right-2 flex items-center justify-center w-4 h-4 text-[10px] font-bold text-white bg-red-500 rounded-full ">
+      {cartItemCount}
+    </span>
+  </div>
+</Link>
 </div>
        
         <ToggleBtn  />
