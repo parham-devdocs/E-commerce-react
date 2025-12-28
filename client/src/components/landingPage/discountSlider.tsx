@@ -4,7 +4,6 @@ import Card from '../../productCard';
 import SliderButton from './sliderButton';
 import Discount from '../discount';
 import { useGetDiscountedProducts } from '../../queries/productsQueries';
-
 const DiscountSlider = ({ title }: { title: string }) => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
@@ -71,19 +70,18 @@ console.log(data)
     <div className="space-y-3">
       <Header link="/" title={title} />
       
-      {/* Discount banner (responsive) */}
       <div className="xl:hidden justify-center flex w-full">
         <Discount />
       </div>
 
       <div
-        className="w-full gap-4 md:px-4 relative rounded-lg p-4"
+        className="w-full gap-4 md:px-4 relative rounded-lg p-4 bg-red-500"
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
         <div className="flex gap-2 items-center">
           {/* Discount banner (desktop) */}
-          <div className="xl:block hidden w-[400px]">
+          <div className="xl:block hidden w-[400px] ">
             <Discount />
           </div>
 
@@ -99,8 +97,18 @@ console.log(data)
             >
               {products.map((product) => (
                 <div key={product.id} style={{ width: `${slideWidth}px` }}>
-                  {/* <Card {...product} slideWidth={`${slideWidth}px`} path={product.id} /> */}
-                </div>
+<Card
+  image={`http://localhost:5000/uploads/c1c3b58bd8d63073d68a4cbe26efb8d8`}
+  name={product.name}
+  brand={product.brand}
+  category={product.category}
+  count={String(product.count)}
+  price={product.price}
+  priceWithDiscount={product.priceWithDiscount}
+  discountPercent={product.discountPercentage}
+  slideWidth={`${slideWidth}px`}
+  path={`/product/${product.id}`}
+/>                </div>
               ))}
             </div>
 

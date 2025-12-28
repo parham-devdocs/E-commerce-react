@@ -15,7 +15,7 @@ async function bootstrap() {
   });
    app.get(ConfigService);
   app.use(cookieParser());
-  app.use('/uploads', express.static(path.join(__dirname, '..', '..', 'uploads')));
+  app.use('/uploads', express.static(path.join(__dirname, '..', 'uploads')));
     await app.listen(process.env.PORT || 3000);
 }
 bootstrap();

@@ -100,7 +100,8 @@ export interface DropDownType {
   name:string
   brand:string
   category:string
-  price:string
+  price:number
+  priceWithDiscount:number
   discountPercentage:number
   attributes:{[key: string]: string}
   inStock:boolean

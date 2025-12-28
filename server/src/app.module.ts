@@ -1,7 +1,6 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { DatabaseModule } from './database.module';
 import { ProductsModule } from './products/products.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
@@ -11,12 +10,19 @@ import { UserModule } from './user/user.module';
 import { CartModule } from './cart/cart.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { PaymentModule } from './payment/payment.module';
-import { APP_GUARD } from '@nestjs/core';
-import { AuthGuard } from './auth.guard';
-import { JWTService } from './auth/JWTService';
 import { AccessContorlService } from './accessControlService';
+import { ServeStaticModule } from "@nestjs/serve-static";
+import { join } from 'path';
 @Module({
-  imports: [ ProductsModule,ConfigModule.forRoot({isGlobal:true}), AuthModule,  ReviewModule, UserModule, CartModule,  ConfigModule.forRoot({ isGlobal: true }),
+  imports: [ ProductsModule,ConfigModule.forRoot({isGlobal:true}), ServeStaticModule.forRoot({
+    rootPath: join(__dirname, '..','..', 'client'),
+    exclude: ['/api*', '/uploads*']
+  }), 
+  ServeStaticModule.forRoot({
+    rootPath: join(__dirname, '..', 'uploads'), // points to server/uploads/
+    serveRoot: '/uploads/', // URL prefix
+  }),
+  AuthModule,  ReviewModule, UserModule, CartModule,  ConfigModule.forRoot({ isGlobal: true }),
 
     MongooseModule.forRootAsync({
       imports: [ConfigModule],

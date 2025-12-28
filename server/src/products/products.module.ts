@@ -18,7 +18,7 @@ import { AccessContorlService } from 'src/accessControlService';
     { name: Product.name, schema: ProductSchema },
     { name: Category.name, schema: CategorySchema }
   ]), MulterModule.register({
-    dest: join(__dirname,'../../../', 'uploads'), 
+    dest: join(__dirname,'../../', 'uploads'), 
     fileFilter: (req, file, cb) => {
       if (!file.mimetype.match(/\/(jpg|jpeg|png|gif)$/)) {
         return cb(new Error('Only image files are allowed!'), false);
