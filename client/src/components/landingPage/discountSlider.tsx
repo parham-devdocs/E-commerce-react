@@ -24,7 +24,6 @@ const DiscountSlider = ({ title }: { title: string }) => {
 console.log(data)
     const interval = setInterval(() => {
       setCurrentSlide(prev => (prev + 1) % totalSlides);
-      console.log(currentSlide)
     }, 3000);
 
     return () => clearInterval(interval);

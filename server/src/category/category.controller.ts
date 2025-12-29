@@ -15,6 +15,7 @@ import { Roles } from 'src/roles.decorator';
 import { UserRole } from 'src/auth/entities/user.entity';
 import { AuthGuard } from 'src/auth.guard';
 import { RoleGuard } from 'src/role.guard';
+import { Public } from 'src/customDecorators/publicRoute.decorator';
 
 @Controller('category')
 @UseGuards(AuthGuard, RoleGuard) 
@@ -25,7 +26,7 @@ export class CatgoryController {
   @Post()
   @Roles(UserRole.ADMIN)
 
- async create(@Body() createCatgoryDto: CreateCategoryDto, @Token() token:tokenType) {
+ async create(@Body() createCatgoryDto: CreateCategoryDto) {
     try {
       const {data,message}=await this.catgoryService.create(createCatgoryDto);
     return {data,message}
@@ -35,21 +36,15 @@ export class CatgoryController {
     
   }
 
+  @Public()
   @Get()
-  @Roles(UserRole.ADMIN)
-  @Roles(UserRole.USER)
-  @Roles(UserRole.GUEST)
-
-
-   findAll( @Token() token:tokenType) {
+   findAll( ) {
   const response= this.catgoryService.findAll()
     return response
   }
 
+  @Public()
   @Get(':id')
-  @Roles(UserRole.ADMIN)
-  @Roles(UserRole.USER)
-  @Roles(UserRole.GUEST)
   findOne(@Token() token:tokenType ,@Param('id') id: string) {
   
     return this.catgoryService.findOne(id);

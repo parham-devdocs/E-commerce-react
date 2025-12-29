@@ -31,8 +31,8 @@ export class CatgoryService {
 
   async findAll() {
     try {
-      const categories=await this.CategoryModel.find({})
-      if (categories.length===0) {
+      const categories = await this.CategoryModel.find({}).populate({ path: 'products',select: 'name images'  }).exec()
+            if (categories.length===0) {
         throw new NotFoundException("no category found")
       }
       return categories

@@ -109,3 +109,10 @@ export interface DropDownType {
   images:string[]
   description:string
 }
+
+export interface Category{
+  _id:number
+  title:string
+  description:string
+  products:Pick<Product,"id"|"name"|"images">[]
+}
