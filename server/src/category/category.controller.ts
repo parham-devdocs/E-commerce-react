@@ -45,7 +45,7 @@ export class CatgoryController {
 
   @Public()
   @Get(':id')
-  findOne(@Token() token:tokenType ,@Param('id') id: string) {
+  findOne(@Param('id') id: string) {
   
     return this.catgoryService.findOne(id);
   }
@@ -57,18 +57,15 @@ export class CatgoryController {
     return this.catgoryService.remove(id);
   }
 
+  @Public()
   @Get("/products/:id")
-  @Roles(UserRole.ADMIN)
-  @Roles(UserRole.USER)
-  @Roles(UserRole.GUEST)
 
-  findProducts(@Token() token:tokenType ,@Param('id') id: string){
+  findProducts(@Param('id') id: string){
 return this.catgoryService.productByCategory(id)
   }
 
   @Post(":productId/:categoryId")
   @Roles(UserRole.ADMIN)
-
   addProducts(@Token() token:tokenType ,@Param('productId') productId: string,@Param('categoryId') categoryId:string){
 return this.catgoryService.addProduct(productId,categoryId)
   }

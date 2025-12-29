@@ -25,19 +25,16 @@ export class ProductsController {
     return response
 
   }
-  @Roles(UserRole.ADMIN)
-  @Roles(UserRole.USER)
-  @Roles(UserRole.GUEST)
+ 
+  @Public()
   @Get("pagination/:page")
- async  findAll(@Param('page') page:string, @Token() token:tokenType) {
+ async  findAll(@Param('page') page:string) {
   const response= await   this.productsService.findAll(page);
 console.log(response)
     return response
   }
-
-  @Roles(UserRole.ADMIN)
-  @Roles(UserRole.USER)
-  @Roles(UserRole.GUEST)
+ 
+  @Public()
   @Get("/recent")
   getRecentProducts(){
     return this.productsService.getRecentProducts()
@@ -50,29 +47,23 @@ console.log(response)
     return this.productsService.getProductsWithDiscount()
   }
 
-  @Roles(UserRole.ADMIN)
-  @Roles(UserRole.USER)
-  @Roles(UserRole.GUEST)
+  @Public()
   @Get(':id')
-  async findOne(@Token() token:tokenType,@Param('id') id: string ) {
+  async findOne(@Param('id') id: string ) {
     const res=await this.productsService.findOne(id);
     return res
 
   }
 
-  @Roles(UserRole.ADMIN)
-  @Roles(UserRole.USER)
-  @Roles(UserRole.GUEST)
+  @Public()
   @Get(':id/available')
-  async findOneAvailable(@Token() token:tokenType,@Param('id') id: string ) {
+  async findOneAvailable(@Param('id') id: string ) {
     const res=await this.productsService.findOneAvailable(id);
     return res
 
   }
 
-  @Roles(UserRole.ADMIN)
-  @Roles(UserRole.USER)
-  @Roles(UserRole.GUEST)
+  @Public()
   @Get(':id')
   async findOneByName( name:string, @Res({ passthrough: true }) response: Response) {
     const res=await this.productsService.findOneByName(response,name);
@@ -93,11 +84,9 @@ console.log(response)
     return this.productsService.remove(+id);
   }
 
-  @Roles(UserRole.ADMIN)
-  @Roles(UserRole.USER)
-  @Roles(UserRole.GUEST)
+  @Public()
   @Get("images/:productId")
-  async getImages(@Token() Token:tokenType, @Param("productId") productId:any ){
+  async getImages( @Param("productId") productId:any ){
     return this.productsService.getProductImages(productId)
   }
 
