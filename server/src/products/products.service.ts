@@ -131,16 +131,31 @@ export class ProductsService {
     }
   }
 
-  async getRecentProducts(){
+  async getRecentProducts(page:string){
+    const pageNum = parseInt(page, 10) || 1;
+    const limit = 10;
+    const skip = (pageNum - 1) * limit;
+    const total=await this.productModel.countDocuments().exec()
+    const totalPages = Math.ceil(total / limit);
+    if (totalPages<pageNum) {
+      throw new NotFoundException("page not found")
+    }
     const products = await this.productModel
     .find({ inStock: true,count:{$gt:0} })       
-    .sort({ createdAt: -1 })      
+    .sort({ createdAt: -1 })
+    .skip(skip)     
     .limit(10)
     .exec();   
     if (!products) {
       throw new NotFoundException("no recent product found")
     }
-    return products}
+    return {
+      data:products,
+      totalPages,
+      page,
+      limit,
+      total
+    }}
 
     async getProductsWithDiscount(){
       const product = await this.productModel.find({discountPercentage:{$gt:0},inStock:true}).limit(0)

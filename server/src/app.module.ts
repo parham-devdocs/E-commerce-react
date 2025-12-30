@@ -14,14 +14,11 @@ import { AccessContorlService } from './accessControlService';
 import { ServeStaticModule } from "@nestjs/serve-static";
 import { join } from 'path';
 @Module({
-  imports: [ ProductsModule,ConfigModule.forRoot({isGlobal:true}), ServeStaticModule.forRoot({
-    rootPath: join(__dirname, '..','..', 'client'),
-    exclude: ['/api*', '/uploads*']
-  }), 
-  ServeStaticModule.forRoot({
-    rootPath: join(__dirname, '..', 'uploads'), // points to server/uploads/
-    serveRoot: '/uploads/', // URL prefix
-  }),
+  imports: [ ProductsModule,ConfigModule.forRoot({isGlobal:true}),
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', '..', 'client'),
+      exclude: ['/api', '/api/*rest'], 
+    }),
   AuthModule,  ReviewModule, UserModule, CartModule,  ConfigModule.forRoot({ isGlobal: true }),
 
     MongooseModule.forRootAsync({

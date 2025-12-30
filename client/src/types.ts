@@ -110,9 +110,26 @@ export interface DropDownType {
   description:string
 }
 
-export interface Category{
-  _id:number
-  title:string
-  description:string
-  products:Pick<Product,"id"|"name"|"images">[]
+export interface CategoryProduct {
+  _id: string;
+  name: string;
+  images: string[];
+}
+
+export interface CategoryItem {
+  _id: string;
+  title?: string;   
+  name?: string;    
+  description: string;
+  image:string
+  products: CategoryProduct[];
+  __v?: number;     
+}
+
+export interface PaginatedCategoriesResponse {
+  data: CategoryItem[];
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
 }

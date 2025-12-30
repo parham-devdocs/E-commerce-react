@@ -37,9 +37,9 @@ export class CatgoryController {
   }
 
   @Public()
-  @Get()
-   findAll( ) {
-  const response= this.catgoryService.findAll()
+  @Get('/page/:page')
+   findAll(@Param('page') page: string) {
+  const response= this.catgoryService.findAll(+page)
     return response
   }
 
@@ -53,7 +53,7 @@ export class CatgoryController {
 
   @Delete(':id')
   @Roles(UserRole.ADMIN)
-  remove(@Token() token:tokenType ,@Param('id') id: string) {
+  remove(@Param('id') id: string) {
     return this.catgoryService.remove(id);
   }
 
@@ -66,7 +66,7 @@ return this.catgoryService.productByCategory(id)
 
   @Post(":productId/:categoryId")
   @Roles(UserRole.ADMIN)
-  addProducts(@Token() token:tokenType ,@Param('productId') productId: string,@Param('categoryId') categoryId:string){
+  addProducts(@Param('productId') productId: string,@Param('categoryId') categoryId:string){
 return this.catgoryService.addProduct(productId,categoryId)
   }
 }

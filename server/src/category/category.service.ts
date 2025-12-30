@@ -28,21 +28,39 @@ export class CatgoryService {
       throw new HttpException('Server Internal Error', 500);
     }
   }
-
-  async findAll() {
-    try {
-      const categories = await this.CategoryModel.find({}).populate({ path: 'products',select: 'name images'  }).exec()
-            if (categories.length===0) {
-        throw new NotFoundException("no category found")
-      }
-      return categories
-    } catch (error) {
-      console.error('Category creation error:', error);
-      throw new HttpException('Server Internal Error', 500)
-        }
+  async findAll(page: number) {
+    const limit = 10;
+    const skip = (page - 1) * limit;
   
+    const total = await this.CategoryModel.countDocuments().exec();
+    const totalPages = Math.ceil(total / limit);
+  
+    if (page > totalPages && total > 0) {
+      return {
+        data: [],
+        total,
+        page,
+        limit,
+        totalPages,
+        message: 'No categories on this page'
+      };
+    }
+  
+    const categories = await this.CategoryModel
+      .find({})
+      .populate({ path: 'products', select: 'name images' })
+      .skip(skip)
+      .limit(limit)
+      .exec();
+  
+    return {
+      data: categories,
+      total,
+      page,
+      limit,
+      totalPages
+    };
   }
-
  async findOne(id: string) {
   try {
     const cat = await this.CategoryModel.findById(id)

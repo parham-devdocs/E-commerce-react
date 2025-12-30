@@ -35,9 +35,9 @@ console.log(response)
   }
  
   @Public()
-  @Get("/recent")
-  getRecentProducts(){
-    return this.productsService.getRecentProducts()
+  @Get("recent/:page")
+  getRecentProducts(@Param('page') page:string){
+    return this.productsService.getRecentProducts(page)
   }
 
  @Public()

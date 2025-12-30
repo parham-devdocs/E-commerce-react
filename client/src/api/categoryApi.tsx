@@ -2,8 +2,8 @@
 
 import apiClient from "../utils/axiosInstance"
 
-const getCategoriesApi=async ()=>{
-    const response=await apiClient.get("/category")
+const getCategoriesApi=async (page:number)=>{
+    const response=await apiClient.get(`/category/page/${page}`)
     return response.data   
 }
 
