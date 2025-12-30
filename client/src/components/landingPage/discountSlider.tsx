@@ -4,37 +4,38 @@ import Card from '../../productCard';
 import SliderButton from './sliderButton';
 import Discount from '../discount';
 import { useGetDiscountedProducts } from '../../queries/productsQueries';
+import Loader from '../loader';
+import type { Product } from '../../types';
+import iphone14 from "../../../public/iPhone_14_Blue_PDP_Image_Position-1A__WWEN.webp";
 const DiscountSlider = ({ title }: { title: string }) => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
 
-  // Fetch discounted products
-  const { data, isLoading, isError, error } = useGetDiscountedProducts();
-  const products = data || [];
+  const {  data:products, isLoading, isError, error } = useGetDiscountedProducts(1);
 
-  // Slider config
   const productsPerSlide = 4;
-  const totalSlides = Math.max(1, Math.ceil(products.length / productsPerSlide));
-  const gap = 16; // px
-  const slideWidth = 250; // px
+  const actualProductCount = products?.data?.length ?? 0;
+  const totalSlides = Math.max(1, Math.ceil(actualProductCount / productsPerSlide));
 
-  // Auto-rotate unless hovered or only 1 slide
   useEffect(() => {
-    if (isHovered || totalSlides <= 1) return;
-console.log(data)
+    // ✅ Guard inside the effect
+    if (isLoading || isError || !products || actualProductCount === 0 || isHovered || totalSlides <= 1) {
+      return;
+    }
+console.log(products)
     const interval = setInterval(() => {
       setCurrentSlide(prev => (prev + 1) % totalSlides);
     }, 3000);
 
     return () => clearInterval(interval);
-  }, [isHovered, totalSlides]);
+  }, [isHovered, totalSlides, isLoading, isError, actualProductCount]);
 
-  // Handle loading & error states
+  // ✅ Now do early returns
   if (isLoading) {
     return (
       <div className="space-y-3">
-        <Header link="/" title={title} />
-        <div className="h-64 flex items-center justify-center">Loading discounted products...</div>
+        <Header link="/discounts" title={title} />
+        <Loader size="lg"/>
       </div>
     );
   }
@@ -50,25 +51,27 @@ console.log(data)
     );
   }
 
-  if (products.length === 0) {
+  if (!products || products.total === 0 || actualProductCount === 0) {
     return (
       <div className="space-y-3">
         <Header link="/" title={title} />
-        <div className="h-64 flex items-center justify-center">No discounted products available.</div>
+        <div className="h-64 flex items-center justify-center">
+          No discounted products available.
+        </div>
       </div>
     );
   }
 
-  // Group products into slides
-  const slides = [];
-  for (let i = 0; i < totalSlides; i++) {
-    slides.push(products.slice(i * productsPerSlide, (i + 1) * productsPerSlide));
-  }
 
+
+  const gap = 16;
+  const slideWidth = 250;
+
+  
   return (
     <div className="space-y-3">
       <Header link="/" title={title} />
-      
+
       <div className="xl:hidden justify-center flex w-full">
         <Discount />
       </div>
@@ -79,12 +82,10 @@ console.log(data)
         onMouseLeave={() => setIsHovered(false)}
       >
         <div className="flex gap-2 items-center">
-          {/* Discount banner (desktop) */}
-          <div className="xl:block hidden w-[400px] ">
+          <div className="xl:block hidden w-[400px]">
             <Discount />
           </div>
 
-          {/* Product slider */}
           <div className="overflow-hidden rounded-xl relative flex-1">
             <div
               className="flex transition-transform duration-500 ease-in-out"
@@ -94,20 +95,22 @@ console.log(data)
                 width: 'fit-content',
               }}
             >
-              {products.map((product) => (
+              {products.data?.map((product:Product) => (
                 <div key={product.id} style={{ width: `${slideWidth}px` }}>
-<Card
-  image={`http://localhost:5000/uploads/c1c3b58bd8d63073d68a4cbe26efb8d8`}
-  name={product.name}
-  brand={product.brand}
-  category={product.category}
-  count={String(product.count)}
-  price={product.price}
-  priceWithDiscount={product.priceWithDiscount}
-  discountPercent={product.discountPercentage}
-  slideWidth={`${slideWidth}px`}
-  path={`/product/${product.id}`}
-/>                </div>
+                  <Card
+                    // image={`http://localhost:5000/uploads/${product.images?.[0] || 'default.jpg'}`}
+                    image={iphone14}
+                    name={product.name}
+                    brand={product.brand}
+                    category={product.category}
+                    count={String(product.count)}
+                    price={product.price}
+                    priceWithDiscount={product.priceWithDiscount}
+                    discountPercent={product.discountPercentage}
+                    slideWidth={`${slideWidth}px`}
+                    path={`/product/${product.id}`}
+                  />
+                </div>
               ))}
             </div>
 

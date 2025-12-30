@@ -41,10 +41,9 @@ console.log(response)
   }
 
  @Public()
-  @Get("/discount")
-  getProductsWithDiscount(){
-    console.log("something")
-    return this.productsService.getProductsWithDiscount()
+  @Get("/discount/:page")
+  getProductsWithDiscount(@Param('page') page:string){
+    return this.productsService.getProductsWithDiscount(page)
   }
 
   @Public()

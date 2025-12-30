@@ -133,3 +133,17 @@ export interface PaginatedCategoriesResponse {
   limit: number;
   totalPages: number;
 }
+export interface PaginatedDiscountedProducts {
+  data: Product[];
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+}
+export interface PaginatedRecentProducts {
+  data: Product[];
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+}

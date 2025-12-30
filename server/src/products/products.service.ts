@@ -157,13 +157,27 @@ export class ProductsService {
       total
     }}
 
-    async getProductsWithDiscount(){
-      const product = await this.productModel.find({discountPercentage:{$gt:0},inStock:true}).limit(0)
-      console.log(product)
-      if (!product) {
-        throw new NotFoundException("no recent product found")
+    async getProductsWithDiscount(page:string){
+      const pageNum = parseInt(page, 10) || 1;
+      const limit = 10;
+      const skip = (pageNum - 1) * limit;
+      const total=await this.productModel.countDocuments().exec()
+      const totalPages = Math.ceil(total / limit);
+      if (totalPages<pageNum) {
+        throw new NotFoundException("page not found")
       }
-      return product}
+      const products = await this.productModel.find({discountPercentage:{$gt:0},inStock:true}).skip(skip).limit(0)
+      if (!products) {
+        throw new NotFoundException("no discounted product found")
+      }
+      return {
+        data:products,
+        totalPages,
+        page,
+        limit,
+        total
+      }}
+      
 
   update(id: number, updateProductDto: UpdateProductDto) {
     return `This action updates a #${id} product`;

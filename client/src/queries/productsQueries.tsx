@@ -1,11 +1,18 @@
 import { useQuery } from "@tanstack/react-query";
-import { getProductsWithDiscount } from "../api/productApi";
-import { type Product } from "../types";
+import { getProductsWithDiscount, getRecentProducts } from "../api/productApi";
+import { type PaginatedDiscountedProducts, type PaginatedRecentProducts } from "../types";
 
 // hooks/useGetDiscountedProducts.ts
-export const useGetDiscountedProducts = () => {
-    return useQuery<Product[]>({
+export const useGetDiscountedProducts = (page?:number) => {
+    return useQuery<PaginatedDiscountedProducts>({
       queryKey: ["discountedProducts"],
-      queryFn: getProductsWithDiscount,
+      queryFn: ()=>getProductsWithDiscount(page),
+    });
+  };
+
+  export const useGetRecentProducts = (page?:number) => {
+    return useQuery<PaginatedRecentProducts>({
+      queryKey: ["recentProducts"],
+      queryFn: ()=>getRecentProducts(page),
     });
   };
