@@ -33,24 +33,26 @@ console.log(products)
   // ✅ Now do early returns
   if (isLoading) {
     return (
-      <div className="space-y-3">
-        <Header link="/discounts" title={title} />
-        <Loader size="lg"/>
-      </div>
-    );
-  }
-
-  if (isError) {
-    return (
-      <div className="space-y-3">
-        <Header link="/" title={title} />
-        <div className="h-64 flex items-center justify-center text-red-500">
-          Failed to load discounted products: {error?.message}
+      <div className="space-y-3 dark:bg-gradient-to-br p-5 rounded-md bg-white bg-gradient- dark:from-gray-900 dark:to-gray-950">
+        <Header link="/" title={title || ""} />
+        <div className="flex w-full h-full justify-center items-center">
+          <Loader size="lg" />
         </div>
       </div>
     );
   }
 
+
+  if (isError) {
+    return (
+      <div className="space-y-3 dark:bg-gradient-to-br p-5 rounded-md bg-white bg-gradient- dark:from-gray-900 dark:to-gray-950">
+        <Header link="/" title={"دسته بندی ها"} />
+        <div className="h-64 flex items-center justify-center text-red-500">
+          Failed to load recent products: {error?.message}
+        </div>
+      </div>
+    );
+  }
   if (!products || products.total === 0 || actualProductCount === 0) {
     return (
       <div className="space-y-3">

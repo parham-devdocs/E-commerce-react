@@ -4,6 +4,7 @@ import MainLayout from "./layouts/mainLayout";
 import "./App.css";
 import Home from "./pages/users/home";
 import ProductDetail from "./pages/users/products/productDetail";
+import Discounts from "./pages/users/discounts"
 import Products from "./pages/users/products/index";
 import Cart from "./pages/users/cart";
 import Login from "./pages/users/login";
@@ -22,8 +23,11 @@ export default function App() {
 
 <Route
   path="/cart"
-  element={userRole && userRole=== "user" ? <Cart /> : <Navigate to="/login" replace />}
-/>          <Route path="/product/:id" element={<ProductDetail />} />
+  element={userRole && userRole=== "user" ? <Cart /> : <Navigate to="/login" replace />}/>    
+  
+          <Route path="/discounts" element={<Discounts />} />
+          <Route path="/product/:id" element={<ProductDetail />} />
+
           <Route path="/products/:category" element={<Products />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />

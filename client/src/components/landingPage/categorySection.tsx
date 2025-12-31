@@ -4,7 +4,29 @@ import Header from "../header";
 import { useGetCategories } from "../../queries/categoryQueries";
 import Loader from "../loader";
 const CategorySection = () => {
-   const {error,data:categories,isLoading}=useGetCategories(1)
+   const {error,data:categories,isLoading,isError}=useGetCategories(1)
+   if (isLoading) {
+    return (
+      <div className="space-y-3 dark:bg-gradient-to-br p-5 rounded-md bg-white bg-gradient- dark:from-gray-900 dark:to-gray-950">
+        <Header link="/" title={"دسته بندی ها"} />
+        <div className="flex w-full h-full justify-center items-center">
+          <Loader size="lg" />
+        </div>
+      </div>
+    );
+  }
+
+  if (isError) {
+    return (
+      <div className="space-y-3 dark:bg-gradient-to-br p-5 rounded-md bg-white bg-gradient- dark:from-gray-900 dark:to-gray-950">
+        <Header link="/" title={"دسته بندی ها"} />
+        <div className="h-64 flex items-center justify-center text-red-500">
+          Failed to load recent products: {error?.message}
+        </div>
+      </div>
+    );
+  }
+
       return (
         <div className="w-full 
         bg-gradient-to-br from-red-50 to-white 
