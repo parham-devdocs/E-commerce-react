@@ -8,7 +8,7 @@ import { getCategoriesApi } from "../api/categoryApi";
 // hooks/useGetDiscountedProducts.ts
 export const useGetCategories= (page:number) => {
     return useQuery<PaginatedCategoriesResponse>({
-      queryKey: ["categories"],
+      queryKey: ["categories",page],
       queryFn:()=> getCategoriesApi(page),
     });
   };

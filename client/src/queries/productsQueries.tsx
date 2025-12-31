@@ -3,9 +3,11 @@ import { getProductsWithDiscount, getRecentProducts } from "../api/productApi";
 import { type PaginatedDiscountedProducts, type PaginatedRecentProducts } from "../types";
 
 // hooks/useGetDiscountedProducts.ts
-export const useGetDiscountedProducts = (page?:number) => {
+export const useGetDiscountedProducts = (page?:number=1,limit?:number=10) => {
+  
     return useQuery<PaginatedDiscountedProducts>({
-      queryKey: ["discountedProducts"],
+      
+      queryKey: ["discountedProducts",page,limit],
       queryFn: ()=>getProductsWithDiscount(page),
     });
   };

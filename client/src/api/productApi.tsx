@@ -2,7 +2,7 @@ import type { PaginatedDiscountedProducts } from "../types";
 import apiClient from "../utils/axiosInstance"
 
 const getProductsWithDiscount = async (page?: number) => {
-    const pageNum = page ?? 1; // fallback to page 1
+    const pageNum = page ?? 1; 
     const response = await apiClient.get(`products/discount/${pageNum}`);
     return response.data as PaginatedDiscountedProducts  
   };
