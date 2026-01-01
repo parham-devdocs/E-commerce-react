@@ -60,9 +60,26 @@ export class CatgoryController {
   @Public()
   @Get("/products/:id")
 
-  findProducts(@Param('id') id: string){
+  findProducts(@Param('id') id: string ){
 return this.catgoryService.productByCategory(id)
   }
+
+  @Public()
+@Get("/products/:id/page/:page")
+findProductsPaginated(
+  @Param('id') id: string,
+  @Param('page') page: string,
+) {
+  return this.catgoryService.findProductsPaginatedid(id, +page);
+}
+
+
+@Public()
+@Get()
+findAllWithProductPreviews() {
+  return this.catgoryService.getAllCategoriesWithProductPreviews();
+}
+
 
   @Post(":productId/:categoryId")
   @Roles(UserRole.ADMIN)

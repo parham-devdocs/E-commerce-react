@@ -12,7 +12,12 @@ const getRecentProducts=async (page?:number)=>{
     return response.data  
 }
 
+const getProducts=async (page?:number)=>{
+  const response=await apiClient.get(`/products/pagination/${page}`)
+  return response.data  
+}
 
 
 
-export {getProductsWithDiscount,getRecentProducts}
+
+export {getProductsWithDiscount,getRecentProducts,getProducts}

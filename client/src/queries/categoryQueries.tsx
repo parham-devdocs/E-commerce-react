@@ -3,12 +3,18 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { type PaginatedCategoriesResponse} from "../types";
-import { getCategoriesApi } from "../api/categoryApi";
+import { getCategoriesApi, getPaginatedCategoriesApi } from "../api/categoryApi";
 
 // hooks/useGetDiscountedProducts.ts
-export const useGetCategories= (page:number) => {
+export const useGetCategoriesByPgination= (page:number) => {
     return useQuery<PaginatedCategoriesResponse>({
-      queryKey: ["categories",page],
-      queryFn:()=> getCategoriesApi(page),
+      queryKey: ["paginatedCategories",page],
+      queryFn:()=> getPaginatedCategoriesApi(page),
+    });
+  };
+  export const useGetCategories= () => {
+    return useQuery<PaginatedCategoriesResponse>({
+      queryKey: ["categories"],
+      queryFn:()=> getCategoriesApi()
     });
   };

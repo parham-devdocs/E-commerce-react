@@ -157,6 +157,73 @@ return cat
       return { error: error.message };
     }
   }
+  async findProductsPaginatedid(id:string,page:number){
+    this.findOne(id)
+    const limit = 10;
+    const skip = (page - 1) * limit;
+  
+    const total = await this.CategoryModel.countDocuments().exec();
+    const totalPages = Math.ceil(total / limit);
+  
+    if (page > totalPages && total > 0) {
+      return {
+        data: [],
+        total,
+        page,
+        limit,
+        totalPages,
+        message: 'No categories on this page'
+      };
+    }
+    try {
+      const products = await this.CategoryModel
+        .findById(id)
+        .populate({
+          path: 'products',
+          model: 'Product',
+          strictPopulate: false,
+        }).skip(skip).limit(limit)
+  
+      if (!products) {
+        return { message: 'Category not found' };
+      }
+  
+      return {
+        data: products,
+        total,
+        page,
+        limit,
+        totalPages,
+      }
+        } catch (error: any) {
+      if (error.name === 'CastError') {
+        return { message: 'Invalid category id' };
+      }
+      return { error: error.message }
+    }
+  }
+  async getAllCategoriesWithProductPreviews() {
+    try {
+      const category = await this.CategoryModel
+        .find({})
+        .populate({
+          path: 'products',
+          model: 'Product',
+          strictPopulate: false,
+          select: '_id name images'
+        })
+  
+      if (!category) {
+        return { message: 'Category not found' };
+      }
+  
+      return category; 
+    } catch (error: any) {
+      if (error.name === 'CastError') {
+        return { message: 'Invalid category id' };
+      }
+      return { error: error.message }
+    }
 }
-
+}
 

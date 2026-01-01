@@ -2,12 +2,14 @@ import { useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import noPhotoIcon from "../../../public/259987.png";
 import { useGetCategories } from "../../queries/categoryQueries";
+import type { Product } from "../../types";
 
   const Menu = ({onClose,isDisplayed}:{onClose:()=>void,isDisplayed:boolean}) => {
     const { data, isLoading, isError, error } = useGetCategories();
+    console.log(data)
     const [selectedId, setSelectedId] = useState(1);
   const menuRef=useRef<HTMLDivElement>(null)
-    const selectedCategory = data&& data.find(cat => cat._id === selectedId);
+    const selectedCategory = data&& data.data.find(cat => +cat._id === selectedId);
  
     return (
 <div 
@@ -38,13 +40,13 @@ import { useGetCategories } from "../../queries/categoryQueries";
           {/* Category List */}
           <div className="w-1/4 min-w-[200px] flex-shrink-0">
             <nav className="space-y-2 overflow-y-auto pr-2 h-full">
-              {data  && data.map((cat) => (
+              {data  && data.data.map((cat) => (
                 <Link
                   key={cat._id}
                   to={`categories/${cat.title}`}
-                  onMouseEnter={() => setSelectedId(cat._id)}
+                  onMouseEnter={() => setSelectedId(+cat._id)}
                   className={`block px-4 py-2.5 rounded-lg text-right transition-all duration-200
-                    ${selectedId === cat._id
+                    ${selectedId === +cat._id
                       ? 'bg-red-50 text-red-700 font-semibold shadow-sm'
                       : 'text-gray-700 hover:bg-gray-50 hover:text-gray-900'}
                   `}
@@ -60,7 +62,7 @@ import { useGetCategories } from "../../queries/categoryQueries";
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
               {selectedCategory?.products.map((product) => (
                 <Link
-                  key={product.id}
+                  key={product._id}
                   to={`products/${product.name}`}
                   className="group block p-3 rounded-lg hover:bg-gray-50 transition-colors duration-200"
                 >
