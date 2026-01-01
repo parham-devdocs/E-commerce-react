@@ -8,7 +8,7 @@ const getPaginatedCategoriesApi=async (page:number)=>{
     return response.data   
 }
 const getCategoriesApi=async ()=>{
-    const response=await apiClient.get(`/category/products`)
+    const response=await apiClient.get(`/category`)
     return response.data   
 }
 

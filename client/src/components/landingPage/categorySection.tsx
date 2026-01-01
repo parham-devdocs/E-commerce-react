@@ -1,10 +1,10 @@
 import { Link } from "react-router-dom";
 import noPhotoIcon from "../../../public/259987.png";
 import Header from "../header";
-import { useGetCategories } from "../../queries/categoryQueries";
+import { useGetCategories, useGetCategoriesByPgination } from "../../queries/categoryQueries";
 import Loader from "../loader";
 const CategorySection = () => {
-   const {error,data:categories,isLoading,isError}=useGetCategories(1)
+   const {error,data:categories,isLoading,isError}=useGetCategoriesByPgination(1)
    if (isLoading) {
     return (
       <div className="space-y-3 dark:bg-gradient-to-br p-5 rounded-md bg-white bg-gradient- dark:from-gray-900 dark:to-gray-950">
