@@ -103,7 +103,7 @@ export interface DropDownType {
   price:number
   priceWithDiscount:number
   discountPercentage:number
-  attributes:{[key: string]: string}
+  attributes:any
   inStock:boolean
   count:number
   images:string[]

@@ -23,13 +23,13 @@ console.log(image)
   return (
     <div className="flex justify-center items-center py-5 w-full rounded-md bg-white dark:bg-gray-800 shadow-md dark:shadow-gray-900/50">
       <div className="flex flex-col lg:flex-row lg:items-center lg:gap-6 w-full max-w-full px-4">
-        <div className="flex-shrink-0 mb-4 lg:mb-0">
-          <img
-            src={image ?image  : noPhoto}
-            alt={title}
-            className="w-full max-w-[200px] h-auto rounded-md  dark:bg-gray-700 object-cover mx-auto"
-          />
-        </div>
+      <div className="flex-shrink-0 mb-4 lg:mb-0 flex justify-center">
+  <img
+    src={image ? `http://localhost:5000/uploads/${image.trim()}` : noPhoto}
+    alt={title}
+    className="w-20 h-20 md:w-44 md:h-44 object-cover rounded-md dark:bg-gray-700"
+  />
+</div>
 
         <div className="w-full text-center lg:text-right space-y-3">
           <h1 className="text-lg font-bold text-gray-800 dark:text-gray-100">{title}</h1>

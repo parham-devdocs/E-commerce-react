@@ -6,7 +6,7 @@ const Gallery = ({images}:{images:string[]}) => {
           <Header title="تصاویر"/>
           
 
-  <div className=' w-full justify-between flex items-center overflow-x-auto  rounded-md shadow-2xl p-5 '>
+  <div className=' w-full justify-between flex items-center overflow-x-auto  rounded-md shadow-2xl p-5 gap-3  '>
 {images.map(image=>{return <img src={`http://localhost:5000/uploads/${image.trim()}`} className=" w-32 h-32 rounded-md"/>})}
     </div>
 

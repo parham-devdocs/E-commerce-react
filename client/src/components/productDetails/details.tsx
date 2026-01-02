@@ -1,23 +1,17 @@
+import type { KeyValuePair } from "../../types";
 import Header from "../header";
 
-const Details = () => {
-  const details = [
-    { key: "نام دستگاه", value: "آیفون 15 پرو", flag: "essential" },
-    { key: "مدل", value: "A2849", flag: "technical" },
-    { key: "صفحه‌نمایش", value: "6.1 اینچ، Super Retina XDR OLED", flag: "display" },
-    { key: "پردازنده", value: "چیپ A17 Pro، 6 هسته‌ای", flag: "performance" },
-    { key: "حافظه رم", value: "8 گیگابایت", flag: "memory" },
-    { key: "ظرفیت ذخیره‌سازی", value: "256 گیگابایت", flag: "storage" },
-    { key: "دوربین عقب", value: "48 مگاپیکسل (اصلی) + 12 مگاپیکسل (اولترا واید)", flag: "camera" },
-    { key: "دوربین جلو", value: "12 مگاپیکسل، TrueDepth", flag: "camera" },
-    { key: "باتری", value: "تا 29 ساعت پخش ویدیو", flag: "battery" },
-    { key: "مقاومت آب و گردوغبار", value: "IP68 (تا 6 متر برای 30 دقیقه)", flag: "durability" }
-  ];
+interface DetailsProps {
+  attributes: KeyValuePair[];
+}
+const Details = ({attributes}:any) => {
+console.log(attributes)
   return (
     <div className=" w-full flex-col flex items-center ">
       <Header title="مشخصات"/>
       <div className=" w-full flex flex-wrap gap-3 items-center justify-center rounded-md shadow-2xl p-5 ">
-      {details.map(attr=>{
+      {attributes.map(attr=>{
+        console.log(attr)
         return (
           <div 
             dir="rtl" 
