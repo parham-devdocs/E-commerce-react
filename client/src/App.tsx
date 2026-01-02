@@ -14,6 +14,7 @@ import ProductList from "./pages/admin/products";
 import useAuthStore from "./store/auth";
 export default function App() {
   const userRole=useAuthStore(state=>state.userInfo?.role)
+  useAuthStore(state=>state.checkAuthStatus())
   return (
     <BrowserRouter>
       <Routes>

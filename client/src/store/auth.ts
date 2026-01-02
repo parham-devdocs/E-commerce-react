@@ -33,21 +33,26 @@ const useAuthStore = create<AuthState>()(
    // In your store
 checkAuthStatus: () => {
   const { userInfo, isLoggedIn, logout } = get();
-  
   if (userInfo?.expiresAt && moment().isAfter(moment(userInfo.expiresAt))) {
-  
     logout();
   } else if (isLoggedIn && !userInfo) {
+    console.log("log out 2 ")
 
     logout();
   }
+  console.log(userInfo?.expiresAt  )
+
 },
-      login: (userData) =>
-        set({
-          isLoggedIn: true,
-          userInfo: userData,
-          userRole: userData.role,
-        }),
+login: (userData) => {
+  const expiresAt = moment().add(1,"days").toISOString();
+  console.log(expiresAt)
+
+  set({
+    isLoggedIn: true,
+    userInfo: { ...userData, expiresAt }, // inject loginAt
+    userRole: userData.role,
+  });
+},
 
         logout: () => {
           set({

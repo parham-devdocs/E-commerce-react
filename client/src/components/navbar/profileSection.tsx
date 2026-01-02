@@ -9,7 +9,6 @@ const ProfileSection = () => {
 const {isLoggedIn,userInfo}=useAuth()
 const navigate=useNavigate()
 function logoutHandler() {
-  console.log(isLoggedIn)
   mutate()
   if (!error) {
     navigate("/")
