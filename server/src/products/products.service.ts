@@ -84,7 +84,6 @@ export class ProductsService {
     }
   
     return {
-      message: 'product retrieved',
       data: product,
     };
   }

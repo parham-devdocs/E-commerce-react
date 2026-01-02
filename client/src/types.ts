@@ -113,13 +113,13 @@ export interface DropDownType {
 
 export interface CategoryProduct {
   _id: string;
-  title: string;
+  name: string;
   images?: string[]; // or `image?: string` if it's a single string
 }
 
 export interface CategoryItem {
   _id: string;
-  name: string;           // ← BUT WAIT! Your NestJS uses `title`, not `name`!
+  title: string;           // ← BUT WAIT! Your NestJS uses `title`, not `name`!
   description: string;
   image: string;
   products: CategoryProduct[];
@@ -132,14 +132,8 @@ export interface PaginatedCategoriesResponse {
   limit: number;
   totalPages: number;
 }
-export interface PaginatedDiscountedProducts {
-  data: Product[];
-  total: number;
-  page: number;
-  limit: number;
-  totalPages: number;
-}
-export interface PaginatedRecentProducts {
+
+export interface PaginatedProducts {
   data: Product[];
   total: number;
   page: number;

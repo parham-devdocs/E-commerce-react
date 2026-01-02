@@ -1,10 +1,9 @@
-import type { PaginatedDiscountedProducts } from "../types";
 import apiClient from "../utils/axiosInstance"
 
 const getProductsWithDiscount = async (page?: number) => {
     const pageNum = page ?? 1; 
     const response = await apiClient.get(`products/discount/${pageNum}`);
-    return response.data as PaginatedDiscountedProducts  
+    return response.data 
   };
 
 const getRecentProducts=async (page?:number)=>{
@@ -18,6 +17,12 @@ const getProducts=async (page?:number)=>{
 }
 
 
+const getSingleProduct=async (id:string)=>{
+  const response=await apiClient.get(`/products/${id}`)
+  return response.data.data
+}
 
 
-export {getProductsWithDiscount,getRecentProducts,getProducts}
+
+
+export {getProductsWithDiscount,getRecentProducts,getProducts,getSingleProduct}

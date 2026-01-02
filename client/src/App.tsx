@@ -27,7 +27,7 @@ export default function App() {
   element={userRole && userRole=== "user" ? <Cart /> : <Navigate to="/login" replace />}/>    
   
           <Route path="/discounts" element={<Discounts />} />
-          <Route path="/product/:id" element={<ProductDetail />} />
+          <Route path="/products/:id" element={<ProductDetail />} />
 
           <Route path="/products/:category" element={<Products />} />
           <Route path="/login" element={<Login />} />

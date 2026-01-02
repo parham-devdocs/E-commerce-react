@@ -1,31 +1,31 @@
 import usePrice from "../../hooks/priceHook";
 import useCartStore from "../../store/cart";
 import Button from "../button";
-
+import noPhoto from "../../../public/259987.png";
 const Price = ({
   title,
   id,
   colors,
   price,
   discountPercentage,
-  images
+  image
 }: {
   title: string;
   id:string;
   colors: string[];
-  images: string[];
+  image?: string
   price: number;
   discountPercentage: number;
 }) => {
   const {seperatedPrice,seperatedPriceWithDiscount } = usePrice({ priceOrDiscount:price, discountPercentage });
   const addToCart=useCartStore(state=>state)
-
+console.log(image)
   return (
     <div className="flex justify-center items-center py-5 w-full rounded-md bg-white dark:bg-gray-800 shadow-md dark:shadow-gray-900/50">
       <div className="flex flex-col lg:flex-row lg:items-center lg:gap-6 w-full max-w-full px-4">
         <div className="flex-shrink-0 mb-4 lg:mb-0">
           <img
-            src={images[0]}
+            src={image ?image  : noPhoto}
             alt={title}
             className="w-full max-w-[200px] h-auto rounded-md  dark:bg-gray-700 object-cover mx-auto"
           />
@@ -62,7 +62,7 @@ const Price = ({
               {seperatedPriceWithDiscount || seperatedPrice}
             </p>
           </div>
-          <Button  style={{color:"primary"}} btn={{fn:()=>{addToCart.addToCart({id})},text:"افزودن به سبد خرید"}}/>
+          <Button  style={{color:"primary"}} btn={{fn:()=>{addToCart.addToCart({id})},type:"button",text:"افزودن به سبد خرید"}}/>
         </div>
       </div>
     </div>

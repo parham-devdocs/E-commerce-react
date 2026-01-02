@@ -77,7 +77,7 @@ const ProductCard = ({
           </div>
         )}
       </div>} 
-     {inStock && <Button  btn={{text:"افزودن به سبد خرید",fn(e) {
+     {inStock && <Button  btn={{type:"button",text:"افزودن به سبد خرید",fn(e) {
       addToCart({id})
       }}}/>} 
     </div>
