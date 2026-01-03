@@ -8,6 +8,7 @@ import Token from 'src/customDecorators/token.decorator';
 import {type tokenType } from 'src/interfaces';
 import { UserRole } from './entities/user.entity';
 import { ChangeRoleDto } from './dto/change-user-role';
+import { Public } from 'src/customDecorators/publicRoute.decorator';
 @Controller('auth')
 export class AuthController {
   constructor(
@@ -15,6 +16,7 @@ export class AuthController {
 
   ) {}
 
+  @Public()
   @Post('register')
  async   register
   (@Body(new ZodValidationPipe(RegisterUserDto))  dto: RegisterUserDto, 
@@ -25,6 +27,7 @@ export class AuthController {
     // return  {message:message , data}
     return await this.authService.register(dto,res)
   }
+  @Public()
   @Post("login")
  async login
  (@Body(new ZodValidationPipe(LoginUserDto)) dto: LoginUserDto ,
@@ -48,6 +51,7 @@ export class AuthController {
     return this.authService.changeRole(email,body.role,res)
   }
 
+  @Public()
   @Get('logout')
   async logout(
     @Token() token: tokenType,

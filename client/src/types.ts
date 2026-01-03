@@ -21,9 +21,7 @@ export type ProductPopUp={
   price:string
 }
 
-export type ProductCardInCart={
-    img:string,productName:string,price:number,discountPercentage:number,defaultNumberOfProducts:number,id:string
-}
+
 
  export type ProductCartData  = {
     id:string
@@ -103,14 +101,17 @@ export interface DropDownType {
   price:number
   priceWithDiscount:number
   discountPercentage:number
-  attributes:any
+  attributes:TranslatedKeyValuePair[]
   inStock:boolean
   count:number
   images:string[]
   description:string
 }
 
-
+export interface TranslatedKeyValuePair {
+  key: string;
+  value: string; 
+}
 export interface CategoryProduct {
   _id: string;
   name: string;
@@ -140,3 +141,25 @@ export interface PaginatedProducts {
   limit: number;
   totalPages: number;
 }
+export interface CartItem{
+  "id": number,
+  "productId": string,
+  "quantity": number
+}
+export interface CartProductType {
+"id":string
+  "img":string,
+  "name": string,
+  "price":number,
+  "discountPercentage": number,
+  "quantity":number
+
+}
+
+export interface ActiveCart{
+    "id": number,
+    "active": boolean,
+    "cartItems": CartItem[]
+}
+
+export interface CartData{quantity:number,productId:string}

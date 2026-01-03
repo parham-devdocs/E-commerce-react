@@ -7,6 +7,7 @@ import { UserService } from 'src/user/user.service';
 import { CartService } from 'src/cart/cart.service';
 import { ProductsService } from 'src/products/products.service';
 import { Repository } from 'typeorm';
+import { calculateInvoiceMetrics } from '../utils';
 
 @Injectable()
 export class PaymentService {
@@ -37,21 +38,7 @@ if (cart) {
   });
   
   const products = await Promise.all(productPromises);
-  const price = products.reduce((acc, product) => {
- return acc + (product?.price * product?.quantity)
-  }, 0)
-  
-  const finalPrice=products.reduce((acc,product)=>{
-    return acc + (product?.priceWithDiscount * product?.quantity);
-
-
-  
-  },0)
-  
-  const totalDiscount=products.reduce((acc,product)=>{
-   return acc + (product.discountAmount * product.quantity)
-   
-  },0)
+ const {price,totalDiscount,finalPrice}=calculateInvoiceMetrics<typeof products>(products)
   
       const newInvoice= this.invoiceModel.create({user,cart,totalDiscount,price,finalPrice})
   await this.cartService.deactiveCart(token)

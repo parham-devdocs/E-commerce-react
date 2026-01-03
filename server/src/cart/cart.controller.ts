@@ -13,7 +13,7 @@ import { RoleGuard } from 'src/role.guard';
 export class CartController {
   constructor(private readonly cartService: CartService) {}
 
-  @Roles(UserRole.ADMIN) 
+  @Roles(UserRole.USER) 
   @Post()
   create(@Token() token:tokenType, @Body() createCartDto: CreateCartItemDTO ) {
    
@@ -22,7 +22,7 @@ export class CartController {
 
   @Roles(UserRole.USER)
   @Patch()
-  deacticeCart(@Token() token:tokenType){
+  deactiveCart(@Token() token:tokenType){
     return this.cartService.deactiveCart(token)
   }
 

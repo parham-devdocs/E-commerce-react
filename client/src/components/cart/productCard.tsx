@@ -1,13 +1,15 @@
-import type { ProductCardInCart } from "../../types"
+import type {  CartProductType } from "../../types"
 import usePrice from "../../hooks/priceHook";
 import ProductNumber from "./productNumber";
 import { useState } from "react";
 import useCartStore from "../../store/cart";
+import { useAddToCart } from "../../queries/cartQueries";
 
-const ProductCard = ({img,id,productName,price,discountPercentage,defaultNumberOfProducts}:ProductCardInCart) => {
-    const [numberOfProducts,setNumberOfProducts] = useState(defaultNumberOfProducts);
+const ProductCard = ({img,id,name,price,discountPercentage,quantity}:CartProductType) => {
+    const [numberOfProducts,setNumberOfProducts] = useState(quantity);
     const decrementNumberOfProducts=useCartStore(state=>state.decrementNumberOfProducts)
     const incrementNumberOfProducts=useCartStore(state=>state.increaseNumberOfProducts)
+    const {mutate,data,isError}=useAddToCart({quantity:numberOfProducts,productId:id})
 
     // Calculate individual item prices
     const { priceWithDiscount} = usePrice({
@@ -27,14 +29,19 @@ const ProductCard = ({img,id,productName,price,discountPercentage,defaultNumberO
     const formattedTotalDiscount = new Intl.NumberFormat("fa-IR").format(totalDiscount);
 
     const decreaseHandler = () => {
+        console.log(numberOfProducts)
+        
         setNumberOfProducts(prev => Math.max(1, prev - 1)); 
         decrementNumberOfProducts({id})
+
     };
     
     const increaseHandler = () => {
+        mutate()
         setNumberOfProducts(prev => prev + 1);
         incrementNumberOfProducts({id})
-        
+        mutate()
+
     };
 
     return (
@@ -42,7 +49,7 @@ const ProductCard = ({img,id,productName,price,discountPercentage,defaultNumberO
             <div className="flex flex-col gap-4 flex-1">
                 <div className="flex items-start justify-between">
                     <h3 className="font-bold text-xl text-gray-800 dark:text-white truncate max-w-[60%]">
-                        {productName}
+                        {name}
                     </h3>
                     <div className="flex flex-col items-end">
                         <p className="text-gray-500 dark:text-gray-400 line-through text-sm">
@@ -84,7 +91,7 @@ const ProductCard = ({img,id,productName,price,discountPercentage,defaultNumberO
                     <img 
                         className="w-32 h-32 object-cover rounded-2xl shadow-2xl border-4 border-white dark:border-gray-700 transition-transform duration-300 hover:scale-105" 
                         src={img} 
-                        alt={productName} 
+                        alt={name} 
                     />
                     {discountPercentage && (
                         <div className="absolute -top-3 -right-3 bg-red-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg">

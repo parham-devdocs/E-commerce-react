@@ -4,23 +4,30 @@ import Details from "../../../components/productDetails/details";
 import {  useParams } from "react-router-dom";
 import { useGetSingleProduct } from "../../../queries/productsQueries";
 import Loader from "../../../components/loader";
-import booleanTranslator from "../../../utils/booleanTranslator";
 
 const ProductDetailPage = () => {
   const { id } = useParams() as {id:string}
+
+
   const {isError,isLoading,error,data}=useGetSingleProduct(id)
-  console.log(data?.attributes )
-  const attributesArray = Object.entries(data?.attributes || {}).map(([key, value]) => {
-    // Translate boolean values to Persian
-    const displayValue = typeof value === 'boolean'
-      ? value ? 'دارد' : 'ندارد'
-      : value; // Keep strings, numbers, etc. as-is (or conver
-  
-    return {
-      key,
-      value: displayValue
-    };
-  });
+// Optional: Define a refined type for your translated key-value pair
+interface TranslatedKeyValuePair {
+  key: string;
+  value: string; 
+}
+
+// Now build the array
+const attributesArray: TranslatedKeyValuePair[] = Object.entries(data?.attributes || {}).map(([key, value]) => {
+  let displayValue: string;
+
+  if (typeof value === 'boolean') {
+    displayValue = value ? 'دارد' : 'ندارد';
+  } else {
+    displayValue = String(value);
+  }
+
+  return { key, value: displayValue };
+});
   if (!data ||isLoading) {
     return (
       <div className="space-y-3 dark:bg-gradient-to-br p-5 rounded-md bg-white bg-gradient- dark:from-gray-900 dark:to-gray-950">

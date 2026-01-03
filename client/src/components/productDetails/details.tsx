@@ -1,10 +1,8 @@
-import type { KeyValuePair } from "../../types";
+import type {  TranslatedKeyValuePair } from "../../types";
 import Header from "../header";
 
-interface DetailsProps {
-  attributes: KeyValuePair[];
-}
-const Details = ({attributes}:any) => {
+
+const Details = ({attributes}:{attributes:TranslatedKeyValuePair[]}) => {
 console.log(attributes)
   return (
     <div className=" w-full flex-col flex items-center ">

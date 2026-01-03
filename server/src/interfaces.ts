@@ -15,4 +15,13 @@ export interface  ENV {
      refreshToken:string
       exp: number }
 
+      export interface ProductInCart {
+        price: number,
+        name: string,
+        discountPercentage: number,
+        id:string,
+        image: string,
+        quantity: number
+      }
+
       export interface CooikeType{refreshToken:string,accessToken:string}

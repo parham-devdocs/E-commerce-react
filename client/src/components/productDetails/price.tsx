@@ -2,6 +2,7 @@ import usePrice from "../../hooks/priceHook";
 import useCartStore from "../../store/cart";
 import Button from "../button";
 import noPhoto from "../../../public/259987.png";
+import { useAddToCart } from "../../queries/cartQueries";
 const Price = ({
   title,
   id,
@@ -19,7 +20,7 @@ const Price = ({
 }) => {
   const {seperatedPrice,seperatedPriceWithDiscount } = usePrice({ priceOrDiscount:price, discountPercentage });
   const addToCart=useCartStore(state=>state)
-console.log(image)
+  const {mutate}=useAddToCart({quantity:1,productId:id})
   return (
     <div className="flex justify-center items-center py-5 w-full rounded-md bg-white dark:bg-gray-800 shadow-md dark:shadow-gray-900/50">
       <div className="flex flex-col lg:flex-row lg:items-center lg:gap-6 w-full max-w-full px-4">
@@ -50,7 +51,7 @@ console.log(image)
             {seperatedPriceWithDiscount && (
               <div className="flex gap-2 items-center mb-1">
                 <p className="text-gray-500 dark:text-gray-400 line-through text-lg">
-                  {seperatedPrice}
+                تومان  {seperatedPrice} 
                 </p>
                 <span className="bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full">
                   {discountPercentage}%
@@ -59,10 +60,10 @@ console.log(image)
             )}
 
             <p className="text-2xl font-bold text-red-500 dark:text-red-400">
-              {seperatedPriceWithDiscount || seperatedPrice}
+              {seperatedPriceWithDiscount || seperatedPrice } تومان
             </p>
           </div>
-          <Button  style={{color:"primary"}} btn={{fn:()=>{addToCart.addToCart({id})},type:"button",text:"افزودن به سبد خرید"}}/>
+          <Button  style={{color:"primary"}} btn={{fn:()=>{addToCart.addToCart({id});mutate()},type:"button",text:"افزودن به سبد خرید"}}/>
         </div>
       </div>
     </div>

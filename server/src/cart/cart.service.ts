@@ -6,8 +6,9 @@ import {  CartItem} from "./entities/cart-item.entity";
 import { JWTService } from 'src/auth/JWTService';
 import { ProductsService } from 'src/products/products.service';
 import { UserService } from 'src/user/user.service';
-import { tokenType } from 'src/interfaces';
+import { ProductInCart, tokenType } from 'src/interfaces';
 import { Cart } from './entities/cart.entity';
+import { calculateInvoiceMetrics } from 'src/utils';
 @Injectable()
 export class CartService {
   constructor(
@@ -61,7 +62,6 @@ export class CartService {
     }
   
     const savedCart = await this.cartRepository.save(cart);
-    console.log('[DEBUG] Cart saved. Total items:', savedCart.cartItems.length);
   
     const newItem = savedCart.cartItems.find(item => item.productId === createCartItemDto.productId);
     return {
@@ -74,6 +74,7 @@ export class CartService {
   async findActiveCart(token:tokenType) {
     const user=await this.userService.findOneByEmail(token.email)
   const active=await this.cartRepository.findOne({where:{active:true,user},relations:["cartItems"]})
+  console.log(active)
   if (!active) {
     return null
   }
@@ -115,7 +116,7 @@ return active
 
   async findProductsInCart(token: tokenType) {
     const user = await this.userService.findOneByEmail(token.email);
-  
+  console.log("asss")
     const cart = await this.cartRepository.findOne({
       where: {
         user,
@@ -129,12 +130,17 @@ return active
         const product = await this.productService.findOne(cartItem.productId)
         const modifiedProduct={price:product.data.price,name:product.data.name,discountPercentage:product.data.discountPercentage,id:product.data.id,image:product.data.images[0],quantity:cartItem.quantity}
         products.push(modifiedProduct)
+
       }
-    
+      const {price,totalDiscount,finalPrice}=calculateInvoiceMetrics<ProductInCart[]>(products)
+
       return {
         inCart: true,
         message: 'Product already in cart',
         products,
+         price: price,
+        totalDiscount:totalDiscount,
+        finalPrice: finalPrice,
       };
     }
     

@@ -1,6 +1,7 @@
 import { Request, Response } from 'express'; // or fastify if you use it
 import bcrypt from "bcrypt";
 import { DateTime } from 'luxon';
+import { ProductInCart } from './interfaces';
 
 
 export function dateComparison(date:string) {
@@ -69,4 +70,29 @@ export const calculatePriceWithDiscount=(discountPercentage:number,price:number)
   const modifiedPercentage=discountPercentage/100
 const appliedDiscount=price-(price*modifiedPercentage)
 return appliedDiscount
+}
+
+
+export const calculateInvoiceMetrics = <T extends any>(products: T) => {
+  const price = (products as any).reduce((acc, product) => {
+    return acc + (product.price * product?.quantity)
+     }, 0)
+     
+     const finalPrice=(products as any).reduce((acc,product)=>{
+      const priceWithDiscount=calculatePriceWithDiscount(product.discountPercentage,product.price)
+       return acc + (priceWithDiscount * product?.quantity);
+   
+   
+     
+     },0)
+     
+     const totalDiscount=(products as any).reduce((acc,product)=>{
+      const discountAmount=calculateDicount(product.discountPercentage,product.price)
+
+      return acc + (discountAmount * product.quantity)
+      
+     },0)
+
+
+     return {price,totalDiscount,finalPrice}
 }

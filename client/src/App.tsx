@@ -29,7 +29,7 @@ export default function App() {
           <Route path="/discounts" element={<Discounts />} />
           <Route path="/products/:id" element={<ProductDetail />} />
 
-          <Route path="/products/:category" element={<Products />} />
+          {/* <Route path="/products/:category" element={<Products />} /> */}
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/admin/users"  element={userRole && userRole=== "admin" ? <UserList /> : <Navigate to="/login" replace />}/>

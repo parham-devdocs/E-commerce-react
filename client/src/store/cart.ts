@@ -20,6 +20,8 @@ const useCartStore = create<CartType>()(
     (set, get) => ({
       cart: [], 
       addToCart: (productCartData: ProductCartData) => {
+
+        
         const productIsAvailable = get().cart.find(item => item.id === productCartData.id);
         
         if (productIsAvailable) {
