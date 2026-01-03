@@ -93,6 +93,13 @@ export const calculateInvoiceMetrics = <T extends any>(products: T) => {
       
      },0)
 
+     const numberOfProducts=(products as any).reduce((acc,product)=>{
+
+      return acc + product.quantity
+      
+     },0)
+     console.log({products,numberOfProducts})
+
 
      return {price,totalDiscount,finalPrice}
 }

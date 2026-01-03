@@ -6,11 +6,10 @@ import Discount from '../discount';
 import { useGetDiscountedProducts } from '../../queries/productsQueries';
 import Loader from '../loader';
 import type { Product } from '../../types';
-import iphone14 from "../../../public/iPhone_14_Blue_PDP_Image_Position-1A__WWEN.webp";
+import noPhoto from "../../../public/259987.png";
 const DiscountSlider = ({ title }: { title: string }) => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
-
   const {  data:products, isLoading, isError, error } = useGetDiscountedProducts(1);
 
   const productsPerSlide = 4;
@@ -71,7 +70,7 @@ console.log(products)
 
   
   return (
-    <div className="space-y-3">
+    <div className="space-y-3 ">
       <Header link="/" title={title} />
 
       <div className="xl:hidden justify-center flex w-full">
@@ -79,7 +78,7 @@ console.log(products)
       </div>
 
       <div
-        className="w-full gap-4 md:px-4 relative rounded-lg p-4 bg-red-500"
+        className="w-full gap-4 md:px-4 relative rounded-lg p-4 bg-red-500 "
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
@@ -90,7 +89,7 @@ console.log(products)
 
           <div className="overflow-hidden rounded-xl relative flex-1">
             <div
-              className="flex transition-transform duration-500 ease-in-out"
+              className="flex transition-transform duration-500 ease-in-out "
               style={{
                 transform: `translateX(-${currentSlide * (slideWidth + gap)}px)`,
                 gap: `${gap}px`,
@@ -98,10 +97,10 @@ console.log(products)
               }}
             >
               {products.data?.map((product:Product) => (
-                <div key={product.id} style={{ width: `${slideWidth}px` }}>
+                <div key={product._id} style={{ width: `${slideWidth}px` }}>
                   <Card
-                    // image={`http://localhost:5000/uploads/${product.images?.[0] || 'default.jpg'}`}
-                    image={iphone14}
+                  
+                    image={`http://localhost:5000/uploads/${product.images?.[0] || noPhoto}`}
                     name={product.name}
                     brand={product.brand}
                     category={product.category}
@@ -110,7 +109,7 @@ console.log(products)
                     priceWithDiscount={product.priceWithDiscount}
                     discountPercent={product.discountPercentage}
                     slideWidth={`${slideWidth}px`}
-                    path={`/product/${product.id}`}
+                    path={`/products/${product._id}`}
                   />
                 </div>
               ))}

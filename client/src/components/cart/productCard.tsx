@@ -9,7 +9,7 @@ const ProductCard = ({img,id,name,price,discountPercentage,quantity}:CartProduct
     const [numberOfProducts,setNumberOfProducts] = useState(quantity);
     const decrementNumberOfProducts=useCartStore(state=>state.decrementNumberOfProducts)
     const incrementNumberOfProducts=useCartStore(state=>state.increaseNumberOfProducts)
-    const {mutate,data,isError}=useAddToCart({quantity:numberOfProducts,productId:id})
+    const {mutate}=useAddToCart({quantity:numberOfProducts,productId:id})
 
     // Calculate individual item prices
     const { priceWithDiscount} = usePrice({

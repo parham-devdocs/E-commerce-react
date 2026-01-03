@@ -14,7 +14,7 @@ const Products = () => {
   const {data:products,isError,error,isLoading}=useGetProducts(currentPage,10)
   const {category}=useParams() 
   const decodedUri=category && decodeURI(category)
-console.log(category && uriDecoder(category))  
+
   return (
     <div className=' w-full h-auto flex items-center flex-col gap-12'>
          {isError &&   <div className="h-64 flex items-center justify-center text-red-500"> Failed to load recent products: {error?.message}</div>}

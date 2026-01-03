@@ -25,7 +25,6 @@ const Card = ({
 }) => {
   // Convert count to number safely
   const stockCount = Number(count);
-
   return (
     <div
       className={`group w-${slideWidth} flex flex-col h-full rounded-xl border border-gray-200 bg-white 

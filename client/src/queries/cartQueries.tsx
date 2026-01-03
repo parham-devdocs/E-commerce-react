@@ -1,7 +1,7 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import type { AxiosError } from "axios";
 import { addItemToCartApi, getActiveCart, getWholeCart } from "../api/cartApi";
-import type { ActiveCart, CartData } from "../types";
+import {type CartResponse, type ActiveCart, type CartData } from "../types";
 import { toast } from "sonner";
 import queryErrorHandler from "../utils/queryErrorHandler";
 
@@ -28,7 +28,7 @@ export const useAddToCart = (data:CartData) => {
   
   
     export const useFindWholeCart=()=>{
-      return useQuery({
+      return useQuery<CartResponse>({
         queryKey:["wholeCart"],
         queryFn:getWholeCart,
         

@@ -11,6 +11,7 @@ const ProductDetailPage = () => {
 
   const {isError,isLoading,error,data}=useGetSingleProduct(id)
 // Optional: Define a refined type for your translated key-value pair
+console.log(id)
 interface TranslatedKeyValuePair {
   key: string;
   value: string; 

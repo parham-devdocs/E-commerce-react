@@ -1,5 +1,4 @@
 import ProductCard from "./productCard"
-import iphone11 from "../../../public/iphone-11-header.png";
 import type {  CartProductType } from "../../types";
 
 const ProductSection = ({products}:{products:CartProductType[]}) => {

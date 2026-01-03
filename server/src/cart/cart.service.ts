@@ -133,7 +133,6 @@ return active
 
       }
       const {price,totalDiscount,finalPrice}=calculateInvoiceMetrics<ProductInCart[]>(products)
-
       return {
         inCart: true,
         message: 'Product already in cart',

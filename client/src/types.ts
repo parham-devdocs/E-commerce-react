@@ -94,7 +94,7 @@ export interface DropDownType {
 
 
  export interface Product{
-  id:string
+  _id:string
   name:string
   brand:string
   category:string
@@ -154,6 +154,15 @@ export interface CartProductType {
   "discountPercentage": number,
   "quantity":number
 
+}
+
+export interface CartResponse {
+  inCart: boolean;
+  message: string;
+  products?: CartProductType[];
+  price?: number;
+  totalDiscount?: number;
+  finalPrice?: number;
 }
 
 export interface ActiveCart{
