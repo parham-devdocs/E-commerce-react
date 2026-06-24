@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import noPhotoIcon from "../../../public/259987.png";
 import Header from "../header";
-import { useGetCategories, useGetCategoriesByPgination } from "../../queries/categoryQueries";
+import { useGetCategoriesByPgination } from "../../queries/categoryQueries";
 import Loader from "../loader";
 const CategorySection = () => {
    const {error,data:categories,isLoading,isError}=useGetCategoriesByPgination(1)

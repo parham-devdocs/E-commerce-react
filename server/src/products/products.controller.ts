@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Res, UseInterceptors, UploadedFile, UploadedFiles, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Res, UseInterceptors, UploadedFile, UseGuards } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
@@ -26,7 +26,7 @@ export class ProductsController {
 
   }
  
-  @Public()
+  @Roles(UserRole.ADMIN)
   @Get("pagination/:page")
  async  findAll(@Param('page') page:string) {
   const response= await   this.productsService.findAll(page);

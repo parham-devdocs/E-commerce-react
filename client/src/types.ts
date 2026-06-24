@@ -1,7 +1,7 @@
 import type { ColumnDef } from "@tanstack/react-table"
 import type { ReactNode } from "react"
 import type z from "zod"
-import type { userLoginSchema, userRegisterSchema } from "./formValidationSchemas"
+import type { createProductSchema, userLoginSchema, userRegisterSchema } from "./formValidationSchemas"
 
 
 export type ProductCardType={
@@ -89,7 +89,7 @@ export interface DropDownType {
 
  export type LoginFormData = z.infer<typeof userLoginSchema>;
  export type RegsiterFormData = z.infer<typeof userRegisterSchema>;
-
+export type CreateProductFormData=z.infer<typeof createProductSchema>
 
 
 
@@ -115,16 +115,24 @@ export interface TranslatedKeyValuePair {
 export interface CategoryProduct {
   _id: string;
   name: string;
-  images?: string[]; // or `image?: string` if it's a single string
+  images?: string[]
 }
 
 export interface CategoryItem {
   _id: string;
-  title: string;           // ← BUT WAIT! Your NestJS uses `title`, not `name`!
+  title: string;     
   description: string;
-  image: string;
+  image?: string;
   products: CategoryProduct[];
 }
+
+export interface Category{
+  _id: string;
+  title:string
+  products:Product[]|[]
+  description:string
+}
+
 
 export interface PaginatedCategoriesResponse {
   data: CategoryItem[];

@@ -12,9 +12,11 @@ import Register from "./pages/users/register";
 import UserList from "./pages/admin/users";
 import ProductList from "./pages/admin/products";
 import useAuthStore from "./store/auth";
+import CreateProducts from "./pages/admin/createProduct";
 export default function App() {
   const userRole=useAuthStore(state=>state.userInfo?.role)
   useAuthStore(state=>state.checkAuthStatus())
+  console.log(userRole)
   return (
     <BrowserRouter>
       <Routes>
@@ -24,7 +26,7 @@ export default function App() {
 
 <Route
   path="/cart"
-  element={userRole && userRole=== "user" ? <Cart /> : <Navigate to="/login" replace />}/>    
+  element={ userRole==="user" ? <Cart /> : <Navigate to="/login" replace />}/>    
   
           <Route path="/discounts" element={<Discounts />} />
           <Route path="/products/:id" element={<ProductDetail />} />
@@ -34,6 +36,8 @@ export default function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/admin/users"  element={userRole && userRole=== "admin" ? <UserList /> : <Navigate to="/login" replace />}/>
           <Route path="/admin/products"  element={userRole && userRole=== "admin" ? <ProductList/> : <Navigate to="/login" replace />}/>
+          <Route path="/admin/products/create"  element={userRole && userRole=== "user"? <CreateProducts/> : <Navigate to="/login" replace />}/>
+
 
         </Route>
       </Routes>

@@ -11,6 +11,7 @@ import { QueryFailedError } from "typeorm";
 import { ZodError } from 'zod';
 import { CooikeType, tokenType } from 'src/interfaces';
 import { UserService } from 'src/user/user.service';
+
 @Injectable()
 export class AuthService {
   constructor(
@@ -33,7 +34,6 @@ export class AuthService {
         registerUserDto.email,
         registerUserDto.role, // now safe to use — user is new
       );
-  
       setAuthCookie(res, accessToken, 'accessToken', 'accessToken');
       setAuthCookie(res, refreshToken, 'refreshToken', 'refreshToken');
   
@@ -147,54 +147,77 @@ export class AuthService {
   }
 
 
-// In AuthService
-async refreshToken(req: Request, res: Response) {
-  const refreshToken = req.cookies?.refreshToken;
-
-  if (!refreshToken) {
-    throw new UnauthorizedException('Refresh token missing');
+  async refreshToken(refreshToken:string, res: Response) {
+    console.log("refresh is called")
+    if (!refreshToken) {
+      throw new UnauthorizedException('Refresh token missing');
+    }
+    console.log('[RefreshToken] Starting refresh token process');
+  
+  
+    if (!refreshToken) {
+      console.warn('[RefreshToken] Refresh token missing in cookies');
+      throw new UnauthorizedException('Refresh token missing');
+    }
+  
+    try {
+      console.log('[RefreshToken] Verifying refresh token...');
+      const payload = this.jwtServcie.verifyTokenOnly('refreshToken', refreshToken); 
+      const { email } = payload;
+  
+      console.log(`[RefreshToken] Token verified. Fetching user with email: ${email}`);
+      const user = await this.userService.findOneByEmail(email);
+      if (!user) {
+        console.warn(`[RefreshToken] User not found for email: ${email}`);
+        throw new UnauthorizedException('User not found');
+      }
+  
+      console.log(`[RefreshToken] Generating new tokens for user: ${email}`);
+      const { accessToken, refreshToken: newRefreshToken } = this.jwtServcie.createToken(email, user.role);
+  
+      // Update refresh token in DB
+      user.refreshToken = newRefreshToken;
+      await this.authRepository.save(user);
+      console.log(`[RefreshToken] Refresh token updated in DB for user: ${email}`);
+  
+      // Set cookies
+      setAuthCookie(res, accessToken, 'accessToken', 'accessToken');
+      setAuthCookie(res, newRefreshToken, 'refreshToken', 'refreshToken'); // ← newRefreshToken!
+      console.log('[RefreshToken] Auth cookies set successfully');
+  
+      // Omit sensitive fields
+      const { hashedPassword, refreshToken: _, ...safeUser } = user;
+  
+      console.log('[RefreshToken] Refresh token flow completed successfully');
+      return {
+        message: 'Tokens refreshed successfully',
+        user: safeUser,
+        accessToken,
+        refreshToken: newRefreshToken, // note: returning new one, not the old input
+      };
+  
+    } catch (error) {
+      console.error(`[RefreshToken] Error during refresh: ${error.message}`);
+      console.error('[RefreshToken] Error stack:', error.stack);
+  
+      // Clear cookies on failure
+      res.clearCookie('accessToken');
+      res.clearCookie('refreshToken');
+      console.log('[RefreshToken] Auth cookies cleared due to error');
+  
+      if (error.name === 'TokenExpiredError') {
+        console.warn('[RefreshToken] Refresh token expired');
+        throw new UnauthorizedException('Refresh token expired');
+      }
+      if (error.name === 'JsonWebTokenError') {
+        console.warn('[RefreshToken] Invalid refresh token');
+        throw new UnauthorizedException('Invalid refresh token');
+      }
+  
+      console.error('[RefreshToken] Unexpected error – unable to refresh token');
+      throw new UnauthorizedException('Unable to refresh token');
+    }
   }
-
-  try {
-    const payload = this.jwtServcie.verifyTokenOnly("refreshToken",refreshToken); 
-    const { email } = payload;
-    const user = await this.userService.findOneByEmail(email);
-    if (!user) {
-      throw new UnauthorizedException('User not found');
-    }
-
- 
-    const { accessToken, refreshToken: newRefreshToken } = this.jwtServcie.createToken(email, user.role);
-
-    user.refreshToken = newRefreshToken;
-    await this.authRepository.save(user);
-
-    setAuthCookie(res,"accessToken", accessToken, 'accessToken');
-    setAuthCookie(res,"refreshToken", newRefreshToken, 'refreshToken');
-
-    const { hashedPassword, refreshToken: _, ...safeUser } = user;
-    const tokens=getAuthCookie(req)
-    return {
-      message: 'Tokens refreshed successfully',
-      user: safeUser,
-      accessToken,refreshToken
-    };
-
-  } catch (error) {
-    // Clear cookies on failure
-    res.clearCookie('accessToken');
-    res.clearCookie('refreshToken');
-    
-    if (error.name === 'TokenExpiredError') {
-      throw new UnauthorizedException('Refresh token expired');
-    }
-    if (error.name === 'JsonWebTokenError') {
-      throw new UnauthorizedException('Invalid refresh token');
-    }
-    throw new UnauthorizedException('Unable to refresh token');
-  }
-}
-
 
   async logout(token: tokenType, res: Response): Promise<any> {
     const { email } = token;
@@ -226,7 +249,7 @@ async refreshToken(req: Request, res: Response) {
  await this.authRepository.save(user);
 
  setAuthCookie(res, accessToken, 'accessToken', 'accessToken');
- setAuthCookie(res, refreshToken, 'refreshToken', 'refreshToken');
+setAuthCookie(res, refreshToken, 'refreshToken', 'refreshToken');
  if (!updatedRole.affected) {
   throw new NotFoundException(`User with email ${email} not found`);
 }

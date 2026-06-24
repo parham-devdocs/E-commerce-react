@@ -17,7 +17,7 @@ export class JWTService {
     const accessToken = jwt.sign(
       payload, // ✅
       process.env.JWT_ACCESS_SECRET as string,
-      { expiresIn: '2h' }
+      { expiresIn: '2d' } 
     );
 
     const refreshToken = jwt.sign(

@@ -39,10 +39,11 @@ export class AuthController {
 
   }
 
+  @Public()
   @Post("refresh")
-  async refreshRoken(@Token() token:tokenType,@Res({ passthrough: true }) res: Response,@Req() req:Request){
-    const {email}=token
-    return this.authService.refreshToken(req,res)
+  async refreshRoken(@Res({ passthrough: true }) res: Response,@Req() req:Request,@Body() body:{refreshToken:string}){
+    console.log("auth")
+    return this.authService.refreshToken(body.refreshToken,res)
   }
 
   @Post("changeRole")

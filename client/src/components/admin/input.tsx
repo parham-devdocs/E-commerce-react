@@ -6,21 +6,24 @@ const Input = ({
   autoComplete,
   value, 
   placeHolder, 
-  onChangeHandler 
+  onChangeHandler ,
+  ...props
 }: { 
   placeHolder: string,
   value: string | number,
   onChangeHandler: (e: React.ChangeEvent<HTMLInputElement>) => void,
   autoComplete?: React.HTMLInputAutoCompleteAttribute,
   id: string, 
-  type: "text" | "email" | "password" | "number" 
+  type: "text" | "email" | "password" | "number",
 }) => {
   const [input, setInput] = useState<string>(value.toString());
   
-  // Update internal state when external value prop changes
   useEffect(() => {
     setInput(value.toString());
   }, [value]);
+
+  // Determine if we should hide number spinners
+  const isNumberType = type === "number";
 
   return (
     <div className="relative">
@@ -28,12 +31,19 @@ const Input = ({
         autoComplete={autoComplete}
         type={type}
         name={id}
+        id={id}
         onChange={(e) => {
           setInput(e.currentTarget.value);
           onChangeHandler(e);
         }}
         value={input}
-        className="w-full h-12 text-right rounded-md border-2 border-red-500 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-300 dark:focus:ring-red-400 dark:text-gray-100 transition-all duration-200 peer"
+        {...props}
+        className={`
+          w-full h-12 text-right rounded-md border-2 border-red-500 px-3 py-2 
+          focus:outline-none focus:ring-2 focus:ring-red-300 dark:focus:ring-red-400 
+          dark:text-gray-100 transition-all duration-200 peer
+          ${isNumberType ? '[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none' : ''}
+        `}
       />
       <label
         htmlFor={id}

@@ -14,7 +14,7 @@ export const useGetDiscountedProducts = (page:number=1,limit:number=10) => {
 
   export const useGetProducts = (page:number=1,limit:number=10) => {
   
-    return useQuery<PaginatedProducts>({
+    return useQuery<PaginatedProducts[]>({
       
       queryKey: ["products",page,limit],
       queryFn: ()=>getProducts(page),

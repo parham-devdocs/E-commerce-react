@@ -1,46 +1,29 @@
-// lib/axiosInstance.ts  (or api/axiosInstance.js)
-
-import axios from 'axios';
-
-// Create instance
+import axios from "axios";
+import { Navigate } from "react-router-dom";
 const apiClient = axios.create({
-  baseURL: "http://localhost:5000/api",
-  withCredentials:true,
+  baseURL: 'http://localhost:5000/api',
+  withCredentials: true,
   timeout: 10000,
   headers: {
     'Content-Type': 'application/json',
   },
 });
 
-// Optional: Add request interceptor
-apiClient.interceptors.request.use(
-  (config) => {
-    // Example: Add auth token from localStorage
-    const token = localStorage.getItem('access_token');
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-    return config;
-  },
-  (error) => {
-    return Promise.reject(error);
-  }
-);
 
-// Optional: Add response interceptor
+// No request interceptor (assuming cookie-only auth)
+
 apiClient.interceptors.response.use(
   (response) => {
-    // Return successful response as-is
+    console.log(`[Axios] ✅ ${response.config.method?.toUpperCase()} ${response.config.url} → ${response.status}`);
     return response;
   },
-  (error) => {
-    // Handle common errors (e.g., 401 = token expired)
-    if (error.response?.status === 401) {
-      console.log(error  )
-      // Redirect to login, clear tokens, etc.
-      localStorage.removeItem('access_token');
-      // window.location.href = '/login';
-    }
+  async (error) => {
+   if (error.status===401) {
+    Navigate({to:"/login"})
+
+   }
+
+    console.log('[Axios] 📤 Propagating non-401 or already-retried error');
     return Promise.reject(error);
   }
 );

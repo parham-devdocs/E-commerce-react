@@ -38,3 +38,20 @@ export const userRegisterSchema = z
       .refine((value) => PASSWORD_REGEX.test(value), {
         message: "رمز عبور باید حداقل شامل یک حرف کوچک، یک حرف بزرگ، یک رقم و یک کاراکتر ویژه (@$!%*?&) باشد",
       })})
+
+
+export const createProductSchema = z.object({
+  name: z.string().min(2, "نام محصول باید حداقل 2 کاراکتر باشد"),
+  brand: z.string().min(2, "برند باید حداقل 2 کاراکتر باشد"),
+  price: z.number().min(1000, "قیمت باید حداقل 1000 تومان باشد"),
+  count: z.number().min(0, "تعداد نمی‌تواند منفی باشد"),
+  discountPercentage: z.number().min(0).max(100).optional(),
+  category: z.string().min(1, "لطفاً دسته‌بندی را انتخاب کنید"),
+  description: z.string().min(10, "توضیحات باید حداقل 10 کاراکتر باشد"),
+  attributes: z.array(
+    z.object({
+      key: z.string(),
+      value: z.string()
+    })
+  ).optional()
+});

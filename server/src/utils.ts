@@ -23,17 +23,17 @@ const now = DateTime.fromISO(DateTime.now().toISO())
 
 export const setAuthCookie = (
   res: Response,
-  value: string,
-  key: string = 'auth_token',
-  tokenType:"refreshToken" | "accessToken"
-) => {
-const token=  res.cookie(key, value, {
+  tokenValue: string,      // clearer name
+  cookieName: string,
+  tokenType: "refreshToken" | "accessToken"
+)=> {
+  const token = res.cookie(cookieName, tokenValue, {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
-    maxAge:tokenType==="accessToken" ? 60 * 60 * 1000 : 60 *60 *1000* 24*7, 
+    maxAge: tokenType === "accessToken" ? 60 * 60 * 1000 : 60 * 60 * 1000 * 24 * 7,
     path: '/',
-  })
-  return token
+  });
+  return token;
 };
 
 export const getAuthCookie = (

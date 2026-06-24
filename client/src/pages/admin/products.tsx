@@ -1,85 +1,53 @@
 import Table from "../../components/admin/table";
 import { createColumnHelper, type ColumnDef } from "@tanstack/react-table";
-import type { Product } from "../../types";
+import type { PaginatedProducts, Product } from "../../types";
 import Button from "../../components/button";
 import discountPercentage from "../../utils/discountCalc";
-import iphone14 from "../../../public/iPhone_14_Blue_PDP_Image_Position-1A__WWEN.webp";
 import Header from "../../components/header";
 import { useState } from "react";
 import AdminListPopUp from "../../components/admin/adminListPopUp";
 import Pagination from "../../components/pagination";
+import { useGetProducts } from "../../queries/productsQueries";
+import Loader from "../../components/loader";
 
-const products: Product[] = [
-  {
-    id: "1",
-    src: iphone14,
-    name: "Ultra Slim Laptop",
-    price: 1299.99,
-    discountPercentage: 0,
-    numbersAvailable: 25,
-  },
-  {
-    id: "2",
-    src: iphone14,
-    name: "Wireless Noise-Canceling Headphones",
-    price: 299.99,
-    discountPercentage: 20,
-    numbersAvailable: 50,
-  },
-  {
-    id: "3",
-    src: iphone14,
-    name: "Latest Model Smartphone",
-    price: 899.99,
-    discountPercentage: 10,
-    numbersAvailable: 0,
-  },
-  {
-    id: "4",
-    src: iphone14,
-    name: "Smart Fitness Watch",
-    price: 249.99,
-    discountPercentage: 25,
-    numbersAvailable: 7,
-  },
-  {
-    id: "5",
-    src: iphone14,
-    name: "10-inch Tablet",
-    price: 449.99,
-    discountPercentage: 5,
-    numbersAvailable: 30,
-  },
-];
 
-type ModifiedProductType = Product & {
+
+type ModifiedProductType = PaginatedProducts[] & {
   removeProduct: () => void;
   updateProduct: (id: number) => void;
   totalPrice?: any;
 };
 
 const Products = () => {
-  const [productIdForUpdation, setProductIdForUpdation] = useState<
-    null | number
-  >(null);
+  const [productIdForUpdation, setProductIdForUpdation] = useState<null | number >(null);
+  const [pageNumber,setPageNumber]=useState(1)
+    const {data,isError,isLoading}=useGetProducts(pageNumber)
+
+    if (isLoading ) {
+      return <Loader size="lg"/>
+    }
+    if (isError && !data) {
+      return <p>something is wrong with server</p>
+    }
+
   const columnHelper = createColumnHelper<ModifiedProductType>();
 
-  const createModifiedData = (products: Product[]): ModifiedProductType[] => {
-    return products.map((product) => ({
+  const createModifiedData = (products: PaginatedProducts): ModifiedProductType[] => {
+    return products.data.map((product) => ({
       ...product,
       removeProduct: () => {
-        console.log(`Removing product: ${product.id}`);
+        console.log(`Removing product`);
       },
       updateProduct: (id: number) => {
         setProductIdForUpdation(id);
-        console.log(`Updating product: ${product.id}`);
+        console.log(`Updating producs`);
       },
     }));
   };
-  const modifiedData: ModifiedProductType[] = createModifiedData(products);
+  const modifiedData: ModifiedProductType[] =data && createModifiedData(data) 
 
   const columns: ColumnDef<ModifiedProductType, any>[] = [
-    columnHelper.accessor("name", {
+    columnHelper.accessor("data.name", {
       header: "نام",
       cell: (info) => (
         <div className="flex items-center gap-3">
@@ -92,19 +60,19 @@ const Products = () => {
         </div>
       ),
     }),
-    columnHelper.accessor("numbersAvailable", {
+    columnHelper.accessor("data.count", {
       header: "تعداد",
       cell: (info) => {
-        return <p>{info.row.original.numbersAvailable}</p>;
+        return <p>{info.getValue}</p>;
       },
     }),
-    columnHelper.accessor("price", {
+    columnHelper.accessor("data.price", {
       header: "قیمت بدون تخفیف",
       cell: (info) => {
         return <p>{info.row.original.price}</p>;
       },
     }),
-    columnHelper.accessor("discountPercentage", {
+    columnHelper.accessor("data.discountPercentage", {
       header: "درصد تخفیف",
       cell: (info) => {
         return <p>{info.row.original.discountPercentage}</p>;
@@ -173,7 +141,7 @@ const Products = () => {
       <Header title="لیست محصولات" />
       <div className="w-full h-full gap-10 flex flex-col items-center justify-center">
         <Table data={modifiedData} columns={columns} />
-        <Pagination pages={10} onClickHandler={(e)=>{console.log(e)}}/>
+        <Pagination pages={10} onClickHandler={(e)=>{setPageNumber(e)}}/>
       </div>
     </div>
   );

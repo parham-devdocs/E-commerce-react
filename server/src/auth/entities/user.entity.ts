@@ -22,10 +22,10 @@ export class AUTH {
   @Column({ type: 'text', unique: true })
   email: string;
 
-  @Column({ type: 'text', unique: true })
+  @Column({ type: 'text', unique: true,nullable:true })
   phoneNumber: string;
 
-  @Column()
+  @Column({ type: 'text', unique: true,nullable:true })
   address: string;
 
   @Column()
