@@ -7,9 +7,10 @@ import { Invoice } from 'src/payment/entities/payment.entity';
 
 // roles.enum.ts
 export enum UserRole {
-  ADMIN = 'admin',
   USER = 'user',
-  GUEST = 'guest', // optional, usually inferred at runtime
+  GUEST = 'guest', 
+  ADMIN = 'admin',
+
 }
 @Entity('auth') 
 export class AUTH {

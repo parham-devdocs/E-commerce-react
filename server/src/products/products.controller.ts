@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Res, UseInterceptors, UploadedFile, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Res, UseInterceptors, UploadedFile, UseGuards, BadRequestException } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
@@ -6,12 +6,16 @@ import Token from 'src/customDecorators/token.decorator';
 import {type tokenType } from 'src/interfaces';
 import {type Response } from 'express';
 import {  FileInterceptor} from "@nestjs/platform-express";
-import {  } from "express";
 import { AuthGuard } from 'src/auth.guard';
 import { RoleGuard } from 'src/role.guard';
 import { Roles } from 'src/roles.decorator';
 import { UserRole } from 'src/auth/entities/user.entity';
 import { Public } from 'src/customDecorators/publicRoute.decorator';
+import  { type Express } from "express";
+import { extname } from 'path';
+import { FileUploaderInterceptor } from 'src/interceptors/fileUploader.interceptor';
+import { diskStorage } from 'multer';
+
 @Controller('products')
 @UseGuards(AuthGuard, RoleGuard) 
 
@@ -20,14 +24,64 @@ export class ProductsController {
 
   @Roles(UserRole.ADMIN)
   @Post()
-  async create(@Body() createProductDto: CreateProductDto, @Token() toker:tokenType,@Res({passthrough:true}) res:Response ) {
-   const response=await this.productsService.create(createProductDto);
-    return response
+  @UseInterceptors(
+    FileInterceptor('file', {
+      storage: diskStorage({
+        destination: './uploads/products',
+        filename: (req, file, callback) => {
+          // ✅ Fix: Use file.originalname, not file.filename
+          const extension = extname(file.originalname);
+          const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+          callback(null, `product-${uniqueSuffix}${extension}`);
+        },
+      }),
+      // ✅ Add file filter for validation
+      fileFilter: (req, file, callback) => {
+        const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+        if (allowedTypes.includes(file.mimetype)) {
+          callback(null, true);
+        } else {
+          callback(new BadRequestException('Invalid file type'), false);
+        }
+      },
+      // ✅ Add file size limit
+      limits: {
+        fileSize: 5 * 1024 * 1024, // 5MB
+      },
+    })
+  )
+  async create(
+    @Body() createProductDTO:CreateProductDto,
+    @Token() token: tokenType,
+    @Res({ passthrough: true }) res: Response,
+    @UploadedFile() file: Express.Multer.File,
+  ) {
+    // ✅ Check if file exists
+    if (!file) {
+      throw new BadRequestException('File is required');
+    }
 
+    // ✅ Log file info
+    console.log('File uploaded:', {
+      originalName: file.originalname,
+      filename: file.filename,
+      size: file.size,
+      mimetype: file.mimetype,
+      path: file.path,
+    });
+const newProduct=await this.productsService.create({...createProductDTO,images:[file.path]})
+
+   
+    return {
+      success: true,
+      message: 'Product created successfully',
+      file:newProduct.data
+    };
   }
- 
+
+  
   @Roles(UserRole.ADMIN)
-  @Get("pagination/:page")
+  @Get("list/:page")
  async  findAll(@Param('page') page:string) {
   const response= await   this.productsService.findAll(page);
 console.log(response)
@@ -89,10 +143,46 @@ console.log(response)
     return this.productsService.getProductImages(productId)
   }
 
+
+
+
+
+
+
+
+
+
+
+
   @Roles(UserRole.ADMIN)
-  @Post('upload/singleImage/:productId')
-  @UseInterceptors(FileInterceptor('file'))
-  async uploadSingleFile(@Token() Token:tokenType, @Param("productId") productId:any ,  @UploadedFile() file: any) {
+  @Post('upload/:productId')
+    @UseInterceptors(
+      FileInterceptor('file', {
+        storage: diskStorage({
+          destination: './uploads/products',
+          filename: (req, file, callback) => {
+            // ✅ Fix: Use file.originalname, not file.filename
+            const extension = extname(file.originalname);
+            const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+            callback(null, `product-${uniqueSuffix}${extension}`);
+          },
+        }),
+        // ✅ Add file filter for validation
+        fileFilter: (req, file, callback) => {
+          const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+          if (allowedTypes.includes(file.mimetype)) {
+            callback(null, true);
+          } else {
+            callback(new BadRequestException('Invalid file type'), false);
+          }
+        },
+        // ✅ Add file size limit
+        limits: {
+          fileSize: 5 * 1024 * 1024, // 5MB
+        },
+      })
+    )
+  async uploadSingleFile(@Token() Token:tokenType, @Param("productId") productId:any  ,@UploadedFile() file: any) {
   return await this.productsService.uploadProductImage(file,productId)
     
   }

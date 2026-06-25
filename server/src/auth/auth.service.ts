@@ -241,8 +241,9 @@ export class AuthService {
   }
   async changeRole(email:string,role:UserRole,res: Response){
  const user= await this.userService.findOneByEmail(email)
-  
- const updatedRole=   await  this.authRepository.update({email},{role:role})
+  console.log(user)
+ const updatedRole=   await  this.authRepository.update({email},{role})
+
  const { accessToken, refreshToken } = this.jwtServcie.createToken(user.email,role);
   
  user.refreshToken = refreshToken;

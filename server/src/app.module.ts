@@ -10,7 +10,7 @@ import { UserModule } from './user/user.module';
 import { CartModule } from './cart/cart.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { PaymentModule } from './payment/payment.module';
-import { AccessContorlService } from './accessControlService';
+import { AccessControlService } from './accessControlService';
 import { ServeStaticModule } from "@nestjs/serve-static";
 import { join } from 'path';
 @Module({
@@ -34,7 +34,7 @@ import { join } from 'path';
     PaymentModule
   ],
   controllers: [AppController],
-  providers: [AppService,AccessContorlService],
-exports:[AccessContorlService]
+  providers: [AppService,AccessControlService],
+exports:[AccessControlService]
 })
 export class AppModule {}

@@ -197,9 +197,14 @@ export class ProductsService {
   }
 
   async uploadProductImage(file:any,productId:ObjectId){
-   const savedImage=await this.productModel.updateOne({ _id: productId}, { $push: { images: file.filename } })
+    try {
+      const savedImage=await this.productModel.updateOne({ _id: productId}, { $push: { images: file.filename } })
 
-  return file
+      return savedImage
+    } catch (error) {
+      return  HttpStatus.INTERNAL_SERVER_ERROR
+    }
+  
   }
 
   async getProductImages(id:string){

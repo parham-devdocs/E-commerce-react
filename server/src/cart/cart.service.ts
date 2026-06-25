@@ -23,8 +23,7 @@ export class CartService {
   ) {
   
     const user = await this.userService.findOneByEmail(token.email);
-  
-    const cartItemResult = await this.findProductInCart(token, createCartItemDto.productId);
+    const cartItemResult = await this.findProductInCart(token, createCartItemDto.productId)
 
     if (cartItemResult.inCart && cartItemResult.item) {
       const cartItem = cartItemResult.item;
@@ -83,9 +82,12 @@ return active
   }
 
   async findProductInCart(token: tokenType, productId: string) {
+
     const user = await this.userService.findOneByEmail(token.email);
     if (!user) throw new HttpException('User not found', HttpStatus.NOT_FOUND);
-  
+  if (!productId) {
+throw new HttpException('Product Id not found', HttpStatus.NOT_FOUND);
+  }
     // This single query is blazing fast
     const cartItem = await this.cartItemRepository.findOne({
       where: {

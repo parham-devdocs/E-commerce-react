@@ -7,7 +7,7 @@ import { UserService } from 'src/user/user.service';
 import { CartService } from 'src/cart/cart.service';
 import { ProductsService } from 'src/products/products.service';
 import { Repository } from 'typeorm';
-import { calculateInvoiceMetrics } from '../utils';
+import { calculateDicount, calculateInvoiceMetrics, calculatePriceWithDiscount } from '../utils';
 
 @Injectable()
 export class PaymentService {
@@ -26,13 +26,15 @@ if (cart) {
     if (!response.inStock) {
       throw new ConflictException(`Product ${response.name} is out of stock`);
     }
+    const discountAmount=calculateDicount(response.discountPercentage,response.price)
+    const priceWithDiscount=calculatePriceWithDiscount(response.discountPercentage,response.price)
     return {
       id: response.id,
       name: response.name,
       price: response.price,
       discountPercentage: response.discountPercentage,
-      discountAmount: response.discountAmount || 0,
-      priceWithDiscount: response.priceWithDiscount || response.price,
+      discountAmount:discountAmount  || 0,
+      priceWithDiscount: priceWithDiscount || response.price,
       quantity: item.quantity,
     };
   });

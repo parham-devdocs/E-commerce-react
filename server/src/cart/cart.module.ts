@@ -9,11 +9,11 @@ import { AuthGuard } from 'src/auth.guard';
 import { userProvider } from 'src/user/user.provider';
 import { UserService } from 'src/user/user.service';
 import { AuthModule } from 'src/auth/auth.module';
-import { AccessContorlService } from 'src/accessControlService';
+import { AccessControlService } from 'src/accessControlService';
 
 @Module({
   controllers: [CartController],
-  providers: [CartService,...cartProvider,...cartItemProvider,AccessContorlService],
+  providers: [CartService,...cartProvider,...cartItemProvider,AccessControlService],
   imports:[DatabaseModule,ProductsModule,UserModule,AuthModule],
   exports:[CartService]
 })

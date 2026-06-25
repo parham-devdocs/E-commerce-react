@@ -22,13 +22,6 @@
     @Prop({ min: 0, max: 100, default: 0 })
     discountPercentage: number;
 
-    @Prop({type:Number})
-    discountAmount: number;
-
-  
-    @Prop({type:Number})
-    priceWithDiscount: number;
-    
 
 
     @Prop({ default: true })
