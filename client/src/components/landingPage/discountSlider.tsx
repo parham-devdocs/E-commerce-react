@@ -11,7 +11,6 @@ const DiscountSlider = ({ title }: { title: string }) => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
   const {  data:products, isLoading, isError, error } = useGetDiscountedProducts(1);
-
   const productsPerSlide = 4;
   const actualProductCount = products?.data?.length ?? 0;
   const totalSlides = Math.max(1, Math.ceil(actualProductCount / productsPerSlide));
@@ -21,7 +20,6 @@ const DiscountSlider = ({ title }: { title: string }) => {
     if (isLoading || isError || !products || actualProductCount === 0 || isHovered || totalSlides <= 1) {
       return;
     }
-console.log(products)
     const interval = setInterval(() => {
       setCurrentSlide(prev => (prev + 1) % totalSlides);
     }, 3000);
@@ -100,7 +98,7 @@ console.log(products)
                 <div key={product._id} style={{ width: `${slideWidth}px` }}>
                   <Card
                   
-                    image={`http://localhost:5000/uploads/${product.images?.[0] || noPhoto}`}
+                    image={`http://localhost:5000/${product.images?.[0] || noPhoto}`}
                     name={product.name}
                     brand={product.brand}
                     category={product.category}

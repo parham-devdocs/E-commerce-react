@@ -7,13 +7,13 @@ export type CategoryDocument = HydratedDocument<Category>;
 @Schema()
 export class Category  {
 @Prop({required:true})
-name: string;
+title: string;
 
 @Prop({required:false,ref:"Product"})
 products: [Types.ObjectId];
 
-@Prop()
-password: string;
+@Prop({required:true})
+description: string;
 
 _id: Types.ObjectId
 }

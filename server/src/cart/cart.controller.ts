@@ -15,8 +15,7 @@ export class CartController {
 
   @Roles(UserRole.USER) 
   @Post()
-  create(@Token() token:tokenType, @Body() createCartDto: CreateCartItemDTO ) {
-   console.log("received")
+  addToCart(@Token() token:tokenType, @Body() createCartDto: CreateCartItemDTO ) {
     return this.cartService.upsert(token,createCartDto);
   }
 
@@ -33,7 +32,7 @@ export class CartController {
   }
 
   @Roles(UserRole.USER)
-  @Get()
+  @Get("active")
   findActiveCart(@Token() token:tokenType ) {
     return this.cartService.findActiveCart(token)
   }

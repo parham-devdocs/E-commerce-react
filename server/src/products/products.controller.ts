@@ -159,7 +159,7 @@ console.log(response)
     @UseInterceptors(
       FileInterceptor('file', {
         storage: diskStorage({
-          destination: './uploads/products',
+          destination: '../uploads/products',
           filename: (req, file, callback) => {
             // ✅ Fix: Use file.originalname, not file.filename
             const extension = extname(file.originalname);
