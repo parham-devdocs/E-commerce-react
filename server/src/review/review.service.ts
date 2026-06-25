@@ -28,26 +28,32 @@ if (existingComment) {
 }
   const user = await this.userService.findOneByEmail(email);
 
-
   const review = this.reviewRepository.create({
-    productId: productId,   // number
+    productId: productId,  
     comment: createReviewDto.comment,
     rate: createReviewDto.rate,
-    user: user
+    user
   });
-
   const response = await this.reviewRepository.save(review);
 
   return {
     comment: response.comment,
     rate: response.rate,
-    productId: response.productId,
-    user: response.user.email, // or just email
+    user: response.user
   };
 }
 
-  findAll() {
-
+  async findAll(productId: string) {
+    const comments= await this.reviewRepository.find({
+      where: {
+        productId
+      }
+      ,relations:["user"]
+        })
+    return {
+      message: 'Reviews fetched succeessfuly ',
+    comments
+    };  
   }
 
   async findOneByProductId(token:tokenType,productId: string) {

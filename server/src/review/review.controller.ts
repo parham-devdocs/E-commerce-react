@@ -8,6 +8,7 @@ import { Roles } from 'src/roles.decorator';
 import { UserRole } from 'src/auth/entities/user.entity';
 import { AuthGuard } from 'src/auth.guard';
 import { RoleGuard } from 'src/role.guard';
+import { Public } from 'src/customDecorators/publicRoute.decorator';
 
 @Controller('review')
 @UseGuards(AuthGuard, RoleGuard) 
@@ -27,26 +28,14 @@ export class ReviewController {
     return this.reviewService.create(productId, token, createReviewDto);
   }
 
-  @Roles(UserRole.ADMIN)
-  @Roles(UserRole.USER)
-  @Roles(UserRole.GUEST)
-  @Get()
-  findAll() {
-    return this.reviewService.findAll();
-  }
 
-  @Roles(UserRole.ADMIN)
-  @Roles(UserRole.USER)
-  @Roles(UserRole.GUEST)
+   @Public()
   @Get(':productId')
-  findOne( 
-  @Token() token: tokenType,
+  findall( 
   @Param('productId') productId: string,
-
-
 ) {
   
-    return this.reviewService.findOneByProductId(token,productId);
+    return this.reviewService.findAll(productId)
   }
 
 

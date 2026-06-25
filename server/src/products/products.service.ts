@@ -223,6 +223,8 @@ export class ProductsService {
     const product= await this.productModel.findById(id).select({images:true})
     return product?.images
   }
+
+
   async reduceStock(productId: string, quantity: number): Promise<any> {
 const product =await this.findOne(productId)
 if (!product.data.inStock || product.data.count-quantity<=0 ) {
