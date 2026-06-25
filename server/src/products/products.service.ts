@@ -92,8 +92,9 @@ export class ProductsService {
     if (!isValidObjectId(id)) {
       throw new HttpException('Invalid productId', HttpStatus.BAD_REQUEST);
     }
-  
-    const product = await this.productModel.find({id,inStock:true});
+  console.log({id})
+    const product = await this.productModel.findOne({_id:id,inStock:true})
+    console.log(product)
     if (!product) {
       throw new NotFoundException('Product not found');
     }
