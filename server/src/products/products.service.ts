@@ -189,8 +189,19 @@ export class ProductsService {
       };
     }
 
-  update(id: number, updateProductDto: UpdateProductDto) {
-    return `This action updates a #${id} product`;
+  async update(id: string, updateProductDto: UpdateProductDto) {
+    try {
+      await this.findOne(id)
+   
+      const updatedProduct=await this.productModel.findByIdAndUpdate(id,updateProductDto)
+      return {
+        message: 'Product updated',
+        data:updatedProduct
+      };
+    } catch (error) {
+      return  HttpStatus.INTERNAL_SERVER_ERROR
+
+    }
   }
 
   remove(id: number) {
