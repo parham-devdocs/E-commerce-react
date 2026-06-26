@@ -1,21 +1,32 @@
-import { BadRequestException, ConflictException, HttpException, HttpStatus, Inject, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  ConflictException,
+  HttpException,
+  HttpStatus,
+  Inject,
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { isValidObjectId, Model, ObjectId } from 'mongoose';
-import { Product } from "src/products/product.schema";
-import { Response } from "express";
-import { Category } from 'src/category/category.schema';
+import { Product } from 'src/products/product.entity';
+import { Response } from 'express';
 import { InjectModel } from '@nestjs/mongoose';
-import { calculateDicount, calculatePriceWithDiscount, dateComparison } from "../utils";
+import {
+  calculateDicount,
+  calculatePriceWithDiscount,
+  dateComparison,
+} from '../utils';
+import { Category } from 'src/category/entities/category.entity';
 @Injectable()
 export class ProductsService {
   constructor(
-    @InjectModel("Product")     private productModel: Model<Product>,
+    @InjectModel('Product') private productModel: Model<Product>,
 
-    @InjectModel('Category') private categoryModel: Model<Category>
-
-
-  ){}
+    @InjectModel('Category') private categoryModel: Model<Category>,
+  ) {}
 
   async create(createProductDto: CreateProductDto) {
     // 1. Validate that category ID is a valid ObjectId
@@ -24,27 +35,40 @@ export class ProductsService {
     }
 
     // 2. Check if category exists
-    const categoryExists = await this.categoryModel.findById(createProductDto.category).exec();
-    
+    const categoryExists = await this.categoryModel
+      .findById(createProductDto.category)
+      .exec();
+
     if (!categoryExists) {
       throw new NotFoundException('Category not found');
     }
 
-    const existingProduct = await this.productModel.findOne({ name: createProductDto.name }).exec();
+    const existingProduct = await this.productModel
+      .findOne({ name: createProductDto.name })
+      .exec();
     if (existingProduct) {
       throw new ConflictException('Product with this name already exists');
     }
 
     try {
-      const priceWithDiscount=calculatePriceWithDiscount(createProductDto.discountPercentage,createProductDto.price)
-      const discountAmount=calculateDicount(createProductDto.discountPercentage,createProductDto.price)
-      const newProduct = new this.productModel({...createProductDto,priceWithDiscount,discountAmount});
+      const priceWithDiscount = calculatePriceWithDiscount(
+        createProductDto.discountPercentage,
+        createProductDto.price,
+      );
+      const discountAmount = calculateDicount(
+        createProductDto.discountPercentage,
+        createProductDto.price,
+      );
+      const newProduct = new this.productModel({
+        ...createProductDto,
+        priceWithDiscount,
+        discountAmount,
+      });
       const saved = await newProduct.save();
       return {
         message: 'Product created',
         data: saved,
       };
-
     } catch (error) {
       // Optional: log error (e.g., with Winston)
       console.error('Product creation error:', error);
@@ -52,155 +76,150 @@ export class ProductsService {
     }
   }
 
-
-
   async findAll(page: string) {
     const pageNum = parseInt(page, 10) || 1;
     const limit = 10;
     const skip = (pageNum - 1) * limit;
-  
+
     const [products, total] = await Promise.all([
       this.productModel.find().skip(skip).limit(limit).lean(),
-      this.productModel.countDocuments()
+      this.productModel.countDocuments(),
     ]);
-    
-  if (products.length===0) {
 
-    throw new NotFoundException()
-  }
+    if (products.length === 0) {
+      throw new NotFoundException();
+    }
     return {
       data: products,
-    
     };
   }
   async findOne(id: string) {
     if (!isValidObjectId(id)) {
       throw new HttpException('Invalid productId', HttpStatus.BAD_REQUEST);
     }
-  
+
     const product = await this.productModel.findById(id);
     if (!product) {
       throw new NotFoundException('Product not found');
     }
-  
+
     return {
       data: product,
     };
   }
-  
+
   async findOneAvailable(id: string) {
     if (!isValidObjectId(id)) {
       throw new HttpException('Invalid productId', HttpStatus.BAD_REQUEST);
     }
-  console.log({id})
-    const product = await this.productModel.findOne({_id:id,inStock:true})
-    console.log(product)
+    console.log({ id });
+    const product = await this.productModel.findOne({ _id: id, inStock: true });
+    console.log(product);
     if (!product) {
       throw new NotFoundException('Product not found');
     }
-  
+
     return {
       message: 'product retrieved',
       data: product,
     };
   }
-  
 
-  async findOneByName(res:Response, name: string) {
+  async findOneByName(res: Response, name: string) {
     try {
-      const product = await this.productModel.find({name})
+      const product = await this.productModel.find({ name });
       if (!product) {
         return res.status(404).json({
-          message: "product not found"
+          message: 'product not found',
         });
       }
-  
-      return res.status(200)
-  
+
+      return res.status(200);
     } catch (error) {
       if (error.name === 'CastError') {
         return res.status(400).json({
-          message: "invalid product id"
+          message: 'invalid product id',
         });
       }
-  
+
       return res.status(500).json({
-        message: "server internal error",
-        error: error.message
+        message: 'server internal error',
+        error: error.message,
       });
     }
   }
 
-  async getRecentProducts(page:string){
+  async getRecentProducts(page: string) {
     const pageNum = parseInt(page, 10) || 1;
     const limit = 10;
     const skip = (pageNum - 1) * limit;
-    const total=await this.productModel.countDocuments().exec()
+    const total = await this.productModel.countDocuments().exec();
     const totalPages = Math.ceil(total / limit);
-    if (totalPages<pageNum) {
-      throw new NotFoundException("page not found")
+    if (totalPages < pageNum) {
+      throw new NotFoundException('page not found');
     }
     const products = await this.productModel
-    .find({ inStock: true,count:{$gt:0} })       
-    .sort({ createdAt: -1 })
-    .skip(skip)     
-    .limit(10)
-    .exec();   
+      .find({ inStock: true, count: { $gt: 0 } })
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(10)
+      .exec();
     if (!products) {
-      throw new NotFoundException("no recent product found")
+      throw new NotFoundException('no recent product found');
     }
     return {
-      data:products,
+      data: products,
       totalPages,
       page,
       limit,
-      total
-    }}
+      total,
+    };
+  }
 
-    async getProductsWithDiscount(page: string) {
-      const pageNum = parseInt(page, 10) || 1;
-      if (pageNum < 1) throw new BadRequestException('Page must be >= 1');
-    
-      const limit = 10;
-      const skip = (pageNum - 1) * limit;
-    
-      const filter = { discountPercentage: { $gt: 0 }, inStock: true };
-      const total = await this.productModel.countDocuments(filter).exec();
-      const totalPages = Math.ceil(total / limit);
-    
-      if (pageNum > totalPages && total > 0) {
-        throw new NotFoundException('Page not found');
-      }
-    
-      const products = await this.productModel
-        .find(filter)
-        .skip(skip)
-        .limit(limit)
-        .exec();
-    
-  
-    
-      return {
-        data: products,
-        totalPages,
-        page: pageNum,
-        limit,
-        total,
-      };
+  async getProductsWithDiscount(page: string) {
+    const pageNum = parseInt(page, 10) || 1;
+    if (pageNum < 1) throw new BadRequestException('Page must be >= 1');
+
+    const limit = 10;
+    const skip = (pageNum - 1) * limit;
+
+    const filter = { discountPercentage: { $gt: 0 }, inStock: true };
+    const total = await this.productModel.countDocuments(filter).exec();
+    const totalPages = Math.ceil(total / limit);
+
+    if (pageNum > totalPages && total > 0) {
+      throw new NotFoundException('Page not found');
     }
+
+    const products = await this.productModel
+      .find(filter)
+      .skip(skip)
+      .limit(limit)
+      .exec();
+
+    return {
+      data: products,
+      totalPages,
+      page: pageNum,
+      limit,
+      total,
+    };
+  }
 
   async update(id: string, updateProductDto: UpdateProductDto) {
     try {
-      await this.findOne(id)
-   
-      const updatedProduct=await this.productModel.findByIdAndUpdate(id,updateProductDto)
+      await this.findOne(id);
+
+      const updatedProduct = await this.productModel.findByIdAndUpdate(
+        id,
+        updateProductDto,
+      );
       return {
         message: 'Product updated',
-        data:updatedProduct
+        data: updatedProduct,
       };
     } catch (error) {
-      return  HttpStatus.INTERNAL_SERVER_ERROR
-
+      return HttpStatus.INTERNAL_SERVER_ERROR;
     }
   }
 
@@ -208,57 +227,61 @@ export class ProductsService {
     return `This action removes a #${id} product`;
   }
 
-  async uploadProductImage(file:any,productId:ObjectId){
+  async uploadProductImage(file: any, productId: ObjectId) {
     try {
-      const savedImage=await this.productModel.updateOne({ _id: productId}, { $push: { images: file.filename } })
+      const savedImage = await this.productModel.updateOne(
+        { _id: productId },
+        { $push: { images: file.filename } },
+      );
 
-      return savedImage
+      return savedImage;
     } catch (error) {
-      return  HttpStatus.INTERNAL_SERVER_ERROR
+      return HttpStatus.INTERNAL_SERVER_ERROR;
     }
-  
   }
 
-  async getProductImages(id:string){
-    const product= await this.productModel.findById(id).select({images:true})
-    return product?.images
+  async getProductImages(id: string) {
+    const product = await this.productModel
+      .findById(id)
+      .select({ images: true });
+    return product?.images;
   }
-
 
   async reduceStock(productId: string, quantity: number): Promise<any> {
-const product =await this.findOne(productId)
-if (!product.data.inStock || product.data.count-quantity<=0 ) {
-  this.markOutOfStock(productId)
-}
-const result = await this.productModel.updateOne(
-  {
-    _id: productId,
-    count: { $gte: quantity }  
-  },
-  [
-    { $set: { count: { $subtract: ["$count", quantity] } } },
-    { $set: { inStock: { $gt: ["$count", 0] } } }
-  ]
-);
-   
-  if (result.matchedCount === 0) {
-    const exists = await this.productModel.exists({ _id: productId });
-    if (!exists) {
+    const product = await this.findOne(productId);
+    if (!product.data.inStock || product.data.count - quantity <= 0) {
+      this.markOutOfStock(productId);
+    }
+    const result = await this.productModel.updateOne(
+      {
+        _id: productId,
+        count: { $gte: quantity },
+      },
+      [
+        { $set: { count: { $subtract: ['$count', quantity] } } },
+        { $set: { inStock: { $gt: ['$count', 0] } } },
+      ],
+    );
+
+    if (result.matchedCount === 0) {
+      const exists = await this.productModel.exists({ _id: productId });
+      if (!exists) {
+        throw new NotFoundException(`Product with ID ${productId} not found`);
+      }
+
+      throw new ConflictException(
+        `Insufficient stock for product ${productId}. Requested: ${quantity}`,
+      );
+    }
+  }
+
+  async markOutOfStock(productId: string) {
+    const result = await this.productModel.updateOne(
+      { _id: productId },
+      { inStock: false },
+    );
+    if (result.matchedCount === 0) {
       throw new NotFoundException(`Product with ID ${productId} not found`);
     }
-
-    throw new ConflictException(
-      `Insufficient stock for product ${productId}. Requested: ${quantity}`
-    );
   }
-  }
-
-
-  async markOutOfStock(productId: string){
-const result=await this.productModel.updateOne({_id:productId},{inStock:false})
-if (result.matchedCount === 0) {
-  throw new NotFoundException(`Product with ID ${productId} not found`);
-}
-  }
-
 }
