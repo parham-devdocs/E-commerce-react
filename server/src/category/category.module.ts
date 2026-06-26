@@ -6,15 +6,21 @@ import { databaseProviders } from 'src/database.providers';
 // import { CategoryProvider } from './category.module.db';
 import { ProductProvider } from 'src/products/product.db.module';
 import { MongooseModule } from '@nestjs/mongoose';
-import { ProductSchema } from 'src/products/product.schema';
+import { Product } from 'src/products/product.entity';
 import { CategorySchema } from './category.schema';
 import { AccessControlService } from 'src/accessControlService';
 import { AuthModule } from 'src/auth/auth.module';
 
 @Module({
   controllers: [CatgoryController],
-  providers: [CatgoryService,AccessControlService],
-  imports: [DatabaseModule,AuthModule,MongooseModule.forFeature([{ name: 'Category', schema: CategorySchema },
-    { name: 'Product', schema: ProductSchema } ])]
+  providers: [CatgoryService, AccessControlService],
+  imports: [
+    DatabaseModule,
+    AuthModule,
+    MongooseModule.forFeature([
+      { name: 'Category', schema: CategorySchema },
+      { name: 'Product', schema: Product },
+    ]),
+  ],
 })
 export class CatgoryModule {}
